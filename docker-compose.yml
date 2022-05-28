@@ -1,0 +1,80 @@
+---
+version: "3.4"
+x-logging: &logging
+  logging:
+    driver: json-file
+    options:
+      max-size: 10m
+      max-file: "3"
+
+services:
+  dtl:
+    image: ethereumoptimism/data-transport-layer:${IMAGE_TAG__DTL:-latest}
+    restart: ${RESTART}
+    env_file:
+      - ./envs/${NETWORK_NAME}/dtl.env
+      - .env
+    volumes:
+      - dtl:/db
+    ports:
+      - ${PORT__DTL:-7878}:7878
+    <<: *logging
+
+  l2geth:
+    image: ethereumoptimism/l2geth:${IMAGE_TAG__L2GETH:-latest}
+    restart: ${RESTART}
+    stop_grace_period: 3m
+    entrypoint:
+      - /bin/sh
+      - -c
+      - "/scripts/$GETH_INIT_SCRIPT && /scripts/l2geth-start.sh"
+    env_file:
+      - ./envs/${NETWORK_NAME}/l2geth.env
+      - .env
+    volumes:
+      - geth:/geth
+      - ../scripts/:/scripts/
+    ports:
+      - ${PORT__L2GETH_HTTP:-9991}:8545
+      - ${PORT__L2GETH_WS:-9992}:8546
+    <<: *logging
+
+  healthcheck:
+    image: ethereumoptimism/replica-healthcheck:${IMAGE_TAG__HEALTHCHECK:-latest}
+    restart: ${RESTART}
+    env_file:
+      - ./envs/${NETWORK_NAME}/healthcheck.env
+      - .env
+    volumes:
+      - ../scripts/:/scripts/
+    ports:
+      - ${PORT__HEALTHCHECK_METRICS:-7300}:7300
+    <<: *logging
+
+  fault-detector:
+    image: ethereumoptimism/fault-detector:${IMAGE_TAG__FAULT_DETECTOR:-latest}
+    restart: ${RESTART}
+    env_file:
+      - ./envs/${NETWORK_NAME}/fault-detector.env
+      - .env
+    volumes:
+      - ../scripts/:/scripts/
+    ports:
+      - ${PORT__HEALTHCHECK_METRICS:-7301}:7300
+    <<: *logging
+
+  prometheus:
+    image: prom/prometheus:${IMAGE_TAG__PROMETHEUS:-latest}
+    env_file:
+      - .env
+    volumes:
+      - ./docker/prometheus:/etc/prometheus
+      - prometheus_data:/prometheus
+    ports:
+      - ${PORT__PROMETHEUS:-9090}:9090
+    <<: *logging
+
+volumes:
+  dtl:
+  geth:
+  prometheus_data:
