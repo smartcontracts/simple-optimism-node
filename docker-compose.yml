@@ -33,7 +33,7 @@ services:
       - .env
     volumes:
       - geth:/geth
-      - ../scripts/:/scripts/
+      - ./scripts/:/scripts/
     ports:
       - ${PORT__L2GETH_HTTP:-9991}:8545
       - ${PORT__L2GETH_WS:-9992}:8546
@@ -45,8 +45,6 @@ services:
     env_file:
       - ./envs/${NETWORK_NAME}/healthcheck.env
       - .env
-    volumes:
-      - ../scripts/:/scripts/
     ports:
       - ${PORT__HEALTHCHECK_METRICS:-7300}:7300
     <<: *logging
@@ -57,10 +55,8 @@ services:
     env_file:
       - ./envs/${NETWORK_NAME}/fault-detector.env
       - .env
-    volumes:
-      - ../scripts/:/scripts/
     ports:
-      - ${PORT__HEALTHCHECK_METRICS:-7301}:7300
+      - ${PORT__FAULT_DETECTOR_METRICS:-7301}:7300
     <<: *logging
 
   prometheus:
@@ -84,12 +80,11 @@ services:
       - ${PORT__GRAFANA:-3000}:3000
     volumes:
       - ./docker/grafana/provisioning/:/etc/grafana/provisioning/:ro
-      - grafana_data:/var/lib/grafana/
-      - grafana_dashboards:/grafana-dashboards:ro
+      - ./docker/grafana/dashboards/simple_node_dashboard.json:/var/lib/grafana/dashboards/simple_node_dashboard.json
+      - grafana_data:/var/lib/grafana
 
 volumes:
   dtl:
   geth:
   prometheus_data:
   grafana_data:
-  grafana_dashboards:
