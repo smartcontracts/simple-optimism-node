@@ -18,7 +18,8 @@ Let's do it!
 
 ## Setting a Data Directory
 
-If you'd like your Docker data to live on a disk other than your primary disk, update or create `/etc/docker/daemon.json` with the following:
+Please note that this is an *optional* step but might be useful for anyone who was confused as I was about how to make Docker point at a different disk.
+If you'd like your Docker data to live on a disk other than your primary disk, update or create `/etc/docker/daemon.json`:
 
 ```json
 {
