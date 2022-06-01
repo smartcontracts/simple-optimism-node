@@ -27,7 +27,7 @@ services:
     entrypoint:
       - /bin/sh
       - -c
-      - "/scripts/$GETH_INIT_SCRIPT && /scripts/l2geth-start.sh"
+      - "/scripts/check-for-chaindata-berlin.sh && /scripts/l2geth-start.sh"
     env_file:
       - ./envs/${NETWORK_NAME}/l2geth.env
       - .env
@@ -65,6 +65,7 @@ services:
 
   prometheus:
     image: prom/prometheus:${IMAGE_TAG__PROMETHEUS:-latest}
+    restart: ${RESTART}
     env_file:
       - .env
     volumes:
@@ -74,7 +75,21 @@ services:
       - ${PORT__PROMETHEUS:-9090}:9090
     <<: *logging
 
+  grafana:
+    image: grafana/grafana:7.5.5
+    restart: ${RESTART}
+    env_file:
+      -  ./envs/${NETWORK_NAME}/grafana.env
+    ports:
+      - ${PORT__GRAFANA:-3000}:3000
+    volumes:
+      - ./docker/grafana/provisioning/:/etc/grafana/provisioning/:ro
+      - grafana_data:/var/lib/grafana/
+      - grafana_dashboards:/grafana-dashboards:ro
+
 volumes:
   dtl:
   geth:
   prometheus_data:
+  grafana_data:
+  grafana_dashboards:
