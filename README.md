@@ -16,6 +16,16 @@ Let's do it!
 - 500GB+ disk (HDD works for now, SSD is better)
 - 10mb/s+ download
 
+## Setting a Data Directory
+
+If you'd like your Docker data to live on a disk other than your primary disk, update or create `/etc/docker/daemon.json` with the following:
+
+```json
+{
+    "data-root": "/mnt/<disk>/docker_data"
+}
+```
+
 ## Environment Variables
 
 Copy `.env.example` to `.env`. and fill out some environment variables.
@@ -32,19 +42,19 @@ Only the following required variables are required:
 
 ### Start
 
-```
+```sh
 docker compose up -d
 ```
 
 ### Stop
 
-```
+```sh
 docker compose down
 ```
 
 ### Wipe
 
-```
+```sh
 docker compose down -v
 ```
 
