@@ -38,6 +38,8 @@ services:
       - ${PORT__L2GETH_HTTP:-9991}:8545
       - ${PORT__L2GETH_WS:-9992}:8546
     <<: *logging
+    mem_limit: 8g
+    mem_reservation: 6g
 
   healthcheck:
     image: ethereumoptimism/replica-healthcheck:${IMAGE_TAG__HEALTHCHECK:-latest}
