@@ -46,6 +46,12 @@ Only the following required variables are required:
 docker compose up -d
 ```
 
+### View logs
+
+```sh
+docker compose logs [component name]
+```
+
 ### Stop
 
 ```sh
@@ -70,6 +76,11 @@ Syncing from L2 is faster but (currently) requires trusting the L2 node you're s
 Many people are running nodes that sync from other L2 nodes, but I'd like to incentivize more people to run nodes that sync directly from L1.
 As a result, I've set this repository up to sync from L1 by default.
 I may later add the option to sync from L2 but I need to go do other things for a while.
+
+#### Connecting to the Optimism Node
+
+
+
 
 ### Healthcheck + Fault Detector
 
