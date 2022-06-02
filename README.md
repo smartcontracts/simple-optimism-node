@@ -94,3 +94,75 @@ Use the following login details to access the dashboard:
 Navigate over to `Dashboards > Manage > Simple Node Dashboard` to see the dashboard, see the following gif if you need help:
 
 ![metrics dashboard gif](https://user-images.githubusercontent.com/14298799/171476634-0cb84efd-adbf-4732-9c1d-d737915e1fa7.gif)
+
+## Detailed Installation Instructions
+
+These instructions assume a debian linux platform, but aside from the package installation, this translates fairly directly.
+
+### Installation
+
+Start by pulling down the repo.  Open a terminal and navigate to where you want the new folder created.  Run the following:
+
+```sh
+git clone https://github.com/smartcontracts/simple-optimism-node.git
+```
+
+You should see something like this:
+
+![git clone output image](https://user-images.githubusercontent.com/94415863/171551614-4c1b61e7-40f6-4649-a163-b2ffb24fa632.png)
+
+### Configuring
+
+Change into the new directory:
+
+```sh
+cd simple-optimism-node
+```
+
+There is a hidden file called `.env.example`. We want to copy it to `.env`.
+
+ ```sh
+cp .env.example .env
+```
+![cd list copy image](https://user-images.githubusercontent.com/94415863/171552299-ecacfeca-0fd1-40a4-8fc0-68e419a9c577.png)
+
+
+And then edit it with your editor of choice
+
+```sh
+nano .env
+```
+The file has a few variables in it we need to fill.
+
+![empty env](https://user-images.githubusercontent.com/94415863/171552497-9727dc0d-1376-4319-8b75-5a687f4adf12.png)
+
+
+To do that, we need to get an L1 and an L2 RPC endpoint. You can use any you want, Alchemy, Infura, Quicknode, etc.  Free tier is fine on Alchemy.
+
+![alchemy rpcs](https://user-images.githubusercontent.com/94415863/171552658-e461eb8f-2ac3-4b24-a61f-0c464f9c4a93.png)
+
+View and Copy the keys, and paste them into `.env`:
+
+![rpc examples](https://user-images.githubusercontent.com/94415863/171552935-66944e35-e72c-449a-b162-dd78221fddb9.png)
+
+To speed up syncing, we're also going to update `IMAGE_TAG__L2GETH`.  This is a temporary measure until a specific ticket is merged.
+
+```sh
+prerelease-0.0.0-test-parallel-sync-2
+```
+![l2geth temp tag](https://user-images.githubusercontent.com/94415863/171553128-dcf1821f-1a10-4249-a099-0873f61f7e02.png)
+
+At this point, you can use the docker commands to pull down the images and run them.  You image may look different while it pulls everything down.
+
+```sh
+docker compose up -d
+```
+
+![image](https://user-images.githubusercontent.com/94415863/171553460-837c3763-24e5-4025-a1af-d06415771beb.png)
+
+And you can hop over to the graphana dashboard to see it start to sync up.
+
+[http://localhost:3000/dashboards](http://localhost:3000/dashboards)
+
+On my current system, I've estimated syncing will take about 60hours.  We'll see if that's how it plays out.  Congrats on running your own Optimism Node!
+
