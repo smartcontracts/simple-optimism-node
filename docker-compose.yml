@@ -72,7 +72,7 @@ services:
     <<: *logging
 
   grafana:
-    image: grafana/grafana:7.5.5
+    image: grafana/grafana:${IMAGE_TAG__GRAFANA:-7.5.5}
     restart: ${RESTART}
     env_file:
       -  ./envs/${NETWORK_NAME}/grafana.env
