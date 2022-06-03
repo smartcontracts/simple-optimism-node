@@ -8,7 +8,6 @@ Let's do it!
 ## Required Software
 
 - [Docker](https://docs.docker.com/get-docker/)
-- [Docker Compose](https://docs.docker.com/compose/install/) (comes bundled with Docker Desktop)
 
 ## Recommended Hardware
 
@@ -57,6 +56,12 @@ docker compose down
 
 ```sh
 docker compose down -v
+```
+
+### Logs
+
+```sh
+docker compose logs <service name (see docker-compose.yml)>
 ```
 
 ## What's Included
