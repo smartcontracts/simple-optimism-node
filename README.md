@@ -58,6 +58,12 @@ docker compose down
 docker compose down -v
 ```
 
+### Logs
+
+```sh
+docker compose logs <service name (see docker-compose.yml)>
+```
+
 ## What's Included
 
 ### Optimism Node
