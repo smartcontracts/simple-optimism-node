@@ -101,7 +101,7 @@ Navigate over to `Dashboards > Manage > Simple Node Dashboard` to see the dashbo
 
 ![metrics dashboard gif](https://user-images.githubusercontent.com/14298799/171476634-0cb84efd-adbf-4732-9c1d-d737915e1fa7.gif)
 
-## Detailed Installation Instructions
+## Detailed Instructions
 
 These instructions assume a debian linux platform, but aside from the package installation, this translates fairly directly.
 
@@ -172,3 +172,4 @@ And you can hop over to the graphana dashboard to see it start to sync up.
 
 On my current system, I've estimated syncing will take about 60hours.  We'll see if that's how it plays out.  Congrats on running your own Optimism Node!
 
+=======
