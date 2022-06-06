@@ -11,7 +11,7 @@ Let's do it!
 
 ## Recommended Hardware
 
-- 16GB+ RAM
+- 8GB+ RAM
 - 500GB+ disk (HDD works for now, SSD is better)
 - 10mb/s+ download
 
