@@ -38,7 +38,7 @@ Only the following required variables are required:
 | `FAULT_DETECTOR__L1_RPC_PROVIDER`       | L1 node RPC to check state roots against                        |
 | `DATA_TRANSPORT_LAYER__L1_RPC_ENDPOINT` | L1 node RPC to download L2 blocks from                          |
 
-## Running the Node
+## Node Operation
 
 ### Start
 
@@ -46,11 +46,17 @@ Only the following required variables are required:
 docker compose up -d
 ```
 
+Will start the node in a detatched shell (`-d`), meaning the node will continue to run in the background.
+You will need to run this again if you ever turn your machine off.
+
 ### Stop
 
 ```sh
 docker compose down
 ```
+
+Will shut down the node without wiping any volumes.
+You can safely run this command and then restart the node again.
 
 ### Wipe
 
@@ -58,17 +64,28 @@ docker compose down
 docker compose down -v
 ```
 
+Will completely wipe the node by removing the volumes that were created for each container.
+Note that this is a destructive action, be very careful!
+
 ### Logs
 
 ```sh
 docker compose logs <service name (see docker-compose.yml)>
 ```
 
+Will display the logs for a given service.
+You can also follow along with the logs for a service in real time by adding the flag `-f`.
+
 ### Update
 
 ```sh
 docker compose pull
 ```
+
+Will download the latest images for any services where you haven't hard-coded a service version.
+Updates are regularly pushed to improve the stability of Optimism nodes or to introduce new quality-of-life features like better logging and better metrics.
+I recommend that you run this command every once in a while (once a week should be more than enough).
+If you intend to maintain an Optimism node for a long time, it's also worth subscribing to the [Optimism Public Changelog](https://changelog.optimism.io/) via either [RSS](https://changelog.optimism.io/feed.xml) or the [optimism-announce@optimism.io mailing list](https://groups.google.com/a/optimism.io/g/optimism-announce).
 
 ## What's Included
 
