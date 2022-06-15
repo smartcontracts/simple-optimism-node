@@ -83,8 +83,18 @@ services:
       - ./docker/grafana/dashboards/simple_node_dashboard.json:/var/lib/grafana/dashboards/simple_node_dashboard.json
       - grafana_data:/var/lib/grafana
 
+  influxdb:
+    image: quay.io/influxdb/influxdb:${IMAGE_TAG__INFLUXDB:-1.6}
+    env_file:
+      - ./envs/${NETWORK_NAME}/influxdb.env
+    ports:
+      - ${PORT__INFLUXDB:-8086}:8086
+    volumes:
+      - influxdb_data:/var/lib/influxdb
+
 volumes:
   dtl:
   geth:
   prometheus_data:
   grafana_data:
+  influxdb_data:

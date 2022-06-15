@@ -2,9 +2,18 @@ datasources:
 -  access: 'proxy'
    editable: true
    is_default: true
-   name: 'prom1'
+   name: 'Prometheus'
    uid: 'T7Dj-Zr7z'
    org_id: 1
    type: 'prometheus'
    url: 'http://prometheus:9090'
+   version: 1
+-  access: 'proxy'
+   editable: true
+   is_default: false
+   name: 'InfluxDB'
+   org_id: 1
+   type: 'influxdb'
+   database: 'l2geth'
+   url: 'http://influxdb:8086'
    version: 1
