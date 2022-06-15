@@ -15,20 +15,27 @@ Let's do it!
 - 500GB+ disk (HDD works for now, SSD is better)
 - 10mb/s+ download
 
-## Setting a Data Directory
+## Installation and Setup Instructions
 
-Please note that this is an *optional* step but might be useful for anyone who was confused as I was about how to make Docker point at a different disk.
-If you'd like your Docker data to live on a disk other than your primary disk, update or create `/etc/docker/daemon.json`:
+Instructions here should work for MacOS and most linux distributions.
+I probably won't include instructions for Windows because I'm lazy.
 
-```json
-{
-    "data-root": "/mnt/<disk>/docker_data"
-}
+### Clone the Repository
+
+```sh
+git clone https://github.com/smartcontracts/simple-optimism-node.git
+cd simple-optimism-node
 ```
 
-## Environment Variables
+### Configure the Node
 
-Copy `.env.example` to `.env`. and fill out some environment variables.
+Make a copy of `.env.example` named `.env`.
+
+```sh
+cp .env.example .env
+```
+
+Open `.env` with your editor of choice and fill out the environment variables listed inside that file.
 Only the following required variables are required:
 
 | Variable Name                           | Description                                                     |
@@ -38,9 +45,25 @@ Only the following required variables are required:
 | `FAULT_DETECTOR__L1_RPC_PROVIDER`       | L1 node RPC to check state roots against                        |
 | `DATA_TRANSPORT_LAYER__L1_RPC_ENDPOINT` | L1 node RPC to download L2 blocks from                          |
 
-## Node Operation
+You can get L1/L2 RPC endpoints from service providers like Alchemy, Infura, QuickNode, etc.
 
-### Start
+You can also modify any of the optional environment variables if you'd wish, but the defaults should work perfectly well for most people.
+Just make sure not to change anything under the line marked "NO TOUCHING" or you might break something!
+
+### Setting a Data Directory (Optional)
+
+Please note that this is an *optional* step but might be useful for anyone who was confused as I was about how to make Docker point at disk other than your primary disk.
+If you'd like your Docker data to live on a disk other than your primary disk, create a file `/etc/docker/daemon.json` with the following contents:
+
+```json
+{
+    "data-root": "/mnt/<disk>/docker_data"
+}
+```
+
+### Operating the Node
+
+#### Start
 
 ```sh
 docker compose up -d
@@ -49,7 +72,7 @@ docker compose up -d
 Will start the node in a detatched shell (`-d`), meaning the node will continue to run in the background.
 You will need to run this again if you ever turn your machine off.
 
-### Stop
+#### Stop
 
 ```sh
 docker compose down
@@ -58,7 +81,7 @@ docker compose down
 Will shut down the node without wiping any volumes.
 You can safely run this command and then restart the node again.
 
-### Wipe
+#### Wipe
 
 ```sh
 docker compose down -v
@@ -67,7 +90,7 @@ docker compose down -v
 Will completely wipe the node by removing the volumes that were created for each container.
 Note that this is a destructive action, be very careful!
 
-### Logs
+#### Logs
 
 ```sh
 docker compose logs <service name (see docker-compose.yml)>
@@ -76,7 +99,7 @@ docker compose logs <service name (see docker-compose.yml)>
 Will display the logs for a given service.
 You can also follow along with the logs for a service in real time by adding the flag `-f`.
 
-### Update
+#### Update
 
 ```sh
 docker compose pull
