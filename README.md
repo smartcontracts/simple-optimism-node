@@ -45,7 +45,7 @@ Only the following required variables are required:
 | `FAULT_DETECTOR__L1_RPC_PROVIDER`       | L1 node RPC to check state roots against                        |
 | `DATA_TRANSPORT_LAYER__L1_RPC_ENDPOINT` | L1 node RPC to download L2 blocks from                          |
 
-You can get L1/L2 RPC endpoints from service providers like Alchemy, Infura, QuickNode, etc.
+You can get L1/L2 RPC endpoints from [these node providers](https://community.optimism.io/docs/useful-tools/providers/).
 
 You can also modify any of the optional environment variables if you'd wish, but the defaults should work perfectly well for most people.
 Just make sure not to change anything under the line marked "NO TOUCHING" or you might break something!
