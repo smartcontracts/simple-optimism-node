@@ -9,6 +9,14 @@ Let's do it!
 
 - [Docker](https://docs.docker.com/engine/install/)
 
+  **Note:** To use Docker as a non root user, add that user to the `docker` group.
+
+  ```
+  sudo usermod -a -G docker `whoami`
+  ```
+
+  You'll need to log out and log in again for the change to be effective.
+
 ## Recommended Hardware
 
 - 16GB+ RAM
