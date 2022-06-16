@@ -9,14 +9,6 @@ Let's do it!
 
 - [Docker](https://docs.docker.com/engine/install/)
 
-  **Note:** To use Docker as a non root user, add that user to the `docker` group.
-
-  ```
-  sudo usermod -a -G docker `whoami`
-  ```
-
-  You'll need to log out and log in again for the change to be effective.
-
 ## Recommended Hardware
 
 - 16GB+ RAM
@@ -27,6 +19,17 @@ Let's do it!
 
 Instructions here should work for MacOS and most linux distributions.
 I probably won't include instructions for Windows because I'm lazy.
+
+### Configure Docker as a Non-Root User (Optional)
+
+If you're planning to run Docker as a root user, you can safely skip this step.
+However, if you're using Docker as a non-root user, you'll need to add yourself to the `docker` user group:
+
+```sh
+sudo usermod -a -G docker `whoami`
+```
+
+You'll need to log out and log in again for this change to take effect.
 
 ### Clone the Repository
 
