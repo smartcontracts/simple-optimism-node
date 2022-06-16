@@ -80,6 +80,9 @@ docker compose up -d
 Will start the node in a detatched shell (`-d`), meaning the node will continue to run in the background.
 You will need to run this again if you ever turn your machine off.
 
+The first time you start the node it synchronizes from regenesis (November 11th, 2021) to the present.
+This process takes hours.
+
 #### Stop
 
 ```sh
@@ -101,11 +104,17 @@ Note that this is a destructive action, be very careful!
 #### Logs
 
 ```sh
-docker compose logs <service name (see docker-compose.yml)>
+docker compose logs <service name>
 ```
 
 Will display the logs for a given service.
 You can also follow along with the logs for a service in real time by adding the flag `-f`.
+
+The available services are:
+- [`dtl` and `l2geth`](#optimism-node)
+- [`healthcheck` and `fault-detector`](#healthcheck--fault-detector)
+- [`prometheus`, `grafana`, and `influxdb`](#metrics-dashboard)
+
 
 #### Update
 
