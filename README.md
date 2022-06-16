@@ -7,7 +7,15 @@ Let's do it!
 
 ## Required Software
 
-- [Docker](https://docs.docker.com/get-docker/)
+- [Docker](https://docs.docker.com/engine/install/)
+
+  **Note:** To use Docker as a non root user, add that user to the `docker` group.
+
+  ```
+  sudo usermod -a -G docker `whoami`
+  ```
+
+  You'll need to log out and log in again for the change to be effective.
 
 ## Recommended Hardware
 
@@ -45,7 +53,7 @@ Only the following required variables are required:
 | `FAULT_DETECTOR__L1_RPC_PROVIDER`       | L1 node RPC to check state roots against                        |
 | `DATA_TRANSPORT_LAYER__L1_RPC_ENDPOINT` | L1 node RPC to download L2 blocks from                          |
 
-You can get L1/L2 RPC endpoints from service providers like Alchemy, Infura, QuickNode, etc.
+You can get L1/L2 RPC endpoints from [these node providers](https://community.optimism.io/docs/useful-tools/providers/).
 
 You can also modify any of the optional environment variables if you'd wish, but the defaults should work perfectly well for most people.
 Just make sure not to change anything under the line marked "NO TOUCHING" or you might break something!
@@ -72,6 +80,9 @@ docker compose up -d
 Will start the node in a detatched shell (`-d`), meaning the node will continue to run in the background.
 You will need to run this again if you ever turn your machine off.
 
+The first time you start the node it synchronizes from regenesis (November 11th, 2021) to the present.
+This process takes hours.
+
 #### Stop
 
 ```sh
@@ -93,11 +104,17 @@ Note that this is a destructive action, be very careful!
 #### Logs
 
 ```sh
-docker compose logs <service name (see docker-compose.yml)>
+docker compose logs <service name>
 ```
 
 Will display the logs for a given service.
 You can also follow along with the logs for a service in real time by adding the flag `-f`.
+
+The available services are:
+- [`dtl` and `l2geth`](#optimism-node)
+- [`healthcheck` and `fault-detector`](#healthcheck--fault-detector)
+- [`prometheus`, `grafana`, and `influxdb`](#metrics-dashboard)
+
 
 #### Update
 
