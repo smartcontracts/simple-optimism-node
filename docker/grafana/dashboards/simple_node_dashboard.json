@@ -87,7 +87,7 @@
         "overrides": []
       },
       "gridPos": {
-        "h": 12,
+        "h": 8,
         "w": 9,
         "x": 0,
         "y": 1
@@ -182,7 +182,7 @@
         "overrides": []
       },
       "gridPos": {
-        "h": 12,
+        "h": 8,
         "w": 9,
         "x": 9,
         "y": 1
@@ -249,7 +249,24 @@
           "color": {
             "mode": "thresholds"
           },
-          "mappings": [],
+          "mappings": [
+            {
+              "from": "",
+              "id": 1,
+              "text": "OK",
+              "to": "",
+              "type": 1,
+              "value": "0"
+            },
+            {
+              "from": "",
+              "id": 2,
+              "text": "NOT OK",
+              "to": "",
+              "type": 1,
+              "value": "1"
+            }
+          ],
           "thresholds": {
             "mode": "absolute",
             "steps": [
@@ -258,8 +275,12 @@
                 "value": null
               },
               {
+                "color": "green",
+                "value": 0
+              },
+              {
                 "color": "red",
-                "value": 0.1
+                "value": 1
               }
             ]
           }
@@ -271,167 +292,6 @@
         "w": 6,
         "x": 18,
         "y": 1
-      },
-      "id": 2,
-      "options": {
-        "orientation": "auto",
-        "reduceOptions": {
-          "calcs": [
-            "lastNotNull"
-          ],
-          "fields": "",
-          "values": false
-        },
-        "showThresholdLabels": false,
-        "showThresholdMarkers": true,
-        "text": {}
-      },
-      "pluginVersion": "7.5.5",
-      "targets": [
-        {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "T7Dj-Zr7z"
-          },
-          "editorMode": "code",
-          "expr": "rate(healthcheck_target_connection_failures[5m])",
-          "legendFormat": "Target",
-          "range": true,
-          "refId": "Target Connection Failures"
-        },
-        {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "T7Dj-Zr7z"
-          },
-          "editorMode": "code",
-          "expr": "rate(healthcheck_reference_connection_failures[5m])",
-          "hide": false,
-          "legendFormat": "Reference",
-          "range": true,
-          "refId": "Reference Connection Failures"
-        }
-      ],
-      "title": "Connection Failures",
-      "type": "gauge"
-    },
-    {
-      "datasource": null,
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "thresholds"
-          },
-          "mappings": [
-            {
-              "options": {
-                "0": {
-                  "index": 1,
-                  "text": "OK"
-                },
-                "1": {
-                  "index": 0,
-                  "text": "ERROR"
-                }
-              },
-              "type": "value"
-            }
-          ],
-          "max": 1,
-          "min": 0,
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "green",
-                "value": null
-              },
-              {
-                "color": "red",
-                "value": 1
-              }
-            ]
-          }
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 4,
-        "w": 6,
-        "x": 18,
-        "y": 5
-      },
-      "id": 6,
-      "options": {
-        "orientation": "auto",
-        "reduceOptions": {
-          "calcs": [
-            "lastNotNull"
-          ],
-          "fields": "",
-          "values": false
-        },
-        "showThresholdLabels": false,
-        "showThresholdMarkers": true,
-        "text": {}
-      },
-      "pluginVersion": "7.5.5",
-      "targets": [
-        {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "T7Dj-Zr7z"
-          },
-          "expr": "healthcheck_is_currently_diverged{}",
-          "refId": "A"
-        }
-      ],
-      "title": "Healthcheck",
-      "type": "gauge"
-    },
-    {
-      "datasource": null,
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "thresholds"
-          },
-          "mappings": [
-            {
-              "options": {
-                "0": {
-                  "index": 0,
-                  "text": "OK"
-                },
-                "1": {
-                  "index": 1,
-                  "text": "ERROR"
-                }
-              },
-              "type": "value"
-            }
-          ],
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "green",
-                "value": null
-              },
-              {
-                "color": "red",
-                "value": 1
-              }
-            ]
-          }
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 4,
-        "w": 6,
-        "x": 18,
-        "y": 9
       },
       "id": 12,
       "options": {
@@ -455,8 +315,10 @@
             "uid": "T7Dj-Zr7z"
           },
           "editorMode": "code",
+          "exemplar": true,
           "expr": "fault_detector_in_unexpected_error_state{}",
-          "legendFormat": "Error",
+          "interval": "",
+          "legendFormat": "Unexpected Errors",
           "range": true,
           "refId": "A"
         },
@@ -466,15 +328,125 @@
             "uid": "T7Dj-Zr7z"
           },
           "editorMode": "code",
+          "exemplar": true,
           "expr": "fault_detector_is_currently_mismatched{}",
           "hide": false,
-          "legendFormat": "Mismatch",
+          "interval": "",
+          "legendFormat": "Fault Detection",
           "range": true,
           "refId": "B"
+        },
+        {
+          "exemplar": true,
+          "expr": "healthcheck_is_currently_diverged",
+          "hide": false,
+          "interval": "",
+          "legendFormat": "Healthcheck",
+          "refId": "C"
         }
       ],
-      "title": "Fault Detector",
+      "title": "System Security Monitoring",
       "type": "gauge"
+    },
+    {
+      "datasource": null,
+      "description": "",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [
+            {
+              "from": "",
+              "id": 1,
+              "text": "SYNCED",
+              "to": "",
+              "type": 1,
+              "value": "1"
+            },
+            {
+              "from": "",
+              "id": 2,
+              "text": "SYNCING",
+              "to": "",
+              "type": 1,
+              "value": "0"
+            }
+          ],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 0
+              },
+              {
+                "color": "green",
+                "value": 1
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 6,
+        "x": 18,
+        "y": 5
+      },
+      "id": 24,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "area",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "text": {},
+        "textMode": "auto"
+      },
+      "pluginVersion": "7.5.5",
+      "targets": [
+        {
+          "exemplar": true,
+          "expr": "healthcheck_reference_height",
+          "hide": true,
+          "interval": "",
+          "legendFormat": "",
+          "refId": "A"
+        },
+        {
+          "exemplar": true,
+          "expr": "healthcheck_target_height",
+          "hide": true,
+          "interval": "",
+          "legendFormat": "",
+          "refId": "B"
+        },
+        {
+          "datasource": "__expr__",
+          "expression": "$A - $B < 2000",
+          "hide": false,
+          "refId": "C",
+          "type": "math"
+        }
+      ],
+      "timeFrom": null,
+      "timeShift": null,
+      "title": "System Readiness",
+      "transformations": [],
+      "type": "stat"
     },
     {
       "datasource": null,
@@ -526,7 +498,7 @@
         "h": 9,
         "w": 24,
         "x": 0,
-        "y": 13
+        "y": 9
       },
       "id": 8,
       "options": {
@@ -566,7 +538,7 @@
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 22
+        "y": 18
       },
       "id": 16,
       "panels": [],
@@ -623,7 +595,7 @@
         "h": 6,
         "w": 8,
         "x": 0,
-        "y": 23
+        "y": 19
       },
       "id": 18,
       "options": {
@@ -808,7 +780,7 @@
         "h": 6,
         "w": 8,
         "x": 8,
-        "y": 23
+        "y": 19
       },
       "id": 20,
       "options": {
@@ -955,7 +927,7 @@
         "h": 6,
         "w": 8,
         "x": 16,
-        "y": 23
+        "y": 19
       },
       "id": 22,
       "options": {
@@ -1070,5 +1042,5 @@
   "timezone": "",
   "title": "Simple Node Dashboard",
   "uid": "fNH7uZ97k",
-  "version": 3
+  "version": 7
 }
