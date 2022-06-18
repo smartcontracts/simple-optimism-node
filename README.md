@@ -7,7 +7,7 @@ Let's do it!
 
 ## Required Software
 
-- [Docker](https://docs.docker.com/engine/install/)
+- [Docker](https://docs.docker.com/engine/install/).
 
 ## Recommended Hardware
 
@@ -17,7 +17,7 @@ Let's do it!
 
 ## Installation and Setup Instructions
 
-Instructions here should work for MacOS and most linux distributions.
+Instructions here should work for MacOS and most Linux distributions.
 I probably won't include instructions for Windows because I'm lazy.
 
 ### Configure Docker as a Non-Root User (Optional)
@@ -47,14 +47,14 @@ cp .env.example .env
 ```
 
 Open `.env` with your editor of choice and fill out the environment variables listed inside that file.
-Only the following required variables are required:
+Only the following variables are required:
 
-| Variable Name                           | Description                                                     |
-|-----------------------------------------|-----------------------------------------------------------------|
-| `NETWORK_NAME`                          | Network to run the node on ("mainnet" or "kovan")               |
-| `HEALTHCHECK__REFERENCE_RPC_PROVIDER`   | Another reference L2 node to check blocks against, just in case |
-| `FAULT_DETECTOR__L1_RPC_PROVIDER`       | L1 node RPC to check state roots against                        |
-| `DATA_TRANSPORT_LAYER__L1_RPC_ENDPOINT` | L1 node RPC to download L2 blocks from                          |
+| Variable Name                           | Description                                                               |
+|-----------------------------------------|---------------------------------------------------------------------------|
+| `NETWORK_NAME`                          | Network to run the node on ("mainnet" or "kovan")                         |
+| `HEALTHCHECK__REFERENCE_RPC_PROVIDER`   | Another reference L2 node to check blocks against, just in case           |
+| `FAULT_DETECTOR__L1_RPC_PROVIDER`       | L1 node RPC to check state roots against                                  |
+| `DATA_TRANSPORT_LAYER__L1_RPC_ENDPOINT` | L1 node RPC to download L2 blocks from (can be the same as the one above) |
 
 You can get L1/L2 RPC endpoints from [these node providers](https://community.optimism.io/docs/useful-tools/providers/).
 
