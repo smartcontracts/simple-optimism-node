@@ -88,7 +88,7 @@
       },
       "gridPos": {
         "h": 8,
-        "w": 9,
+        "w": 8,
         "x": 0,
         "y": 1
       },
@@ -136,7 +136,8 @@
       "type": "timeseries"
     },
     {
-      "datasource": null,
+      "datasource": "InfluxDB",
+      "description": "",
       "fieldConfig": {
         "defaults": {
           "color": {
@@ -152,8 +153,7 @@
             "hideFrom": {
               "graph": false,
               "legend": false,
-              "tooltip": false,
-              "viz": false
+              "tooltip": false
             },
             "lineInterpolation": "linear",
             "lineWidth": 1,
@@ -161,8 +161,8 @@
             "scaleDistribution": {
               "type": "linear"
             },
-            "showPoints": "auto",
-            "spanNulls": false
+            "showPoints": "always",
+            "spanNulls": true
           },
           "mappings": [],
           "thresholds": {
@@ -177,18 +177,20 @@
                 "value": 80
               }
             ]
-          }
+          },
+          "unit": "string"
         },
         "overrides": []
       },
       "gridPos": {
         "h": 8,
-        "w": 9,
-        "x": 9,
+        "w": 8,
+        "x": 8,
         "y": 1
       },
       "id": 4,
       "options": {
+        "graph": {},
         "legend": {
           "calcs": [],
           "displayMode": "list",
@@ -202,44 +204,48 @@
           "mode": "single"
         }
       },
+      "pluginVersion": "7.5.5",
       "targets": [
         {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "T7Dj-Zr7z"
-          },
-          "editorMode": "code",
-          "expr": "healthcheck_last_matching_state_root_height{}",
-          "legendFormat": "Last Matching Height",
-          "range": true,
-          "refId": "Last Matching Height"
-        },
-        {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "T7Dj-Zr7z"
-          },
-          "editorMode": "code",
-          "expr": "healthcheck_reference_height{}",
+          "alias": "Head",
+          "groupBy": [
+            {
+              "params": [
+                "$__interval"
+              ],
+              "type": "time"
+            },
+            {
+              "params": [
+                "null"
+              ],
+              "type": "fill"
+            }
+          ],
           "hide": false,
-          "legendFormat": "Reference Height",
-          "range": true,
-          "refId": "Reference Height"
-        },
-        {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "T7Dj-Zr7z"
-          },
-          "editorMode": "code",
-          "expr": "healthcheck_target_height{}",
-          "hide": false,
-          "legendFormat": "Target Height",
-          "range": true,
-          "refId": "Target Height"
+          "measurement": "geth.chain/head/block.gauge",
+          "orderByTime": "ASC",
+          "policy": "default",
+          "refId": "A",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": [
+                  "value"
+                ],
+                "type": "field"
+              },
+              {
+                "params": [],
+                "type": "mean"
+              }
+            ]
+          ],
+          "tags": []
         }
       ],
-      "title": "Client Heights",
+      "title": "Node Block Height",
       "type": "timeseries"
     },
     {
@@ -289,8 +295,8 @@
       },
       "gridPos": {
         "h": 4,
-        "w": 6,
-        "x": 18,
+        "w": 8,
+        "x": 16,
         "y": 1
       },
       "id": 12,
@@ -356,22 +362,15 @@
           "color": {
             "mode": "thresholds"
           },
+          "displayName": "Blocks to sync",
           "mappings": [
             {
-              "from": "",
+              "from": "0",
               "id": 1,
               "text": "SYNCED",
-              "to": "",
-              "type": 1,
+              "to": "1000",
+              "type": 2,
               "value": "1"
-            },
-            {
-              "from": "",
-              "id": 2,
-              "text": "SYNCING",
-              "to": "",
-              "type": 1,
-              "value": "0"
             }
           ],
           "thresholds": {
@@ -382,22 +381,19 @@
                 "value": null
               },
               {
-                "color": "red",
-                "value": 0
-              },
-              {
-                "color": "green",
-                "value": 1
+                "color": "blue",
+                "value": 1000
               }
             ]
-          }
+          },
+          "unit": "none"
         },
         "overrides": []
       },
       "gridPos": {
         "h": 4,
-        "w": 6,
-        "x": 18,
+        "w": 8,
+        "x": 16,
         "y": 5
       },
       "id": 24,
@@ -420,31 +416,17 @@
       "targets": [
         {
           "exemplar": true,
-          "expr": "healthcheck_reference_height",
-          "hide": true,
+          "expr": "healthcheck_reference_height - healthcheck_target_height",
+          "hide": false,
+          "instant": false,
           "interval": "",
           "legendFormat": "",
           "refId": "A"
-        },
-        {
-          "exemplar": true,
-          "expr": "healthcheck_target_height",
-          "hide": true,
-          "interval": "",
-          "legendFormat": "",
-          "refId": "B"
-        },
-        {
-          "datasource": "__expr__",
-          "expression": "$A - $B < 2000",
-          "hide": false,
-          "refId": "C",
-          "type": "math"
         }
       ],
       "timeFrom": null,
       "timeShift": null,
-      "title": "System Readiness",
+      "title": "Chain Sync Status",
       "transformations": [],
       "type": "stat"
     },
@@ -495,7 +477,7 @@
         "overrides": []
       },
       "gridPos": {
-        "h": 9,
+        "h": 8,
         "w": 24,
         "x": 0,
         "y": 9
@@ -528,7 +510,7 @@
           "refId": "A"
         }
       ],
-      "title": "DTL Sync",
+      "title": "Rollup Data Sync Status",
       "type": "timeseries"
     },
     {
@@ -538,7 +520,7 @@
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 18
+        "y": 17
       },
       "id": 16,
       "panels": [],
@@ -595,7 +577,7 @@
         "h": 6,
         "w": 8,
         "x": 0,
-        "y": 19
+        "y": 18
       },
       "id": 18,
       "options": {
@@ -780,7 +762,7 @@
         "h": 6,
         "w": 8,
         "x": 8,
-        "y": 19
+        "y": 18
       },
       "id": 20,
       "options": {
@@ -927,7 +909,7 @@
         "h": 6,
         "w": 8,
         "x": 16,
-        "y": 19
+        "y": 18
       },
       "id": 22,
       "options": {
@@ -1042,5 +1024,5 @@
   "timezone": "",
   "title": "Simple Node Dashboard",
   "uid": "fNH7uZ97k",
-  "version": 7
+  "version": 12
 }
