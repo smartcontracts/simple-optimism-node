@@ -7,7 +7,7 @@ Let's do it!
 
 ## Required Software
 
-- [Docker](https://docs.docker.com/engine/install/).
+- [docker](https://docs.docker.com/engine/install/)
 
 ## Recommended Hardware
 
