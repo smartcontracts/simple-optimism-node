@@ -84,7 +84,8 @@ Will start the node in a detatched shell (`-d`), meaning the node will continue 
 You will need to run this again if you ever turn your machine off.
 
 The first time you start the node it synchronizes from regenesis (November 11th, 2021) to the present.
-This process takes hours.
+At writing, this process takes about 55 hours (from the Google Cloud Provider data center).
+You can use [the dashboard](#metrics-dashboard) to monitor its progress.
 
 #### Stop
 
@@ -142,6 +143,25 @@ Syncing from L2 is faster but (currently) requires trusting the L2 node you're s
 Many people are running nodes that sync from other L2 nodes, but I'd like to incentivize more people to run nodes that sync directly from L1.
 As a result, I've set this repository up to sync from L1 by default.
 I may later add the option to sync from L2 but I need to go do other things for a while.
+
+
+#### Using the Optimism Node
+
+The node is available at https://localhost:9991. For example, to use it with Foundry:
+
+1. [Intall Foundry](https://book.getfoundry.sh/getting-started/installation.html).
+2. Inform Foundry about the node's URL.
+
+   ```sh
+   export ETH_RPC_URL=http://localhost:9991
+   ```
+   
+3. Use the tool normally. For example, this command line asks for a transaction by hash.
+
+   ```sh
+   cast tx 0x582f760efa328b0e322df98632d946de38635e27dcec1e63554ccacf0d51d293
+   ```
+
 
 ### Healthcheck + Fault Detector
 
