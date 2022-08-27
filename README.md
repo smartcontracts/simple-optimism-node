@@ -51,7 +51,7 @@ Only the following variables are required:
 
 | Variable Name                           | Description                                                               |
 |-----------------------------------------|---------------------------------------------------------------------------|
-| `NETWORK_NAME`                          | Network to run the node on ("mainnet" or "kovan")                         |
+| `NETWORK_NAME`                          | Network to run the node on ("mainnet" or "goerli")                         |
 | `HEALTHCHECK__REFERENCE_RPC_PROVIDER`   | Another reference L2 node to check blocks against, just in case           |
 | `FAULT_DETECTOR__L1_RPC_PROVIDER`       | L1 node RPC to check state roots against                                  |
 | `DATA_TRANSPORT_LAYER__L1_RPC_ENDPOINT` | L1 node RPC to download L2 blocks from (can be the same as the one above) |
