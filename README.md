@@ -72,6 +72,19 @@ If you'd like your Docker data to live on a disk other than your primary disk, c
 }
 ```
 
+Make sure to restart docker after you do this or the changes won't apply:
+
+```sh
+sudo systemctl daemon-reload
+sudo systemctl restart docker
+```
+
+Confirm that the changes were properly applied:
+
+```sh
+docker info | grep -i "Docker Root Dir"
+```
+
 ### Operating the Node
 
 #### Start
