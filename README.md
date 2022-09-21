@@ -166,6 +166,23 @@ The Fault Detector service will continuously scan the transaction results publis
 If there's ever a discrepancy between these two values, please complain very loudly!
 In the future, this service will trigger Cannon, the fault proving mechanism that Optimism is building as part of its Bedrock upgrade.
 
+
+#### Monitoring the Optimism Network
+
+To identify whether there is any fault in the Optimism Network, run this command:
+
+```sh
+curl http://localhost:7301/api/status
+```
+
+As long as the network is legitimate, the result should be
+
+```json
+{"ok":true}
+```
+
+If it is not true then there's a fault in the network. **We need to know about it ASAP**.
+
 ### Metrics Dashboard
 
 Grafana is exposed at [http://localhost:3000](http://localhost:3000) and comes with one pre-loaded dashboard ("Simple Node Dashboard").
