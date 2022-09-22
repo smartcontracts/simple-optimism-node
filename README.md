@@ -15,6 +15,13 @@ Let's do it!
 - 500GB+ disk (HDD works for now, SSD is better)
 - 10mb/s+ download
 
+## Approximate Disk Usage
+
+Usage as of 2022-09-21:
+
+- Archive node: ~800gb
+- Full node: ~60gb
+
 ## Installation and Setup Instructions
 
 Instructions here should work for MacOS and most Linux distributions.
