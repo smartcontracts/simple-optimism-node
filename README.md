@@ -156,15 +156,20 @@ Many people are running nodes that sync from other L2 nodes, but I'd like to inc
 As a result, I've set this repository up to sync from L1 by default.
 I may later add the option to sync from L2 but I need to go do other things for a while.
 
-### Healthcheck + Fault Detector
+### Healthcheck
 
 When you run your Optimism node using these instructions, you will also be running two services that monitor the health of your node and the health of the network.
 The Healthcheck service will constantly compare the state computed by your node to the state of some other reference node.
 This is a great way to confirm that your node is syncing correctly.
 
+### Fault Detector
+
 The Fault Detector service will continuously scan the transaction results published by the Optimism Sequencer and cross-check them against the transaction results that your node generated locally.
-If there's ever a discrepancy between these two values, please complain very loudly!
+**If there's ever a discrepancy between these two values, please complain very loudly!**
+This either means that the Sequencer has published an invalid transaction result or there's a bug in your node software and an Optimism developer needs to know about it.
 In the future, this service will trigger Cannon, the fault proving mechanism that Optimism is building as part of its Bedrock upgrade.
+
+The Fault Detector exposes several metrics that can be used to determine whether your node has detected a discrepancy including the `is_currently_diverged` gauge. The Fault Detector also exposes a simple API at `localhost:$PORT__FAULT_DETECTOR_METRICS/api/status` which returns `{ ok: boolean }`. You can use this API to monitor the status of the Fault Detector from another application.
 
 ### Metrics Dashboard
 
