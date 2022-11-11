@@ -10,7 +10,7 @@ x-logging: &logging
 services:
   dtl:
     image: ethereumoptimism/data-transport-layer:${IMAGE_TAG__DTL:-latest}
-    restart: ${RESTART}
+    restart: unless-stopped
     env_file:
       - ./envs/${NETWORK_NAME}/dtl.env
       - .env
@@ -22,7 +22,7 @@ services:
 
   l2geth:
     image: ethereumoptimism/l2geth:${IMAGE_TAG__L2GETH:-latest}
-    restart: ${RESTART}
+    restart: unless-stopped
     stop_grace_period: 3m
     entrypoint:
       - /bin/sh
@@ -41,7 +41,7 @@ services:
 
   healthcheck:
     image: ethereumoptimism/replica-healthcheck:${IMAGE_TAG__HEALTHCHECK:-latest}
-    restart: ${RESTART}
+    restart: unless-stopped
     env_file:
       - ./envs/${NETWORK_NAME}/healthcheck.env
       - .env
@@ -51,7 +51,7 @@ services:
 
   fault-detector:
     image: ethereumoptimism/fault-detector:${IMAGE_TAG__FAULT_DETECTOR:-latest}
-    restart: ${RESTART}
+    restart: unless-stopped
     env_file:
       - ./envs/${NETWORK_NAME}/fault-detector.env
       - .env
@@ -61,7 +61,7 @@ services:
 
   prometheus:
     image: prom/prometheus:${IMAGE_TAG__PROMETHEUS:-latest}
-    restart: ${RESTART}
+    restart: unless-stopped
     env_file:
       - .env
     volumes:
@@ -73,7 +73,7 @@ services:
 
   grafana:
     image: grafana/grafana:${IMAGE_TAG__GRAFANA:-7.5.5}
-    restart: ${RESTART}
+    restart: unless-stopped
     env_file:
       -  ./envs/${NETWORK_NAME}/grafana.env
     ports:
