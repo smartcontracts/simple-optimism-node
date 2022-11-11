@@ -1,15 +1,10 @@
 #!/bin/sh
 set -eou
 
-if [[ -z $DATADIR ]]; then
-    echo "Must pass DATADIR"
-    exit 1
-fi
-if [[ -z $BLOCK_SIGNER_ADDRESS ]]; then
-    echo "Must pass BLOCK_SIGNER_ADDRESS"
-    exit 1
-fi
+# Set rollup backend to match sync source
+export ROLLUP_BACKEND=$SYNC_SOURCE
 
+# Run geth
 exec geth \
   --vmodule=eth/*=5,miner=4,rpc=5,rollup=4,consensus/clique=1 \
   --datadir=$DATADIR \
