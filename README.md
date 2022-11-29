@@ -58,10 +58,12 @@ Only the following variables are required:
 
 | Variable Name                           | Description                                                               |
 |-----------------------------------------|---------------------------------------------------------------------------|
-| `NETWORK_NAME`                          | Network to run the node on ("mainnet" or "goerli")                         |
-| `HEALTHCHECK__REFERENCE_RPC_PROVIDER`   | Another reference L2 node to check blocks against, just in case           |
+| `NETWORK_NAME`                          | Network to run the node on ("mainnet" or "goerli")                            |
+| `NODE_TYPE`                             | Type of node to run ("full" or "archive")                                      |
+| `SYNC_SOURCE`                           | Where to sync data from ("l1" or "l2")                                        |
+| `HEALTHCHECK__REFERENCE_RPC_PROVIDER`   | Another reference L2 node to check blocks against, just in case              |
 | `FAULT_DETECTOR__L1_RPC_PROVIDER`       | L1 node RPC to check state roots against                                  |
-| `DATA_TRANSPORT_LAYER__L1_RPC_ENDPOINT` | L1 node RPC to download L2 blocks from (can be the same as the one above) |
+| `DATA_TRANSPORT_LAYER__RPC_ENDPOINT`    | Node to get chain data from, must be an L1 node if `SYNC_SOURCE` is "l1" and vice versa for L2 |
 
 You can get L1/L2 RPC endpoints from [these node providers](https://community.optimism.io/docs/useful-tools/providers/).
 

@@ -11,11 +11,16 @@ services:
   dtl:
     image: ethereumoptimism/data-transport-layer:${IMAGE_TAG__DTL:-latest}
     restart: unless-stopped
+    entrypoint:
+      - /bin/sh
+      - -c
+      - "/scripts/dtl-start.sh"
     env_file:
       - ./envs/${NETWORK_NAME}/dtl.env
       - .env
     volumes:
       - dtl:/db
+      - ./scripts/:/scripts/
     ports:
       - ${PORT__DTL:-7878}:7878
     <<: *logging
