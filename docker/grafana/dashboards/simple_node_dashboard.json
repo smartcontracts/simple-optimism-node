@@ -22,13 +22,17 @@
     ]
   },
   "editable": true,
-  "gnetId": null,
+  "fiscalYearStartMonth": 0,
   "graphTooltip": 0,
   "links": [],
+  "liveNow": false,
   "panels": [
     {
       "collapsed": false,
-      "datasource": null,
+      "datasource": {
+        "type": "prometheus",
+        "uid": "6R74VAnVz"
+      },
       "gridPos": {
         "h": 1,
         "w": 24,
@@ -37,17 +41,31 @@
       },
       "id": 14,
       "panels": [],
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "6R74VAnVz"
+          },
+          "refId": "A"
+        }
+      ],
       "title": "System Overview",
       "type": "row"
     },
     {
-      "datasource": null,
+      "datasource": {
+        "type": "prometheus",
+        "uid": "6R74VAnVz"
+      },
       "fieldConfig": {
         "defaults": {
           "color": {
             "mode": "palette-classic"
           },
           "custom": {
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
             "axisLabel": "",
             "axisPlacement": "auto",
             "barAlignment": 0,
@@ -67,7 +85,14 @@
               "type": "linear"
             },
             "showPoints": "auto",
-            "spanNulls": false
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
           },
           "mappings": [],
           "thresholds": {
@@ -97,14 +122,12 @@
         "legend": {
           "calcs": [],
           "displayMode": "list",
-          "placement": "bottom"
+          "placement": "bottom",
+          "showLegend": true
         },
         "tooltip": {
           "mode": "single",
           "sort": "none"
-        },
-        "tooltipOptions": {
-          "mode": "single"
         }
       },
       "targets": [
@@ -136,7 +159,10 @@
       "type": "timeseries"
     },
     {
-      "datasource": "InfluxDB",
+      "datasource": {
+        "type": "influxdb",
+        "uid": "4knV40nVz"
+      },
       "description": "",
       "fieldConfig": {
         "defaults": {
@@ -144,6 +170,8 @@
             "mode": "palette-classic"
           },
           "custom": {
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
             "axisLabel": "",
             "axisPlacement": "auto",
             "barAlignment": 0,
@@ -153,7 +181,8 @@
             "hideFrom": {
               "graph": false,
               "legend": false,
-              "tooltip": false
+              "tooltip": false,
+              "viz": false
             },
             "lineInterpolation": "linear",
             "lineWidth": 1,
@@ -162,7 +191,14 @@
               "type": "linear"
             },
             "showPoints": "always",
-            "spanNulls": true
+            "spanNulls": true,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
           },
           "mappings": [],
           "thresholds": {
@@ -194,20 +230,22 @@
         "legend": {
           "calcs": [],
           "displayMode": "list",
-          "placement": "bottom"
+          "placement": "bottom",
+          "showLegend": true
         },
         "tooltip": {
           "mode": "single",
           "sort": "none"
-        },
-        "tooltipOptions": {
-          "mode": "single"
         }
       },
       "pluginVersion": "7.5.5",
       "targets": [
         {
           "alias": "Head",
+          "datasource": {
+            "type": "influxdb",
+            "uid": "4knV40nVz"
+          },
           "groupBy": [
             {
               "params": [
@@ -249,7 +287,10 @@
       "type": "timeseries"
     },
     {
-      "datasource": null,
+      "datasource": {
+        "type": "prometheus",
+        "uid": "6R74VAnVz"
+      },
       "fieldConfig": {
         "defaults": {
           "color": {
@@ -257,20 +298,15 @@
           },
           "mappings": [
             {
-              "from": "",
-              "id": 1,
-              "text": "OK",
-              "to": "",
-              "type": 1,
-              "value": "0"
-            },
-            {
-              "from": "",
-              "id": 2,
-              "text": "NOT OK",
-              "to": "",
-              "type": 1,
-              "value": "1"
+              "options": {
+                "0": {
+                  "text": "OK"
+                },
+                "1": {
+                  "text": "NOT OK"
+                }
+              },
+              "type": "value"
             }
           ],
           "thresholds": {
@@ -313,21 +349,8 @@
         "showThresholdMarkers": true,
         "text": {}
       },
-      "pluginVersion": "7.5.5",
+      "pluginVersion": "9.3.0",
       "targets": [
-        {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "T7Dj-Zr7z"
-          },
-          "editorMode": "code",
-          "exemplar": true,
-          "expr": "fault_detector_in_unexpected_error_state{}",
-          "interval": "",
-          "legendFormat": "Unexpected Errors",
-          "range": true,
-          "refId": "A"
-        },
         {
           "datasource": {
             "type": "prometheus",
@@ -343,6 +366,10 @@
           "refId": "B"
         },
         {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "T7Dj-Zr7z"
+          },
           "exemplar": true,
           "expr": "healthcheck_is_currently_diverged",
           "hide": false,
@@ -355,7 +382,10 @@
       "type": "gauge"
     },
     {
-      "datasource": null,
+      "datasource": {
+        "type": "prometheus",
+        "uid": "6R74VAnVz"
+      },
       "description": "",
       "fieldConfig": {
         "defaults": {
@@ -365,12 +395,14 @@
           "displayName": "Blocks to sync",
           "mappings": [
             {
-              "from": "0",
-              "id": 1,
-              "text": "SYNCED",
-              "to": "1000",
-              "type": 2,
-              "value": "1"
+              "options": {
+                "from": 0,
+                "result": {
+                  "text": "SYNCED"
+                },
+                "to": 1000
+              },
+              "type": "range"
             }
           ],
           "thresholds": {
@@ -412,9 +444,13 @@
         "text": {},
         "textMode": "auto"
       },
-      "pluginVersion": "7.5.5",
+      "pluginVersion": "9.3.0",
       "targets": [
         {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "6R74VAnVz"
+          },
           "exemplar": true,
           "expr": "healthcheck_reference_height - healthcheck_target_height",
           "hide": false,
@@ -424,20 +460,23 @@
           "refId": "A"
         }
       ],
-      "timeFrom": null,
-      "timeShift": null,
       "title": "Chain Sync Status",
       "transformations": [],
       "type": "stat"
     },
     {
-      "datasource": null,
+      "datasource": {
+        "type": "prometheus",
+        "uid": "6R74VAnVz"
+      },
       "fieldConfig": {
         "defaults": {
           "color": {
             "mode": "palette-classic"
           },
           "custom": {
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
             "axisLabel": "",
             "axisPlacement": "auto",
             "barAlignment": 0,
@@ -457,7 +496,14 @@
               "type": "linear"
             },
             "showPoints": "auto",
-            "spanNulls": false
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
           },
           "mappings": [],
           "thresholds": {
@@ -487,14 +533,12 @@
         "legend": {
           "calcs": [],
           "displayMode": "list",
-          "placement": "bottom"
+          "placement": "bottom",
+          "showLegend": true
         },
         "tooltip": {
           "mode": "single",
           "sort": "none"
-        },
-        "tooltipOptions": {
-          "mode": "single"
         }
       },
       "targets": [
@@ -515,7 +559,10 @@
     },
     {
       "collapsed": false,
-      "datasource": null,
+      "datasource": {
+        "type": "prometheus",
+        "uid": "6R74VAnVz"
+      },
       "gridPos": {
         "h": 1,
         "w": 24,
@@ -524,17 +571,31 @@
       },
       "id": 16,
       "panels": [],
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "6R74VAnVz"
+          },
+          "refId": "A"
+        }
+      ],
       "title": "Geth Performance",
       "type": "row"
     },
     {
-      "datasource": "InfluxDB",
+      "datasource": {
+        "type": "influxdb",
+        "uid": "4knV40nVz"
+      },
       "fieldConfig": {
         "defaults": {
           "color": {
             "mode": "palette-classic"
           },
           "custom": {
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
             "axisLabel": "",
             "axisPlacement": "auto",
             "barAlignment": 0,
@@ -544,7 +605,8 @@
             "hideFrom": {
               "graph": false,
               "legend": false,
-              "tooltip": false
+              "tooltip": false,
+              "viz": false
             },
             "lineInterpolation": "linear",
             "lineWidth": 1,
@@ -553,7 +615,14 @@
               "type": "linear"
             },
             "showPoints": "never",
-            "spanNulls": true
+            "spanNulls": true,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
           },
           "mappings": [],
           "thresholds": {
@@ -585,16 +654,22 @@
         "legend": {
           "calcs": [],
           "displayMode": "list",
-          "placement": "bottom"
+          "placement": "bottom",
+          "showLegend": true
         },
-        "tooltipOptions": {
-          "mode": "single"
+        "tooltip": {
+          "mode": "single",
+          "sort": "none"
         }
       },
       "pluginVersion": "7.5.5",
       "targets": [
         {
           "alias": "system",
+          "datasource": {
+            "type": "influxdb",
+            "uid": "4knV40nVz"
+          },
           "groupBy": [
             {
               "params": [
@@ -632,6 +707,10 @@
         },
         {
           "alias": "geth",
+          "datasource": {
+            "type": "influxdb",
+            "uid": "4knV40nVz"
+          },
           "groupBy": [
             {
               "params": [
@@ -670,6 +749,10 @@
         },
         {
           "alias": "IO",
+          "datasource": {
+            "type": "influxdb",
+            "uid": "4knV40nVz"
+          },
           "groupBy": [
             {
               "params": [
@@ -707,19 +790,22 @@
           "tags": []
         }
       ],
-      "timeFrom": null,
-      "timeShift": null,
       "title": "CPU",
       "type": "timeseries"
     },
     {
-      "datasource": "InfluxDB",
+      "datasource": {
+        "type": "influxdb",
+        "uid": "4knV40nVz"
+      },
       "fieldConfig": {
         "defaults": {
           "color": {
             "mode": "palette-classic"
           },
           "custom": {
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
             "axisLabel": "",
             "axisPlacement": "auto",
             "barAlignment": 0,
@@ -729,7 +815,8 @@
             "hideFrom": {
               "graph": false,
               "legend": false,
-              "tooltip": false
+              "tooltip": false,
+              "viz": false
             },
             "lineInterpolation": "linear",
             "lineWidth": 1,
@@ -738,7 +825,14 @@
               "type": "linear"
             },
             "showPoints": "never",
-            "spanNulls": true
+            "spanNulls": true,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
           },
           "mappings": [],
           "thresholds": {
@@ -770,16 +864,22 @@
         "legend": {
           "calcs": [],
           "displayMode": "list",
-          "placement": "bottom"
+          "placement": "bottom",
+          "showLegend": true
         },
-        "tooltipOptions": {
-          "mode": "single"
+        "tooltip": {
+          "mode": "single",
+          "sort": "none"
         }
       },
       "pluginVersion": "7.5.5",
       "targets": [
         {
           "alias": "used",
+          "datasource": {
+            "type": "influxdb",
+            "uid": "4knV40nVz"
+          },
           "groupBy": [
             {
               "params": [
@@ -817,6 +917,10 @@
         },
         {
           "alias": "held",
+          "datasource": {
+            "type": "influxdb",
+            "uid": "4knV40nVz"
+          },
           "groupBy": [
             {
               "params": [
@@ -854,19 +958,22 @@
           "tags": []
         }
       ],
-      "timeFrom": null,
-      "timeShift": null,
       "title": "Memory",
       "type": "timeseries"
     },
     {
-      "datasource": "InfluxDB",
+      "datasource": {
+        "type": "influxdb",
+        "uid": "4knV40nVz"
+      },
       "fieldConfig": {
         "defaults": {
           "color": {
             "mode": "palette-classic"
           },
           "custom": {
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
             "axisLabel": "",
             "axisPlacement": "auto",
             "barAlignment": 0,
@@ -876,7 +983,8 @@
             "hideFrom": {
               "graph": false,
               "legend": false,
-              "tooltip": false
+              "tooltip": false,
+              "viz": false
             },
             "lineInterpolation": "linear",
             "lineWidth": 1,
@@ -885,7 +993,14 @@
               "type": "linear"
             },
             "showPoints": "never",
-            "spanNulls": true
+            "spanNulls": true,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
           },
           "mappings": [],
           "thresholds": {
@@ -917,16 +1032,22 @@
         "legend": {
           "calcs": [],
           "displayMode": "list",
-          "placement": "bottom"
+          "placement": "bottom",
+          "showLegend": true
         },
-        "tooltipOptions": {
-          "mode": "single"
+        "tooltip": {
+          "mode": "single",
+          "sort": "none"
         }
       },
       "pluginVersion": "7.5.5",
       "targets": [
         {
           "alias": "read",
+          "datasource": {
+            "type": "influxdb",
+            "uid": "4knV40nVz"
+          },
           "groupBy": [
             {
               "params": [
@@ -964,6 +1085,10 @@
         },
         {
           "alias": "write",
+          "datasource": {
+            "type": "influxdb",
+            "uid": "4knV40nVz"
+          },
           "groupBy": [
             {
               "params": [
@@ -1003,14 +1128,12 @@
           "tags": []
         }
       ],
-      "timeFrom": null,
-      "timeShift": null,
       "title": "Disk",
       "type": "timeseries"
     }
   ],
   "refresh": "1m",
-  "schemaVersion": 27,
+  "schemaVersion": 37,
   "style": "dark",
   "tags": [],
   "templating": {
@@ -1024,5 +1147,6 @@
   "timezone": "",
   "title": "Simple Node Dashboard",
   "uid": "fNH7uZ97k",
-  "version": 12
+  "version": 1,
+  "weekStart": ""
 }
