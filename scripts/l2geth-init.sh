@@ -26,11 +26,4 @@ else
     echo "$GETH_CHAINDATA_DIR exists, checking for hardfork."
     echo "Chain config:"
     geth dump-chain-cfg --datadir="$GETH_DATA_DIR"
-    if geth dump-chain-cfg --datadir="$GETH_DATA_DIR" | grep -q "\"berlinBlock\": $L2GETH_BERLIN_ACTIVATION_HEIGHT"; then
-        echo "Hardfork already activated."
-    else
-        echo "Hardfork not activated, running init."
-        geth init --datadir="$GETH_DATA_DIR" "$L2GETH_GENESIS_URL" "$L2GETH_GENESIS_HASH"
-        echo "geth hardfork activation complete"
-    fi
 fi
