@@ -32,7 +32,7 @@ services:
     entrypoint:
       - /bin/sh
       - -c
-      - "/scripts/check-for-chaindata-berlin.sh && /scripts/l2geth-start.sh"
+      - "/scripts/l2geth-init.sh && /scripts/l2geth-start.sh"
     env_file:
       - ./envs/${NETWORK_NAME}/l2geth.env
       - .env
