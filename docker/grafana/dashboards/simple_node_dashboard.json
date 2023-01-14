@@ -134,7 +134,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "T7Dj-Zr7z"
+            "uid": "6R74VAnVz"
           },
           "editorMode": "code",
           "expr": "fault_detector_highest_checked_batch_index{}",
@@ -145,7 +145,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "T7Dj-Zr7z"
+            "uid": "6R74VAnVz"
           },
           "editorMode": "code",
           "expr": "fault_detector_highest_known_batch_index{}",
@@ -354,7 +354,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "T7Dj-Zr7z"
+            "uid": "6R74VAnVz"
           },
           "editorMode": "code",
           "exemplar": true,
@@ -368,7 +368,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "T7Dj-Zr7z"
+            "uid": "6R74VAnVz"
           },
           "exemplar": true,
           "expr": "healthcheck_is_currently_diverged",
@@ -545,7 +545,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "T7Dj-Zr7z"
+            "uid": "6R74VAnVz"
           },
           "editorMode": "code",
           "expr": "data_transport_layer_highest_synced_l1_block{}",
