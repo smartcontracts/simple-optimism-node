@@ -36,12 +36,12 @@ services:
     env_file:
       - ./envs/${NETWORK_NAME}/l2geth.env
       - .env
-    volumes:
-      - geth:/geth
-      - ./scripts/:/scripts/
     ports:
       - ${PORT__L2GETH_HTTP:-9991}:8545
       - ${PORT__L2GETH_WS:-9992}:8546
+    volumes:
+      - geth:/geth
+      - ./scripts/:/scripts/
     <<: *logging
 
   healthcheck:
@@ -69,11 +69,11 @@ services:
     restart: unless-stopped
     env_file:
       - .env
+    ports:
+      - ${PORT__PROMETHEUS:-9090}:9090
     volumes:
       - ./docker/prometheus:/etc/prometheus
       - prometheus_data:/prometheus
-    ports:
-      - ${PORT__PROMETHEUS:-9090}:9090
     <<: *logging
 
   grafana:
@@ -90,6 +90,7 @@ services:
 
   influxdb:
     image: quay.io/influxdb/influxdb:${IMAGE_TAG__INFLUXDB:-1.6}
+    restart: unless-stopped
     env_file:
       - ./envs/${NETWORK_NAME}/influxdb.env
     ports:

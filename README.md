@@ -193,3 +193,83 @@ Use the following login details to access the dashboard:
 Navigate over to `Dashboards > Manage > Simple Node Dashboard` to see the dashboard, see the following gif if you need help:
 
 ![metrics dashboard gif](https://user-images.githubusercontent.com/14298799/171476634-0cb84efd-adbf-4732-9c1d-d737915e1fa7.gif)
+
+## Bedrock
+
+Note: this is a temporary section while I work on full Bedrock support.
+
+The Optimism Goerli testnet was upgraded to Bedrock on Thursday January 12th 2023.
+I am in the process of working on full Bedrock support within `simple-optimism-node`.
+You can run a Goerli Bedrock node with some limitations as described in the [Current Limitations](#current-limitations) section below.
+Please read those limitations carefully, they'll be updated and removed as I work on additional features.
+
+Please also report any bugs that you find, it'll help speed up the process of getting to production Goerli Bedrock nodes.
+Thank you!
+
+### Current Limitations
+
+- Legacy database migration is not yet supported, all Goerli Bedrock nodes will be started from a pre-migrated database downloaded via torrent.
+- Nodes seed the pre-migrated database torrent by default. Upload limits cannot yet be configured.
+- No functional metrics dashboard.
+- No legacy node request forwarding.
+- No fault detector or healthcheck service.
+
+### Configure the Node
+
+Make a copy of `.env.example` named `.env`.
+
+```sh
+cp .env.example .env
+```
+
+Open `.env` with your editor of choice and fill out the environment variables listed inside that file.
+Only the following variables are required for Bedrock:
+
+| Variable Name                           | Description                                                               |
+|-----------------------------------------|---------------------------------------------------------------------------|
+| `NETWORK_NAME`                          | Network to run the node on ("mainnet" or "goerli")                            |
+| `NODE_TYPE`                             | Type of node to run ("full" or "archive")                                      |
+| `BEDROCK_SOURCE`                           | Where to get the Bedrock database from (only "download" supported for now)                                        |
+| `OP_NODE__RPC_ENDPOINT`                 | L1 node that the op-node will get chain data from
+ |
+| `OP_NODE__RPC_TYPE`                     | Type of RPC that you're connected to, available options are: "alchemy", "quicknode", "infura", "parity", "nethermind", "debug_geth", "erigon", and "basic" |
+
+You can also modify any of the optional environment variables if you'd wish, but the defaults should work perfectly well for most people.
+
+#### The OP_NODE__RPC_TYPE variable
+
+The `OP_NODE__RPC_TYPE` environment variable tells the `op-node` service what type of RPC it's connected to.
+This allows `op-node` to make more efficient requests with custom RPCs that may only be available on some RPCs.
+It is HIGHLY recommended to set this variable to the appropriate provider or you may experience rate limits and/or excessive requests to your RPC.
+
+### Operating the Node
+
+#### Start
+
+```sh
+docker compose -f docker-compose.bedrock.yml up -d
+```
+
+#### Stop
+
+```sh
+docker compose -f docker-compose.bedrock.yml down
+```
+
+#### Wipe
+
+```sh
+docker compose -f docker-compose.bedrock.yml down -v
+```
+
+### Torrents
+
+Note: the built-in torrent client is a Bedrock-only feature.
+
+`simple-optimism-node` uses torrents to download certain configuration files and databases as a decentralized alternative to a central server hosting everything.
+By default, the torrent port is 6881 but can be configured with the `PORT__TORRENT` environment variable.
+You will need to expose the torrent port to the internet to be able to download things:
+
+```sh
+uwf allow 6881
+```

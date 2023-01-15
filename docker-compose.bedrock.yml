@@ -1,0 +1,102 @@
+---
+version: "3.4"
+x-logging: &logging
+  logging:
+    driver: json-file
+    options:
+      max-size: 10m
+      max-file: "3"
+
+services:
+  op-geth:
+    image: ethereumoptimism/op-geth:v1.10.26-166f27c
+    restart: unless-stopped
+    stop_grace_period: 3m
+    entrypoint:
+      - /bin/sh
+      - -c
+      - "/scripts/op-geth-init.sh && /scripts/op-geth-start.sh"
+    env_file:
+      - ./envs/${NETWORK_NAME}/op-geth.env
+      - .env
+    ports:
+      - ${PORT__L2GETH_HTTP:-9991}:8545
+      - ${PORT__L2GETH_WS:-9992}:8546
+    volumes:
+      - ./docker/torrent/watch/:/torrents
+      - ./scripts/:/scripts
+      - jwt:/jwt
+      - op_geth:/geth
+      - torrent_watch:/watch
+      - torrent_downloads:/downloads
+
+  op-node:
+    image: us-docker.pkg.dev/oplabs-tools-artifacts/images/op-node:v0.10.9
+    restart: unless-stopped
+    stop_grace_period: 3m
+    entrypoint:
+      - /bin/sh
+      - -c
+      - "/scripts/op-node-init.sh && /scripts/op-node-start.sh"
+    env_file:
+      - .env
+    volumes:
+      - ./scripts/:/scripts
+      - jwt:/jwt
+
+  prometheus_bedrock:
+    image: prom/prometheus:${IMAGE_TAG__PROMETHEUS:-latest}
+    restart: unless-stopped
+    env_file:
+      - .env
+    ports:
+      - ${PORT__PROMETHEUS:-9090}:9090
+    volumes:
+      - ./docker/prometheus/prometheus.bedrock.yml:/etc/prometheus/prometheus.yml
+      - prometheus_data_bedrock:/prometheus
+    <<: *logging
+
+  grafana_bedrock:
+    image: grafana/grafana:${IMAGE_TAG__GRAFANA:-9.3.0}
+    restart: unless-stopped
+    env_file:
+      -  ./envs/${NETWORK_NAME}/grafana.env
+    ports:
+      - ${PORT__GRAFANA:-3000}:3000
+    volumes:
+      - ./docker/grafana/provisioning/:/etc/grafana/provisioning/:ro
+      - ./docker/grafana/dashboards/simple_node_dashboard.bedrock.json:/var/lib/grafana/dashboards/simple_node_dashboard.bedrock.json
+      - grafana_data_bedrock:/var/lib/grafana
+
+  influxdb_bedrock:
+    image: quay.io/influxdb/influxdb:${IMAGE_TAG__INFLUXDB:-1.6}
+    restart: unless-stopped
+    env_file:
+      - ./envs/${NETWORK_NAME}/influxdb.env
+    ports:
+      - ${PORT__INFLUXDB:-8086}:8086
+    volumes:
+      - influxdb_data_bedrock:/var/lib/influxdb
+
+  torrent:
+    image: lscr.io/linuxserver/qbittorrent:${IMAGE_TAG__TORRENT:-latest}
+    restart: unless-stopped
+    ports:
+      - ${PORT__TORRENT_UI:-8080}:8080
+      - ${PORT__TORRENT:-6881}:6881 
+      - ${PORT__TORRENT:-6881}:6881/udp
+    volumes:
+      - ./docker/torrent/config/watched_folders.json:/config/qBittorrent/watched_folders.json
+      - torrent_config:/config
+      - torrent_watch:/watch
+      - torrent_downloads:/downloads
+
+volumes:
+  jwt:
+  op_geth:
+  prometheus_data_bedrock:
+  grafana_data_bedrock:
+  influxdb_data_bedrock:
+  torrent_watch:
+  torrent_config:
+  torrent_downloads:
