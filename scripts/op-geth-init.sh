@@ -29,7 +29,25 @@ function downloaded() {
   fi
 }
 
+function torrent() {
+  echo "Downloading file..."
+  cp $1 /watch/
+
+  while true
+  do
+    if downloaded "$2" "$3"; then
+      echo "Downloaded file"
+      break
+    else
+      echo "Still downloading file..."
+    fi
+
+    sleep 5s
+  done
+}
+
 GETH_DATA_DIR=/geth
+TORRENTS_DIR=/torrents/$NETWORK_NAME
 
 if ! command -v rsync &> /dev/null; then
   echo "Installing rsync..."
@@ -44,24 +62,8 @@ if [ "$BEDROCK_SOURCE" == "download" ]; then
   if [ -e "$GETH_DATA_DIR" ] && [ -n "$(ls -A $GETH_DATA_DIR)" ]; then
     echo "Already initialized geth"
   else
-    if downloaded "$BEDROCK_TAR_PATH" "$BEDROCK_TAR_CHECKSUM"; then
-      echo "Already downloaded bedrock.tar"
-    else
-      echo "Downloading bedrock.tar..."
-      cp /torrents/$NETWORK_NAME/bedrock.tar.torrent /watch/
-
-      while true
-      do
-        if downloaded "$BEDROCK_TAR_PATH" "$BEDROCK_TAR_CHECKSUM"; then
-          echo "Downloaded bedrock.tar"
-          break
-        else
-          echo "Still downloading bedrock.tar..."
-        fi
-
-        sleep 5s
-      done
-    fi
+    echo "Downloading bedrock.tar..."
+    torrent $TORRENTS_DIR/bedrock.tar.torrent $BEDROCK_TAR_PATH $BEDROCK_TAR_CHECKSUM
 
     echo "Extracting bedrock.tar..."
     rm -rf $BEDROCK_TMP_PATH
@@ -71,6 +73,22 @@ if [ "$BEDROCK_SOURCE" == "download" ]; then
     echo "Initializing geth..."
     rsync -avP --ignore-existing --progress --backup --backup-dir="$BEDROCK_BAK_PATH" "$BEDROCK_TMP_PATH/geth" "$GETH_DATA_DIR"
   fi
+fi
+
+if [ "$BEDROCK_SOURCE" == "migration" ]; then
+  WITNESS_TAR_PATH=/downloads/witness.tar
+  WITNESS_OUT_PATH=/data/witness
+
+  echo "Downloading witness.tar..."
+  torrent $TORRENTS_DIR/witness.tar.torrent $WITNESS_TAR_PATH $WITNESS_TAR_CHECKSUM
+
+  echo "Extracting witness.tar..."
+  rm -rf $WITNESS_OUT_PATH
+  mkdir -p $WITNESS_OUT_PATH
+  tar -xvf $WITNESS_TAR_PATH -C $WITNESS_OUT_PATH
+
+  # run the migration
+  # copy the database into geth
 fi
 
 BEDROCK_JWT_PATH=/jwt/jwt.txt
