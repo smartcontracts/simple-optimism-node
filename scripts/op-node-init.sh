@@ -1,12 +1,9 @@
 #!/bin/sh
 set -exu
 
-echo running "${0}"
+source ./utils.sh
 
-if ! command -v openssl &> /dev/null; then
-  echo "Installing openssl..."
-  apk add openssl
-fi
+install "openssl"
 
 BEDROCK_JWT_PATH=/jwt/jwt.txt
 if [ -e "$BEDROCK_JWT_PATH" ]; then

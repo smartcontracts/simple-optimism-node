@@ -20,13 +20,14 @@ services:
       - ./envs/${NETWORK_NAME}/op-geth.env
       - .env
     ports:
-      - ${PORT__L2GETH_HTTP:-9991}:8545
-      - ${PORT__L2GETH_WS:-9992}:8546
+      - ${PORT__OP_GETH_HTTP:-9993}:8545
+      - ${PORT__OP_GETH_WS:-9994}:8546
     volumes:
       - ./docker/torrent/watch/:/torrents
       - ./scripts/:/scripts
       - jwt:/jwt
       - op_geth:/geth
+      - geth:/legacy-geth
       - torrent_watch:/watch
       - torrent_downloads:/downloads
 
@@ -93,6 +94,7 @@ services:
 
 volumes:
   jwt:
+  geth:
   op_geth:
   prometheus_data_bedrock:
   grafana_data_bedrock:

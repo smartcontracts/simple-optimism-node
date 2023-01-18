@@ -1,27 +1,13 @@
 #!/bin/sh
 set -eou
 
-# Install curl if not already installed
-if ! command -v curl &> /dev/null; then
-  echo "Installing curl..."
-  apk add curl
-fi
+source ./utils.sh
 
-# Wait for geth to be ready
+install "curl"
+
 echo "Waiting for op-geth..."
-curl \
-  -X POST \
-  --silent \
-  --output /dev/null \
-  --retry-connrefused \
-  --retry 1000 \
-  --retry-delay 1 \
-  -d '{"jsonrpc":"2.0","id":0,"method":"eth_chainId","params":[]}' \
-  http://op-geth:8545
+chainwait "http://op-geth:8545"
 
-op-node --help
-
-# Run op-node
 exec op-node \
   --l1=$OP_NODE__RPC_ENDPOINT \
   --l2=http://op-geth:8551 \

@@ -1,7 +1,6 @@
 #!/bin/sh
 set -eou
 
-# Run op-geth
 exec geth \
   --datadir="$BEDROCK_DATADIR" \
   --http \
