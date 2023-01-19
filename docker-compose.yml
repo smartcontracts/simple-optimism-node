@@ -64,6 +64,59 @@ services:
       - ${PORT__FAULT_DETECTOR_METRICS:-7301}:7300
     <<: *logging
 
+  op-geth:
+    image: ethereumoptimism/op-geth:v1.10.26-166f27c
+    restart: unless-stopped
+    stop_grace_period: 3m
+    entrypoint:
+      - /bin/sh
+      - -c
+      - "/scripts/op-geth-start.sh"
+    env_file:
+      - ./envs/${NETWORK_NAME}/op-geth.env
+      - .env
+    ports:
+      - ${PORT__OP_GETH_HTTP:-9993}:8545
+      - ${PORT__OP_GETH_WS:-9994}:8546
+    volumes:
+      - ./scripts/:/scripts
+      - shared:/shared
+      - op_geth:/geth
+    <<: *logging
+
+  op-node:
+    image: us-docker.pkg.dev/oplabs-tools-artifacts/images/op-node:v0.10.9
+    restart: unless-stopped
+    stop_grace_period: 3m
+    entrypoint:
+      - /bin/sh
+      - -c
+      - "/scripts/op-node-start.sh"
+    env_file:
+      - .env
+    volumes:
+      - ./scripts/:/scripts
+      - shared:/shared
+    <<: *logging
+
+  bedrock-init:
+    image: ubuntu:jammy
+    entrypoint:
+      - /bin/sh
+      - -c
+      - "/scripts/init/bedrock-init.sh"
+    env_file:
+      - .env
+    volumes:
+      - ./docker/torrent/watch/:/torrents
+      - ./scripts/:/scripts
+      - shared:/shared
+      - op_geth:/geth
+      - geth:/legacy-geth
+      - torrent_watch:/watch
+      - torrent_downloads:/downloads
+    <<: *logging
+
   prometheus:
     image: prom/prometheus:${IMAGE_TAG__PROMETHEUS:-latest}
     restart: unless-stopped
@@ -98,9 +151,27 @@ services:
     volumes:
       - influxdb_data:/var/lib/influxdb
 
+  torrent:
+    image: lscr.io/linuxserver/qbittorrent:${IMAGE_TAG__TORRENT:-latest}
+    restart: unless-stopped
+    ports:
+      - ${PORT__TORRENT_UI:-8080}:8080
+      - ${PORT__TORRENT:-6881}:6881 
+      - ${PORT__TORRENT:-6881}:6881/udp
+    volumes:
+      - ./docker/torrent/config/watched_folders.json:/config/qBittorrent/watched_folders.json
+      - torrent_config:/config
+      - torrent_watch:/watch
+      - torrent_downloads:/downloads
+
 volumes:
   dtl:
   geth:
   prometheus_data:
   grafana_data:
   influxdb_data:
+  shared:
+  op_geth:
+  torrent_watch:
+  torrent_config:
+  torrent_downloads:

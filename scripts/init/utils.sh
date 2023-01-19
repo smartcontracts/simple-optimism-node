@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 function checksum() {
   if [ -d "$1" ]; then
@@ -49,12 +49,25 @@ function extract() {
 
 function install() {
   if ! command -v $1 &> /dev/null; then
-    echo "Installing $1..."
-    apk add $1
+    if [ "$1" == "cast" ]; then
+      install "curl"
+      install "git"
+      curl -L https://foundry.paradigm.xyz | bash
+      /root/.foundry/bin/foundryup
+      cp /root/.foundry/bin/cast /usr/local/bin/cast
+    elif [ "$1" == "go" ]; then
+      install "curl"
+      curl -OL https://golang.org/dl/go1.19.5.linux-amd64.tar.gz
+      tar -C /usr/local -xzf go1.19.5.linux-amd64.tar.gz
+      cp /usr/local/go/bin/go /usr/local/bin/go
+    else
+      apt-get update && apt-get install $1 --assume-yes
+    fi
   fi
 }
 
 function chainwait() {
+  install "curl"
   curl \
     -X POST \
     --silent \
@@ -66,14 +79,20 @@ function chainwait() {
     $1
 }
 
-function blocknum() {
-  RESULT=$(curl -X POST -s -d '{"jsonrpc":"2.0","id":0,"method":"eth_blockNumber","params":[]}' $1 | jq -r '.result')
-  echo $(($RESULT))
-}
-
 function copy() {
+  install "rsync"
   BACKUP_DIR="/copy-backups/$1"
   mkdir -p $2
   mkdir -p $BACKUP_DIR
   rsync -avP --ignore-existing --progress --backup --backup-dir="$BACKUP_DIR" "$1" "$2"
+}
+
+function blocknum() {
+  install "cast"
+  echo "$(cast block-number --rpc-url $1)"
+}
+
+function config() {
+  install "cast"
+  echo "$(cast call 0xcbebc5ba53ff12165239cbb3d310fda2236d6ad2 'config(address,string)(string)' 0x68108902De3A5031197a6eB3b74b3b033e8E8e4d $1 --rpc-url https://goerli.infura.io/v3/84842078b09946638c03157f83405213)"
 }

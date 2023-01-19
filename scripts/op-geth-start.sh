@@ -1,6 +1,13 @@
 #!/bin/sh
 set -eou
 
+# Wait for the Bedrock flag for this network to be set.
+while [ ! -f /shared/initialized.txt ]; do
+  echo "Waiting for Bedrock node to initialize..."
+  sleep 60
+done
+
+# Start op-geth.
 exec geth \
   --datadir="$BEDROCK_DATADIR" \
   --http \
@@ -25,7 +32,7 @@ exec geth \
   --networkid=420 \
   --authrpc.vhosts="*" \
   --authrpc.addr=0.0.0.0 \
-  --authrpc.jwtsecret=/jwt/jwt.txt \
+  --authrpc.jwtsecret=/shared/jwt.txt \
   --rollup.sequencerhttp="$BEDROCK_SEQUENCER_HTTP" \
   --rollup.disabletxpoolgossip=true \
   $@
