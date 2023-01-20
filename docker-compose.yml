@@ -11,10 +11,7 @@ services:
   dtl:
     image: ethereumoptimism/data-transport-layer:${IMAGE_TAG__DTL:-latest}
     restart: unless-stopped
-    entrypoint:
-      - /bin/sh
-      - -c
-      - "/scripts/dtl-start.sh"
+    entrypoint: /scripts/dtl-start.sh
     env_file:
       - ./envs/${NETWORK_NAME}/dtl.env
       - .env
@@ -29,7 +26,7 @@ services:
     image: ethereumoptimism/l2geth:${IMAGE_TAG__L2GETH:-latest}
     restart: unless-stopped
     stop_grace_period: 3m
-    entrypoint:
+    entrypoint: 
       - /bin/sh
       - -c
       - "/scripts/l2geth-init.sh && /scripts/l2geth-start.sh"
@@ -68,10 +65,7 @@ services:
     image: ethereumoptimism/op-geth:v1.10.26-166f27c
     restart: unless-stopped
     stop_grace_period: 3m
-    entrypoint:
-      - /bin/sh
-      - -c
-      - "/scripts/op-geth-start.sh"
+    entrypoint: /scripts/op-geth-start.sh
     env_file:
       - ./envs/${NETWORK_NAME}/op-geth.env
       - .env
@@ -88,10 +82,7 @@ services:
     image: us-docker.pkg.dev/oplabs-tools-artifacts/images/op-node:v0.10.9
     restart: unless-stopped
     stop_grace_period: 3m
-    entrypoint:
-      - /bin/sh
-      - -c
-      - "/scripts/op-node-start.sh"
+    entrypoint: /scripts/op-node-start.sh
     env_file:
       - .env
     volumes:
@@ -100,20 +91,17 @@ services:
     <<: *logging
 
   bedrock-init:
-    image: ubuntu:jammy
-    entrypoint:
-      - /bin/sh
-      - -c
-      - "/scripts/init/bedrock-init.sh"
+    build:
+      context: ./docker/dockerfiles
+      dockerfile: Dockerfile.bedrock-init
+    entrypoint: /scripts/bedrock-init.sh
     env_file:
       - .env
     volumes:
-      - ./docker/torrent/watch/:/torrents
       - ./scripts/:/scripts
       - shared:/shared
       - op_geth:/geth
       - geth:/legacy-geth
-      - torrent_watch:/watch
       - torrent_downloads:/downloads
     <<: *logging
 
@@ -154,14 +142,14 @@ services:
   torrent:
     image: lscr.io/linuxserver/qbittorrent:${IMAGE_TAG__TORRENT:-latest}
     restart: unless-stopped
+    environment:
+      - PASSWORD=${TORRENT_UI_PASSWORD}
     ports:
       - ${PORT__TORRENT_UI:-8080}:8080
       - ${PORT__TORRENT:-6881}:6881 
       - ${PORT__TORRENT:-6881}:6881/udp
     volumes:
-      - ./docker/torrent/config/watched_folders.json:/config/qBittorrent/watched_folders.json
       - torrent_config:/config
-      - torrent_watch:/watch
       - torrent_downloads:/downloads
 
 volumes:
@@ -172,6 +160,5 @@ volumes:
   influxdb_data:
   shared:
   op_geth:
-  torrent_watch:
   torrent_config:
   torrent_downloads:

@@ -35,4 +35,5 @@ exec geth \
   --authrpc.jwtsecret=/shared/jwt.txt \
   --rollup.sequencerhttp="$BEDROCK_SEQUENCER_HTTP" \
   --rollup.disabletxpoolgossip=true \
+  --rollup.historicalrpc=http://l2geth:8545 \
   $@

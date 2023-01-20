@@ -1,25 +1,14 @@
 #!/bin/bash
 set -exu
 
-source ./scripts/init/utils.sh
-
-install "go"
-install "git"
-install "make"
-install "openssl"
-install "cast"
+# Import utilities.
+source ./scripts/utils.sh
 
 # Common variables.
 INITIALIZED_FLAG=/shared/initialized.txt
 BEDROCK_JWT_PATH=/shared/jwt.txt
 GETH_DATA_DIR=/geth
 TORRENTS_DIR=/torrents/$NETWORK_NAME
-
-# Exit early if we've already initialized.
-if [ -e "$INITIALIZED_FLAG" ]; then
-  echo "Bedrock node already initialized"
-  exit 0
-fi
 
 # Wait for the Bedrock flag for this network to be set.
 while true
@@ -34,29 +23,33 @@ do
 done
 
 # Grab Bedrock network configuration values.
-BEDROCK_TERMINAL_HEIGHT=$(config "bedrock/$NETWORK_NAME/terminal-height")
+TERMINAL_HEIGHT=$(config "bedrock/$NETWORK_NAME/terminal-height")
 BEDROCK_TAR_MAGNET=$(config "bedrock/$NETWORK_NAME/bedrock-magnet")
 WITNESS_TAR_MAGNET=$(config "bedrock/$NETWORK_NAME/witness-magnet")
-BEDROCK_TAR_CHECKSUM=$(config "bedrock/$NETWORK_NAME/bedrock-checksum")
-WITNESS_TAR_CHECKSUM=$(config "bedrock/$NETWORK_NAME/witness-checksum")
 
-# Handle download.
+# Exit early if we've already initialized.
+if [ -e "$INITIALIZED_FLAG" ]; then
+  echo "Bedrock node already initialized"
+  exit 0
+fi
+
+# Initialize the Bedrock database.
 if [ "$BEDROCK_SOURCE" == "download" ]; then
   BEDROCK_TAR_PATH=/downloads/bedrock.tar
   BEDROCK_TMP_PATH=/bedrock-tmp
 
   echo "Downloading bedrock.tar..."
-  torrent $TORRENTS_DIR/bedrock.tar.torrent $BEDROCK_TAR_PATH $BEDROCK_TAR_CHECKSUM
+  torrent $BEDROCK_TAR_MAGNET
 
   echo "Extracting bedrock.tar..."
   extract $BEDROCK_TAR_PATH $BEDROCK_TMP_PATH
 
   echo "Initializing geth..."
   copy $BEDROCK_TMP_PATH/geth $GETH_DATA_DIR
-fi
 
-# Handle migration.
-if [ "$BEDROCK_SOURCE" == "migration" ]; then
+  echo "Cleaning up..."
+  rm -rf $BEDROCK_TMP_PATH
+elif [ "$BEDROCK_SOURCE" == "migration" ]; then
   LEGACY_GETH_DATA_DIR=/legacy-geth/geth
   LEGACY_GETH_COPY_DIR=/legacy-geth-copy
   WITNESS_TAR_PATH=/downloads/witness.tar
@@ -68,7 +61,7 @@ if [ "$BEDROCK_SOURCE" == "migration" ]; then
   echo "Waiting for l2geth to be at terminal height..."
   while true
   do
-    if [ $(blocknum "http://l2geth:8545") -eq $TERMINAL_HEIGHT ]; then
+    if [ $(cast block-number --rpc-url "http://l2geth:8545") -eq $TERMINAL_HEIGHT ]; then
       break
     else
       echo "Still waiting for l2geth to be at terminal height..."
@@ -77,7 +70,7 @@ if [ "$BEDROCK_SOURCE" == "migration" ]; then
   done
 
   echo "Downloading witness.tar..."
-  torrent $TORRENTS_DIR/witness.tar.torrent $WITNESS_TAR_PATH $WITNESS_TAR_CHECKSUM
+  torrent $WITNESS_TAR_MAGNET
 
   echo "Extracting witness.tar..."
   extract $WITNESS_TAR_PATH $WITNESS_OUT_PATH
@@ -111,6 +104,9 @@ if [ "$BEDROCK_SOURCE" == "migration" ]; then
 
   echo "Cleaning up..."
   rm -rf $LEGACY_GETH_COPY_DIR
+else
+  echo "Unknown bedrock source $BEDROCK_SOURCE"
+  exit 1
 fi
 
 # Create the JWT.
