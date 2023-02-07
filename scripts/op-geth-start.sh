@@ -32,6 +32,7 @@ exec geth \
   --networkid=420 \
   --authrpc.vhosts="*" \
   --authrpc.addr=0.0.0.0 \
+  --authrpc.port=8551 \
   --authrpc.jwtsecret=/shared/jwt.txt \
   --rollup.sequencerhttp="$BEDROCK_SEQUENCER_HTTP" \
   --rollup.disabletxpoolgossip=true \
