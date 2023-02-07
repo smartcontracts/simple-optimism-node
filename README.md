@@ -5,6 +5,22 @@ I've created this repository to make that process as simple as possible.
 You should be relatively familiar with running commands on your machine.
 Let's do it!
 
+## Bedrock Support
+
+The Optimism Goerli testnet was upgraded to Bedrock on Thursday January 12th 2023.
+I am in the process of working on full Bedrock support within `simple-optimism-node`.
+You can run a Goerli Bedrock node with some limitations as described in the [Bedrock Limitations](#bedrock-limitations) section below.
+Please read those limitations carefully, they'll be updated and removed as I work on additional features.
+
+Please also report any bugs that you find, it'll help speed up the process of getting to production Goerli Bedrock nodes.
+Thank you!
+
+### Bedrock Limitations
+
+- No upload limits for BitTorrent yet.
+- No functional metrics dashboard.
+- No fault detector.
+
 ## Required Software
 
 - [docker](https://docs.docker.com/engine/install/)
@@ -38,6 +54,19 @@ sudo usermod -a -G docker `whoami`
 
 You'll need to log out and log in again for this change to take effect.
 
+### Open the BitTorrent port
+
+BitTorrent is a system used to share files over a p2p network.
+`simple-optimism-node` uses BitTorrent to download certain important files in a decentralized manner.
+Although BitTorrent may have a negative connotation due to its occasional use in sharing copyrighted files, all of the files that `simple-optimism-node` shares and downloads via BitTorrent are entirely legal configuration files for the system.
+
+For `simple-optimism-node` to operate properly, you will need to open the port that our BitTorrent client, `qBitTorrent`, uses.
+By default, this port is 6881 (you may need to run the following command as root):
+
+```sh
+ufw allow 6881
+```
+
 ### Clone the Repository
 
 ```sh
@@ -54,21 +83,38 @@ cp .env.example .env
 ```
 
 Open `.env` with your editor of choice and fill out the environment variables listed inside that file.
-Only the following variables are required:
-
-| Variable Name                           | Description                                                               |
-|-----------------------------------------|---------------------------------------------------------------------------|
-| `NETWORK_NAME`                          | Network to run the node on ("mainnet" or "goerli")                            |
-| `NODE_TYPE`                             | Type of node to run ("full" or "archive")                                      |
-| `SYNC_SOURCE`                           | Where to sync data from ("l1" or "l2")                                        |
-| `HEALTHCHECK__REFERENCE_RPC_PROVIDER`   | Another reference L2 node to check blocks against, just in case              |
-| `FAULT_DETECTOR__L1_RPC_PROVIDER`       | L1 node RPC to check state roots against                                  |
-| `DATA_TRANSPORT_LAYER__RPC_ENDPOINT`    | Node to get chain data from, must be an L1 node if `SYNC_SOURCE` is "l1" and vice versa for L2 |
-
-You can get L1/L2 RPC endpoints from [these node providers](https://community.optimism.io/docs/useful-tools/providers/).
-
+You MUST fill in all variables in the `REQUIRED` section.
+Currently, this repository is only configured to run both a legacy node and a Bedrock node (if the network has been upgraded to Bedrock), so you MUST fill in both `REQUIRED (LEGACY)` and `REQUIRED (BEDROCK)`.
 You can also modify any of the optional environment variables if you'd wish, but the defaults should work perfectly well for most people.
-Just make sure not to change anything under the line marked "NO TOUCHING" or you might break something!
+You can get L1/L2 RPC endpoints from [these node providers](https://community.optimism.io/docs/useful-tools/providers/) or by running your own nodes.
+
+#### Notes for Selected Variables
+
+##### `SYNC_SOURCE`
+
+The `SYNC_SOURCE` environment variable tells legacy nodes where to sync data from and can have a value of either `l1` or `l2`.
+It is recommended to sync from `l1` because `l1` sync is entirely trustless, whereas `l2` sync requires trusting the `l2` node you are syncing from.
+However, `l2` sync is keeps your node closer to the tip of the L2 chain.
+Note that this only applies to legacy nodes, not Bedrock nodes.
+After the Bedrock transition, the `l2` sync option will be removed.
+
+##### `BEDROCK_SOURCE`
+
+The `BEDROCK_SOURCE` environment variable determines where Bedrock nodes will get the database that it needs to start syncing and can have a value of either `download` or `migration`.
+
+When getting the database via `download`, the node will fetch the database over BitTorrent.
+This is recommended for anyone starting a fresh node that only needs to keep up with the Bedrock network.
+
+When getting the database via `migration`, the node will look for an existing legacy database and migrate a copy of this database trustlessly to Bedrock.
+This is recommended for anyone who already runs a legacy node with `simple-optimism-node` and wants the most trustless way to execute and verify the Bedrock upgrade.
+Note that you MUST have a fully synced legacy node for this option to work.
+
+##### `OP_NODE__RPC_TYPE`
+
+The `OP_NODE__RPC_TYPE` envrionemnt variable tells the `op-node` component of the Bedrock node what sort of RPC it is connected to.
+When this variable is configured properly `op-node` can execute more efficiently by using special RPC endpoints that some RPC providers have and others may not.
+The available options for this variable are `alchemy`, `quicknode`, `infura`, `parity`, `nethermind`, `debug_geth`, `erigon`, `basic`, and `any`.
+The default is `basic`.
 
 ### Setting a Data Directory (Optional)
 
@@ -136,10 +182,11 @@ Will display the logs for a given service.
 You can also follow along with the logs for a service in real time by adding the flag `-f`.
 
 The available services are:
-- [`dtl` and `l2geth`](#optimism-node)
-- [`healthcheck` and `fault-detector`](#healthcheck--fault-detector)
-- [`prometheus`, `grafana`, and `influxdb`](#metrics-dashboard)
 
+- [`dtl` and `l2geth`](#optimism-node)
+- [`healthcheck`](#healthcheck)
+- [`fault-detector`](#fault-detector)
+- [`prometheus`, `grafana`, and `influxdb`](#metrics-dashboard)
 
 #### Update
 
@@ -187,9 +234,10 @@ Simple Node Dashboard includes basic node information and will tell you if your 
 
 Use the following login details to access the dashboard:
 
-* Username: `admin`
-* Password: `optimism`
+- Username: `admin`
+- Password: `optimism`
 
 Navigate over to `Dashboards > Manage > Simple Node Dashboard` to see the dashboard, see the following gif if you need help:
 
 ![metrics dashboard gif](https://user-images.githubusercontent.com/14298799/171476634-0cb84efd-adbf-4732-9c1d-d737915e1fa7.gif)
+
