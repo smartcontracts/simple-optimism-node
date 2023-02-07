@@ -25,7 +25,7 @@ services:
   l2geth:
     image: ethereumoptimism/l2geth:${IMAGE_TAG__L2GETH:-latest}
     restart: unless-stopped
-    stop_grace_period: 3m
+    stop_grace_period: 5m
     entrypoint: 
       - /bin/sh
       - -c
@@ -84,7 +84,7 @@ services:
   op-geth:
     image: ethereumoptimism/op-geth:v1.10.26-166f27c
     restart: unless-stopped
-    stop_grace_period: 3m
+    stop_grace_period: 5m
     entrypoint: /scripts/op-geth-start.sh
     env_file:
       - ./envs/${NETWORK_NAME}/op-geth.env
@@ -101,7 +101,7 @@ services:
   op-node:
     image: us-docker.pkg.dev/oplabs-tools-artifacts/images/op-node:v0.10.9
     restart: unless-stopped
-    stop_grace_period: 3m
+    stop_grace_period: 5m
     entrypoint: /scripts/op-node-start.sh
     env_file:
       - .env
