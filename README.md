@@ -88,6 +88,13 @@ Currently, this repository is only configured to run both a legacy node and a Be
 You can also modify any of the optional environment variables if you'd wish, but the defaults should work perfectly well for most people.
 You can get L1/L2 RPC endpoints from [these node providers](https://community.optimism.io/docs/useful-tools/providers/) or by running your own nodes.
 
+#### Setting a qBittorrent UI password
+
+If you are running a Bedrock node, you will be running a torrent client for downloading certain important files.
+The default qBittorrent password is `adminadmin`.
+It is HIGHLY recommended that you change this password to avoid compromise.
+You can change the password by heading over to the qBittorrent UI (located on localhost:8080), opening up preferences, then "Web UI", and setting your custom password.
+
 #### Notes for Selected Variables
 
 ##### `SYNC_SOURCE`
