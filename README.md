@@ -179,6 +179,12 @@ docker compose down -v
 Will completely wipe the node by removing the volumes that were created for each container.
 Note that this is a destructive action, be very careful!
 
+Usually you do this because the `op-geth` data directory becomes corrupt, in which case you'll get this error message from `op-node`:
+
+```
+stage 0 failed resetting: temp: failed to find the L2 Heads to start from: failed to fetch L2 block by hash 0x0000000000000000000000000000000000000000000000000000000000000000
+```
+
 #### Logs
 
 ```sh
