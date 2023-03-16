@@ -20,7 +20,7 @@ exec geth \
 	--ws.addr=0.0.0.0 \
 	--ws.port=8546 \
 	--ws.origins="*" \
-	--ws.api=debug,eth,txpool,net,engine \
+	--ws.api=debug,eth,txpool,net,engine,web3 \
   --metrics \
   --metrics.influxdb \
   --metrics.influxdb.endpoint=http://influxdb:8086 \
