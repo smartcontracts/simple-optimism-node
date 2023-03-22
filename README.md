@@ -91,9 +91,11 @@ You can get L1/L2 RPC endpoints from [these node providers](https://community.op
 #### Setting a qBittorrent UI password
 
 If you are running a Bedrock node, you will be running a torrent client for downloading certain important files.
-The default qBittorrent password is `adminadmin`.
-It is HIGHLY recommended that you change this password to avoid compromise.
-You can change the password by heading over to the qBittorrent UI (located on localhost:8080), opening up preferences, then "Web UI", and setting your custom password.
+The default qBittorrent username is `admin` and the password is `adminadmin`.
+Please note that the docker image I'm using does NOT support changing the password via environment variable.
+[I have created an issue to get this fixed.](https://github.com/linuxserver/docker-qbittorrent/issues/228)
+You CAN change the password via the UI but this will break some of the scripts in this repository.
+I recommend NOT changing the default password and making sure not to expose the UI (located on localhost:8080) to the internet (or people might start using your machine to torrent things you don't want to be torrenting).
 
 #### Notes for Selected Variables
 
