@@ -82,7 +82,7 @@ services:
     <<: *logging
 
   op-geth:
-    image: ethereumoptimism/op-geth:v1.10.26-166f27c
+    image: us-docker.pkg.dev/oplabs-tools-artifacts/images/op-geth:v1.11.2-13ee9ab
     restart: unless-stopped
     stop_grace_period: 3m
     entrypoint: /scripts/op-geth-start.sh
@@ -99,7 +99,7 @@ services:
     <<: *logging
 
   op-node:
-    image: us-docker.pkg.dev/oplabs-tools-artifacts/images/op-node:v0.10.9
+    image: us-docker.pkg.dev/oplabs-tools-artifacts/images/op-node:v1.0.0
     restart: unless-stopped
     stop_grace_period: 3m
     entrypoint: /scripts/op-node-start.sh
