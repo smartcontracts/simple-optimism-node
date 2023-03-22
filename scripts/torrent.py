@@ -9,7 +9,7 @@ qbt = qbittorrentapi.Client(
   host='torrent',
   port=8080,
   username='admin',
-  password=os.getenv('TORRENT_UI_PASSWORD')
+  password='adminadmin'
 )
 
 try:

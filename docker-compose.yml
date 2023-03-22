@@ -163,8 +163,6 @@ services:
   torrent:
     image: lscr.io/linuxserver/qbittorrent:${IMAGE_TAG__TORRENT:-latest}
     restart: unless-stopped
-    environment:
-      - PASSWORD=${TORRENT_UI_PASSWORD}
     ports:
       - ${PORT__TORRENT_UI:-8080}:8080
       - ${PORT__TORRENT:-6881}:6881 
