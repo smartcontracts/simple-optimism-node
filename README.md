@@ -7,19 +7,24 @@ Let's do it!
 
 ## Bedrock Support
 
-The Optimism Goerli testnet was upgraded to Bedrock on Thursday January 12th 2023.
-I am in the process of working on full Bedrock support within `simple-optimism-node`.
-You can run a Goerli Bedrock node with some limitations as described in the [Bedrock Limitations](#bedrock-limitations) section below.
-Please read those limitations carefully, they'll be updated and removed as I work on additional features.
+`simple-optimism-node` has been updated to support Bedrock [with certain limitations as described below](#bedrock-limitations).
+Please note that, for the moment, this repository *only* supports running a Bedrock node from the pre-migrated data directory supplied by OP Labs.
+I am working on removing these limitations this week (week of June 5th, 2023).
 
-Please also report any bugs that you find, it'll help speed up the process of getting to production Goerli Bedrock nodes.
-Thank you!
+### Bedrock Support for OP Mainnet
+
+Bedrock is scheduled to go live on OP Mainnet on June 6th, 2023.
+Nodes will only begin to operate properly once the proper images are available and you have fully downloaded the data directory via torrent.
+You should begin to run your Bedrock nodes once I have updated these images in the repository.
+This may take some time depending on the number of seeders serving the directory.
+You should also be prepared to expect a waiting time of at least 24 hours after the OP Mainnet migration has completed so that I can fully test the setup and make sure that everything is working properly.
+[I will continue to tweet status updates as needed](https://twitter.com/kelvinfichter).
 
 ### Bedrock Limitations
 
 - No upload limits for BitTorrent yet.
-- No functional metrics dashboard.
 - No fault detector.
+- Self-migration is currently not working until I pin some commits.
 
 ## Required Software
 
