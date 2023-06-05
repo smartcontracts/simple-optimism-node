@@ -14,9 +14,11 @@ I am working on removing these limitations this week (week of June 5th, 2023).
 ### Bedrock Support for OP Mainnet
 
 Bedrock is scheduled to go live on OP Mainnet on June 6th, 2023.
-You can start to run your Bedrock nodes now, but the nodes will only begin to operate properly once you have fully downloaded the data directory via torrent.
+Nodes will only begin to operate properly once the proper images are available and you have fully downloaded the data directory via torrent.
+You should begin to run your Bedrock nodes once I have updated these images in the repository.
 This may take some time depending on the number of seeders serving the directory.
 You should also be prepared to expect a waiting time of at least 24 hours after the OP Mainnet migration has completed so that I can fully test the setup and make sure that everything is working properly.
+[I will continue to tweet status updates as needed](https://twitter.com/kelvinfichter).
 
 ### Bedrock Limitations
 
@@ -259,4 +261,3 @@ Use the following login details to access the dashboard:
 Navigate over to `Dashboards > Manage > Simple Node Dashboard` to see the dashboard, see the following gif if you need help:
 
 ![metrics dashboard gif](https://user-images.githubusercontent.com/14298799/171476634-0cb84efd-adbf-4732-9c1d-d737915e1fa7.gif)
-
