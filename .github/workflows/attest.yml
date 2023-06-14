@@ -1,0 +1,18 @@
+name: PR Attestation
+on:
+  pull_request:
+    types: [closed]
+
+jobs:
+  my-job:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Create Attestation
+        if: github.event_name == 'pull_request' && github.event.action == 'closed' && github.event.pull_request.merged == true
+        id: attestation
+        uses: buildooor/github-attestation-action@master
+        with:
+          private-key: ${{ secrets.PRIVATE_KEY }}
+          rpc-url: ${{ secrets.RPC_URL }}
+          network: sepolia
+          branch: main
