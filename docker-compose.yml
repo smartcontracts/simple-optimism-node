@@ -1,17 +1,9 @@
----
 version: "3.4"
-x-logging: &logging
-  logging:
-    driver: json-file
-    options:
-      max-size: 10m
-      max-file: "3"
-
 services:
   dtl:
     image: ethereumoptimism/data-transport-layer:${IMAGE_TAG__DTL:-latest}
     restart: unless-stopped
-    entrypoint: /scripts/dtl-start.sh
+    entrypoint: /scripts/start-dtl.sh
     env_file:
       - ./envs/${NETWORK_NAME}/dtl.env
       - .env
@@ -20,7 +12,8 @@ services:
       - ./scripts/:/scripts/
     ports:
       - ${PORT__DTL:-7878}:7878
-    <<: *logging
+    profiles:
+      - legacy
 
   l2geth:
     image: ethereumoptimism/l2geth:${IMAGE_TAG__L2GETH:-latest}
@@ -29,17 +22,18 @@ services:
     entrypoint: 
       - /bin/sh
       - -c
-      - "/scripts/l2geth-init.sh && /scripts/l2geth-start.sh"
+      - "/scripts/init-l2geth.sh && /scripts/start-l2geth.sh"
     env_file:
       - ./envs/${NETWORK_NAME}/l2geth.env
       - .env
-    ports:
-      - ${PORT__L2GETH_HTTP:-9991}:8545
-      - ${PORT__L2GETH_WS:-9992}:8546
     volumes:
       - geth:/geth
       - ./scripts/:/scripts/
-    <<: *logging
+    ports:
+      - ${PORT__L2GETH_HTTP:-9991}:8545
+      - ${PORT__L2GETH_WS:-9992}:8546
+    profiles:
+      - legacy
 
   healthcheck:
     image: ethereumoptimism/replica-healthcheck:${IMAGE_TAG__HEALTHCHECK:-latest}
@@ -49,17 +43,8 @@ services:
       - .env
     ports:
       - ${PORT__HEALTHCHECK_METRICS:-7300}:7300
-    <<: *logging
-
-  healthcheck-bedrock:
-    image: ethereumoptimism/replica-healthcheck:${IMAGE_TAG__HEALTHCHECK:-latest}
-    restart: unless-stopped
-    env_file:
-      - ./envs/${NETWORK_NAME}/healthcheck-bedrock.env
-      - .env
-    ports:
-      - ${PORT__HEALTHCHECK_BEDROCK_METRICS:-7302}:7300
-    <<: *logging
+    profiles:
+      - current
 
   fault-detector:
     image: ethereumoptimism/fault-detector:${IMAGE_TAG__FAULT_DETECTOR:-latest}
@@ -69,52 +54,48 @@ services:
       - .env
     ports:
       - ${PORT__FAULT_DETECTOR_METRICS:-7301}:7300
-    <<: *logging
-
-  fault-detector-bedrock:
-    image: ethereumoptimism/fault-detector:${IMAGE_TAG__FAULT_DETECTOR:-latest}
-    restart: unless-stopped
-    env_file:
-      - ./envs/${NETWORK_NAME}/fault-detector-bedrock.env
-      - .env
-    ports:
-      - ${PORT__FAULT_DETECTOR_BEDROCK_METRICS:-7303}:7300
-    <<: *logging
+    profiles:
+      - current
 
   op-geth:
-    image: us-docker.pkg.dev/oplabs-tools-artifacts/images/op-geth:v1.11.2-13ee9ab
+    image: us-docker.pkg.dev/oplabs-tools-artifacts/images/op-geth:v1.101105.3
     restart: unless-stopped
     stop_grace_period: 5m
-    entrypoint: /scripts/op-geth-start.sh
+    entrypoint: /scripts/start-op-geth.sh
     env_file:
       - ./envs/${NETWORK_NAME}/op-geth.env
       - .env
-    ports:
-      - ${PORT__OP_GETH_HTTP:-9993}:8545
-      - ${PORT__OP_GETH_WS:-9994}:8546
     volumes:
       - ./scripts/:/scripts
       - shared:/shared
       - op_geth:/geth
-    <<: *logging
+    ports:
+      - ${PORT__OP_GETH_HTTP:-9993}:8545
+      - ${PORT__OP_GETH_WS:-9994}:8546
+    profiles:
+      - current
 
   op-node:
-    image: us-docker.pkg.dev/oplabs-tools-artifacts/images/op-node:v1.0.0
+    image: us-docker.pkg.dev/oplabs-tools-artifacts/images/op-node:v1.1.0
     restart: unless-stopped
     stop_grace_period: 5m
-    entrypoint: /scripts/op-node-start.sh
+    entrypoint: /scripts/start-op-node.sh
     env_file:
       - .env
     volumes:
       - ./scripts/:/scripts
       - shared:/shared
-    <<: *logging
+    ports:
+      - ${PORT__OP_NODE_P2P:-9003}:9003/udp
+      - ${PORT__OP_NODE_P2P:-9003}:9003/tcp
+    profiles:
+      - current
 
   bedrock-init:
     build:
       context: ./docker/dockerfiles
       dockerfile: Dockerfile.bedrock-init
-    entrypoint: /scripts/bedrock-init.sh
+    entrypoint: /scripts/init-bedrock.sh
     env_file:
       - .env
     volumes:
@@ -123,53 +104,51 @@ services:
       - op_geth:/geth
       - geth:/legacy-geth
       - torrent_downloads:/downloads
-    <<: *logging
+    profiles:
+      - current
 
   prometheus:
     image: prom/prometheus:${IMAGE_TAG__PROMETHEUS:-latest}
     restart: unless-stopped
     env_file:
       - .env
-    ports:
-      - ${PORT__PROMETHEUS:-9090}:9090
     volumes:
       - ./docker/prometheus:/etc/prometheus
       - prometheus_data:/prometheus
-    <<: *logging
+    ports:
+      - ${PORT__PROMETHEUS:-9090}:9090
+    profiles:
+      - legacy
+      - current
 
   grafana:
     image: grafana/grafana:${IMAGE_TAG__GRAFANA:-9.3.0}
     restart: unless-stopped
     env_file:
       -  ./envs/${NETWORK_NAME}/grafana.env
-    ports:
-      - ${PORT__GRAFANA:-3000}:3000
     volumes:
       - ./docker/grafana/provisioning/:/etc/grafana/provisioning/:ro
       - ./docker/grafana/dashboards/simple_node_dashboard.json:/var/lib/grafana/dashboards/simple_node_dashboard.json
-      - ./docker/grafana/dashboards/simple_node_dashboard.bedrock.json:/var/lib/grafana/dashboards/simple_node_dashboard.bedrock.json
       - grafana_data:/var/lib/grafana
+    ports:
+      - ${PORT__GRAFANA:-3000}:3000
+    profiles:
+      - legacy
+      - current
 
   influxdb:
-    image: quay.io/influxdb/influxdb:${IMAGE_TAG__INFLUXDB:-1.6}
+    image: influxdb:${IMAGE_TAG__INFLUXDB:-1.8}
     restart: unless-stopped
     env_file:
       - ./envs/${NETWORK_NAME}/influxdb.env
+    volumes:
+      - ./docker/influxdb/influx_init.iql:/docker-entrypoint-initdb.d/influx_init.iql
+      - influxdb_data:/var/lib/influxdb
     ports:
       - ${PORT__INFLUXDB:-8086}:8086
-    volumes:
-      - influxdb_data:/var/lib/influxdb
-
-  torrent:
-    image: lscr.io/linuxserver/qbittorrent:${IMAGE_TAG__TORRENT:-latest}
-    restart: unless-stopped
-    ports:
-      - ${PORT__TORRENT_UI:-8080}:8080
-      - ${PORT__TORRENT:-6881}:6881 
-      - ${PORT__TORRENT:-6881}:6881/udp
-    volumes:
-      - torrent_config:/config
-      - torrent_downloads:/downloads
+    profiles:
+      - legacy
+      - current
 
 volumes:
   dtl:
@@ -179,5 +158,4 @@ volumes:
   influxdb_data:
   shared:
   op_geth:
-  torrent_config:
   torrent_downloads:

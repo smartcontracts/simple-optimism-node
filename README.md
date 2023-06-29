@@ -7,24 +7,13 @@ Let's do it!
 
 ## Bedrock Support
 
-`simple-optimism-node` has been updated to support Bedrock [with certain limitations as described below](#bedrock-limitations).
+`simple-optimism-node` now supports the Bedrock versions of both OP Mainnet and OP Goerli.
 Please note that, for the moment, this repository *only* supports running a Bedrock node from the pre-migrated data directory supplied by OP Labs.
-I am working on removing these limitations this week (week of June 5th, 2023).
+I am working on including the functionality for self-migration but I wanted to get something functional out there as quickly as possible.
 
-### Bedrock Support for OP Mainnet
-
-Bedrock is scheduled to go live on OP Mainnet on June 6th, 2023.
-Nodes will only begin to operate properly once the proper images are available and you have fully downloaded the data directory via torrent.
-You should begin to run your Bedrock nodes once I have updated these images in the repository.
-This may take some time depending on the number of seeders serving the directory.
-You should also be prepared to expect a waiting time of at least 24 hours after the OP Mainnet migration has completed so that I can fully test the setup and make sure that everything is working properly.
-[I will continue to tweet status updates as needed](https://twitter.com/kelvinfichter).
-
-### Bedrock Limitations
-
-- No upload limits for BitTorrent yet.
-- No fault detector.
-- Self-migration is currently not working until I pin some commits.
+Previous versions of this repository used a torrenting system for downloading configuration files and data directories.
+I've decided to move to Cloudflare R2 temporarily since it provides better download speeds and is relatively inexpensive.
+I will likely move back to a torrenting model in the future but R2 allows people to get running with Bedrock more quickly.
 
 ## Required Software
 
@@ -33,15 +22,8 @@ You should also be prepared to expect a waiting time of at least 24 hours after 
 ## Recommended Hardware
 
 - 16GB+ RAM
-- 500GB+ disk (HDD works for now, SSD is better)
+- 2TB SSD
 - 10mb/s+ download
-
-## Approximate Disk Usage
-
-Usage as of 2022-09-21:
-
-- Archive node: ~800gb
-- Full node: ~60gb
 
 ## Installation and Setup Instructions
 
@@ -59,19 +41,6 @@ sudo usermod -a -G docker `whoami`
 
 You'll need to log out and log in again for this change to take effect.
 
-### Open the BitTorrent port
-
-BitTorrent is a system used to share files over a p2p network.
-`simple-optimism-node` uses BitTorrent to download certain important files in a decentralized manner.
-Although BitTorrent may have a negative connotation due to its occasional use in sharing copyrighted files, all of the files that `simple-optimism-node` shares and downloads via BitTorrent are entirely legal configuration files for the system.
-
-For `simple-optimism-node` to operate properly, you will need to open the port that our BitTorrent client, `qBitTorrent`, uses.
-By default, this port is 6881 (you may need to run the following command as root):
-
-```sh
-ufw allow 6881
-```
-
 ### Clone the Repository
 
 ```sh
@@ -88,47 +57,30 @@ cp .env.example .env
 ```
 
 Open `.env` with your editor of choice and fill out the environment variables listed inside that file.
-You MUST fill in all variables in the `REQUIRED` section.
-Currently, this repository is only configured to run both a legacy node and a Bedrock node (if the network has been upgraded to Bedrock), so you MUST fill in both `REQUIRED (LEGACY)` and `REQUIRED (BEDROCK)`.
+You MUST fill in all variables in the `REQUIRED (LEGACY)` OR `REQUIRED (BEDROCK)` sections.
+If you wish to run both a legacy node and a Bedrock node at the same time, you MUST fill in BOTH sections.
+
 You can also modify any of the optional environment variables if you'd wish, but the defaults should work perfectly well for most people.
 You can get L1/L2 RPC endpoints from [these node providers](https://community.optimism.io/docs/useful-tools/providers/) or by running your own nodes.
 
-#### Setting a qBittorrent UI password
-
-If you are running a Bedrock node, you will be running a torrent client for downloading certain important files.
-The default qBittorrent username is `admin` and the password is `adminadmin`.
-Please note that the docker image I'm using does NOT support changing the password via environment variable.
-[I have created an issue to get this fixed.](https://github.com/linuxserver/docker-qbittorrent/issues/228)
-You CAN change the password via the UI but this will break some of the scripts in this repository.
-I recommend NOT changing the default password and making sure not to expose the UI (located on localhost:8080) to the internet (or people might start using your machine to torrent things you don't want to be torrenting).
-
 #### Notes for Selected Variables
-
-##### `SYNC_SOURCE`
-
-The `SYNC_SOURCE` environment variable tells legacy nodes where to sync data from and can have a value of either `l1` or `l2`.
-It is recommended to sync from `l1` because `l1` sync is entirely trustless, whereas `l2` sync requires trusting the `l2` node you are syncing from.
-However, `l2` sync is keeps your node closer to the tip of the L2 chain.
-Note that this only applies to legacy nodes, not Bedrock nodes.
-After the Bedrock transition, the `l2` sync option will be removed.
-
-##### `BEDROCK_SOURCE`
-
-The `BEDROCK_SOURCE` environment variable determines where Bedrock nodes will get the database that it needs to start syncing and can have a value of either `download` or `migration`.
-
-When getting the database via `download`, the node will fetch the database over BitTorrent.
-This is recommended for anyone starting a fresh node that only needs to keep up with the Bedrock network.
-
-When getting the database via `migration`, the node will look for an existing legacy database and migrate a copy of this database trustlessly to Bedrock.
-This is recommended for anyone who already runs a legacy node with `simple-optimism-node` and wants the most trustless way to execute and verify the Bedrock upgrade.
-Note that you MUST have a fully synced legacy node for this option to work.
 
 ##### `OP_NODE__RPC_TYPE`
 
-The `OP_NODE__RPC_TYPE` envrionemnt variable tells the `op-node` component of the Bedrock node what sort of RPC it is connected to.
+The `OP_NODE__RPC_TYPE` environment variable tells the `op-node` component of the Bedrock node what sort of RPC it is connected to.
 When this variable is configured properly `op-node` can execute more efficiently by using special RPC endpoints that some RPC providers have and others may not.
 The available options for this variable are `alchemy`, `quicknode`, `infura`, `parity`, `nethermind`, `debug_geth`, `erigon`, `basic`, and `any`.
 The default is `basic`.
+
+##### `OP_GETH__HISTORICAL_RPC`
+
+Standard queries like `eth_getBlockByNumber` will execute properly for blocks before the Bedrock upgrade but `op-geth` is not able to execute the legacy state transition function.
+This means that `op-geth` cannot natively serve requests like `eth_call` that require executing the legacy state transition.
+
+The `OP_GETH__HISTORICAL_RPC` environment variable points `op-geth` to a node running the legacy version of OP Mainnet.
+`op-geth` will use this to serve certain historical queries that can't be fulfilled by `op-geth` itself.
+If this variable isn't defined, it defaults to attempting to use the legacy node spun up by this tool.
+If you are not running a legacy node alongside `op-geth` and you do not supply this environment variable, your `op-geth` will not be able to serve these sort of legacy requests.
 
 ### Setting a Data Directory (Optional)
 
@@ -156,22 +108,24 @@ docker info | grep -i "Docker Root Dir"
 
 ### Operating the Node
 
+#### Profiles
+
+`simple-optimism-node` now supplies two [docker compose profiles](https://docs.docker.com/compose/profiles/) for the `current` system and the `legacy` system.
+If you want to run BOTH of the systems in tandem, run the commands below WITHOUT the `--profile current` flag.
+
 #### Start
 
 ```sh
-docker compose up -d
+docker compose --profile current up -d
 ```
 
 Will start the node in a detatched shell (`-d`), meaning the node will continue to run in the background.
 You will need to run this again if you ever turn your machine off.
 
-The first time you start the node it synchronizes from regenesis (November 11th, 2021) to the present.
-This process takes hours.
-
 #### Stop
 
 ```sh
-docker compose down
+docker compose --profile current down
 ```
 
 Will shut down the node without wiping any volumes.
@@ -180,7 +134,7 @@ You can safely run this command and then restart the node again.
 #### Wipe
 
 ```sh
-docker compose down -v
+docker compose --profile current down -v
 ```
 
 Will completely wipe the node by removing the volumes that were created for each container.
@@ -204,7 +158,7 @@ You can also follow along with the logs for a service in real time by adding the
 
 The available services are:
 
-- [`dtl` and `l2geth`](#optimism-node)
+- [`dtl`, `l2geth`, `op-node`, and `op-geth`](#optimism-node)
 - [`healthcheck`](#healthcheck)
 - [`fault-detector`](#fault-detector)
 - [`prometheus`, `grafana`, and `influxdb`](#metrics-dashboard)

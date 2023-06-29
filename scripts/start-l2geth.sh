@@ -1,10 +1,7 @@
 #!/bin/sh
 set -eou
 
-# Set rollup backend to match sync source
-export ROLLUP_BACKEND=$SYNC_SOURCE
-
-# Run geth
+# Start l2geth.
 exec geth \
   --vmodule=eth/*=5,miner=4,rpc=5,rollup=4,consensus/clique=1 \
   --datadir=$DATADIR \

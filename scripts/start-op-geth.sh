@@ -24,7 +24,7 @@ exec geth \
   --metrics \
   --metrics.influxdb \
   --metrics.influxdb.endpoint=http://influxdb:8086 \
-  --metrics.influxdb.database=l2geth \
+  --metrics.influxdb.database=opgeth \
   --syncmode=full \
   --gcmode="$NODE_TYPE" \
   --nodiscover \
@@ -36,5 +36,5 @@ exec geth \
   --authrpc.jwtsecret=/shared/jwt.txt \
   --rollup.sequencerhttp="$BEDROCK_SEQUENCER_HTTP" \
   --rollup.disabletxpoolgossip=true \
-  --rollup.historicalrpc=http://l2geth:8545 \
+  --rollup.historicalrpc="${OP_GETH__HISTORICAL_RPC:-http://l2geth:8545}" \
   $@
