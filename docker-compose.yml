@@ -86,8 +86,7 @@ services:
       - ./scripts/:/scripts
       - shared:/shared
     ports:
-      - ${PORT__OP_NODE_P2P:-9003}:9003/udp
-      - ${PORT__OP_NODE_P2P:-9003}:9003/tcp
+      - ${PORT__OP_NODE_P2P:-9003}:9003
     profiles:
       - current
 
