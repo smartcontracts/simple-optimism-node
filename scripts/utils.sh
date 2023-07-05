@@ -17,7 +17,7 @@ function download() {
   SIZE=$(curl -sI $1 | grep -i Content-Length | awk '{print $2}')
   (while true ; do sleep 60; echo "$(ls -l $2 | awk -v size=$SIZE '{printf "Download Progress: %.2f%%\n", $5/size*100}')"; done) &
   monitor_pid=$!
-  wget -c -o $2 $1
+  wget -c -q -O $2 $1
   kill $monitor_pid
 }
 
