@@ -15,9 +15,9 @@ function extract() {
 #   out: Location to download the file to.
 function download() {
   SIZE=$(curl -sI $1 | grep -i Content-Length | awk '{print $2}')
-  (while true ; do sleep 60; echo "$(ls -l $2 | awk -v size=$SIZE '{printf "Download Progress: %.2f%%\n", $5/size*100}')"; done) &
+  (while true ; do sleep 60; echo "$(du -b $2 | awk -v size=$SIZE '{printf "Download Progress: %.2f%%\n", $1/size*100}')"; done) &
   monitor_pid=$!
-  wget -c -o $2 $1
+  axel -o $2 $1
   kill $monitor_pid
 }
 
