@@ -25,7 +25,7 @@ echo "Fetching download link..."
 BEDROCK_TAR_DOWNLOAD=$(config "bedrock/$NETWORK_NAME/bedrock-download")
 
 echo "Downloading bedrock.tar..."
-aria2c -x 4 -s 4 -j 4 -o $BEDROCK_TAR_PATH $BEDROCK_TAR_DOWNLOAD
+download $BEDROCK_TAR_DOWNLOAD $BEDROCK_TAR_PATH
 
 echo "Extracting bedrock.tar..."
 extract $BEDROCK_TAR_PATH $GETH_DATA_DIR
