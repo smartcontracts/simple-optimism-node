@@ -9,6 +9,15 @@ function extract() {
   tar -xf $1 -C $2
 }
 
+# extract: Extracts a zst archive into an output location.
+# Arguments:
+#   arc: ZST archive to to extract.
+#   loc: Location to extract to.
+function extractzst() {
+  mkdir -p $2
+  tar --use-compress-program=unzstd -xf $1 -C $2
+}
+
 # download: Downloads a file and provides basic progress percentages.
 # Arguments:
 #   url: URL of the file to download.
