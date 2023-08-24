@@ -21,8 +21,15 @@ fi
 echo "Bedrock node needs to be initialized..."
 echo "Initializing via download..."
 
+# Fix OP link with hardcoded official OP snapshot
 echo "Fetching download link..."
-BEDROCK_TAR_DOWNLOAD=$(config "bedrock/$NETWORK_NAME/bedrock-download")
+if [ "$NETWORK_NAME" = "mainnet" ]; then
+  BEDROCK_TAR_DOWNLOAD="https://datadirs.optimism.io/mainnet-bedrock.tar.zst"
+elif [ "$NETWORK_NAME" = "goerli" ]; then
+  BEDROCK_TAR_DOWNLOAD="https://datadirs.optimism.io/goerli-bedrock.tar.zst"
+else
+  BEDROCK_TAR_DOWNLOAD=$(config "bedrock/$NETWORK_NAME/bedrock-download")
+fi
 
 echo "Downloading bedrock.tar..."
 download $BEDROCK_TAR_DOWNLOAD $BEDROCK_TAR_PATH
