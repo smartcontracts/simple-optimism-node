@@ -21,14 +21,32 @@ fi
 echo "Bedrock node needs to be initialized..."
 echo "Initializing via download..."
 
+# Fix OP link with hardcoded official OP snapshot
 echo "Fetching download link..."
-BEDROCK_TAR_DOWNLOAD=$(config "bedrock/$NETWORK_NAME/bedrock-download")
+if [ "$NETWORK_NAME" = "mainnet" ]; then
+  BEDROCK_TAR_DOWNLOAD="https://datadirs.optimism.io/mainnet-bedrock.tar.zst"
+elif [ "$NETWORK_NAME" = "goerli" ]; then
+  BEDROCK_TAR_DOWNLOAD="https://datadirs.optimism.io/goerli-bedrock.tar.zst"
+else
+  BEDROCK_TAR_DOWNLOAD=$(config "bedrock/$NETWORK_NAME/bedrock-download")
+fi
+
+if [[ "$BEDROCK_TAR_DOWNLOAD" == *.zst ]]; then
+  BEDROCK_TAR_PATH+=".zst"
+fi
 
 echo "Downloading bedrock.tar..."
 download $BEDROCK_TAR_DOWNLOAD $BEDROCK_TAR_PATH
 
 echo "Extracting bedrock.tar..."
-extract $BEDROCK_TAR_PATH $GETH_DATA_DIR
+if [[ "$BEDROCK_TAR_DOWNLOAD" == *.zst ]]; then
+  extractzst $BEDROCK_TAR_PATH $GETH_DATA_DIR
+else
+  extract $BEDROCK_TAR_PATH $GETH_DATA_DIR
+fi
+
+# Remove tar file to save disk space
+rm $BEDROCK_TAR_PATH
 
 echo "Creating JWT..."
 mkdir -p $(dirname $BEDROCK_JWT_PATH)

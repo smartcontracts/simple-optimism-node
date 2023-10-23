@@ -9,6 +9,15 @@ function extract() {
   tar -xf $1 -C $2
 }
 
+# extract: Extracts a zst archive into an output location.
+# Arguments:
+#   arc: ZST archive to to extract.
+#   loc: Location to extract to.
+function extractzst() {
+  mkdir -p $2
+  tar --use-compress-program=unzstd -xf $1 -C $2
+}
+
 # download: Downloads a file and provides basic progress percentages.
 # Arguments:
 #   url: URL of the file to download.
@@ -17,7 +26,7 @@ function download() {
   SIZE=$(curl -sI $1 | grep -i Content-Length | awk '{print $2}')
   (while true ; do sleep 60; echo "$(ls -l $2 | awk -v size=$SIZE '{printf "Download Progress: %.2f%%\n", $5/size*100}')"; done) &
   monitor_pid=$!
-  wget -c -o $2 $1
+  aria2c --max-tries=0 -o $2 $1
   kill $monitor_pid
 }
 
