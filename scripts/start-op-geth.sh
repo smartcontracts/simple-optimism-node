@@ -37,4 +37,5 @@ exec geth \
   --rollup.sequencerhttp="$BEDROCK_SEQUENCER_HTTP" \
   --rollup.disabletxpoolgossip=true \
   --rollup.historicalrpc="${OP_GETH__HISTORICAL_RPC:-http://l2geth:8545}" \
+  --op-network=$NETWORK_NAME \
   $@
