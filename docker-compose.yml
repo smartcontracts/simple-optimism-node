@@ -24,7 +24,7 @@ services:
     image: ethereumoptimism/replica-healthcheck:${IMAGE_TAG__HEALTHCHECK:-latest}
     restart: unless-stopped
     env_file:
-      - ./envs/${NETWORK_NAME}/healthcheck.env
+      - ./envs/common/healthcheck.env
       - .env
     ports:
       - ${PORT__HEALTHCHECK_METRICS:-7300}:7300
@@ -99,7 +99,7 @@ services:
     image: grafana/grafana:${IMAGE_TAG__GRAFANA:-9.3.0}
     restart: unless-stopped
     env_file:
-      -  ./envs/${NETWORK_NAME}/grafana.env
+      -  ./envs/common/grafana.env
     volumes:
       - ./docker/grafana/provisioning/:/etc/grafana/provisioning/:ro
       - ./docker/grafana/dashboards/simple_node_dashboard.json:/var/lib/grafana/dashboards/simple_node_dashboard.json
@@ -114,7 +114,7 @@ services:
     image: influxdb:${IMAGE_TAG__INFLUXDB:-1.8}
     restart: unless-stopped
     env_file:
-      - ./envs/${NETWORK_NAME}/influxdb.env
+      - ./envs/common/influxdb.env
     volumes:
       - ./docker/influxdb/influx_init.iql:/docker-entrypoint-initdb.d/influx_init.iql
       - influxdb_data:/var/lib/influxdb
