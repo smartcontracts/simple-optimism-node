@@ -1,20 +1,5 @@
 version: "3.4"
 services:
-  dtl:
-    image: ethereumoptimism/data-transport-layer:${IMAGE_TAG__DTL:-latest}
-    restart: unless-stopped
-    entrypoint: /scripts/start-dtl.sh
-    env_file:
-      - ./envs/${NETWORK_NAME}/dtl.env
-      - .env
-    volumes:
-      - dtl:/db
-      - ./scripts/:/scripts/
-    ports:
-      - ${PORT__DTL:-7878}:7878
-    profiles:
-      - legacy
-
   l2geth:
     image: ethereumoptimism/l2geth:${IMAGE_TAG__L2GETH:-latest}
     restart: unless-stopped
