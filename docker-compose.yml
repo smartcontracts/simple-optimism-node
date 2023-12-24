@@ -9,7 +9,7 @@ services:
       - -c
       - "/scripts/init-l2geth.sh && /scripts/start-l2geth.sh"
     env_file:
-      - ./envs/${NETWORK_NAME}/l2geth.env
+      - ./envs/common/l2geth.env
       - .env
     volumes:
       - geth:/geth
