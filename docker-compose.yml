@@ -46,17 +46,6 @@ services:
     profiles:
       - current
 
-  fault-detector:
-    image: ethereumoptimism/fault-detector:${IMAGE_TAG__FAULT_DETECTOR:-latest}
-    restart: unless-stopped
-    env_file:
-      - ./envs/${NETWORK_NAME}/fault-detector.env
-      - .env
-    ports:
-      - ${PORT__FAULT_DETECTOR_METRICS:-7301}:7300
-    profiles:
-      - current
-
   op-geth:
     image: us-docker.pkg.dev/oplabs-tools-artifacts/images/op-geth:v1.101304.0
     restart: unless-stopped
