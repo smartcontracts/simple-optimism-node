@@ -23,9 +23,9 @@ echo "Initializing via download..."
 
 # Fix OP link with hardcoded official OP snapshot
 echo "Fetching download link..."
-if [ "$NETWORK_NAME" = "mainnet" ]; then
+if [ "$NETWORK_NAME" = "op-mainnet" ]; then
   BEDROCK_TAR_DOWNLOAD="https://datadirs.optimism.io/mainnet-bedrock.tar.zst"
-elif [ "$NETWORK_NAME" = "goerli" ]; then
+elif [ "$NETWORK_NAME" = "op-goerli" ]; then
   BEDROCK_TAR_DOWNLOAD="https://datadirs.optimism.io/goerli-bedrock.tar.zst"
 else
   BEDROCK_TAR_DOWNLOAD=$(config "bedrock/$NETWORK_NAME/bedrock-download")
