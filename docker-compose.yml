@@ -1,20 +1,5 @@
 version: "3.4"
 services:
-  dtl:
-    image: ethereumoptimism/data-transport-layer:${IMAGE_TAG__DTL:-latest}
-    restart: unless-stopped
-    entrypoint: /scripts/start-dtl.sh
-    env_file:
-      - ./envs/${NETWORK_NAME}/dtl.env
-      - .env
-    volumes:
-      - dtl:/db
-      - ./scripts/:/scripts/
-    ports:
-      - ${PORT__DTL:-7878}:7878
-    profiles:
-      - legacy
-
   l2geth:
     image: ethereumoptimism/l2geth:${IMAGE_TAG__L2GETH:-latest}
     restart: unless-stopped
@@ -24,7 +9,7 @@ services:
       - -c
       - "/scripts/init-l2geth.sh && /scripts/start-l2geth.sh"
     env_file:
-      - ./envs/${NETWORK_NAME}/l2geth.env
+      - ./envs/common/l2geth.env
       - .env
     volumes:
       - geth:/geth
@@ -39,21 +24,10 @@ services:
     image: ethereumoptimism/replica-healthcheck:${IMAGE_TAG__HEALTHCHECK:-latest}
     restart: unless-stopped
     env_file:
-      - ./envs/${NETWORK_NAME}/healthcheck.env
+      - ./envs/common/healthcheck.env
       - .env
     ports:
       - ${PORT__HEALTHCHECK_METRICS:-7300}:7300
-    profiles:
-      - current
-
-  fault-detector:
-    image: ethereumoptimism/fault-detector:${IMAGE_TAG__FAULT_DETECTOR:-latest}
-    restart: unless-stopped
-    env_file:
-      - ./envs/${NETWORK_NAME}/fault-detector.env
-      - .env
-    ports:
-      - ${PORT__FAULT_DETECTOR_METRICS:-7301}:7300
     profiles:
       - current
 
@@ -66,6 +40,7 @@ services:
       - ./envs/${NETWORK_NAME}/op-geth.env
       - .env
     volumes:
+      - ./envs/${NETWORK_NAME}/config:/chainconfig
       - ./scripts/:/scripts
       - shared:/shared
       - op_geth:/geth
@@ -81,8 +56,10 @@ services:
     stop_grace_period: 5m
     entrypoint: /scripts/start-op-node.sh
     env_file:
+      - ./envs/${NETWORK_NAME}/op-node.env
       - .env
     volumes:
+      - ./envs/${NETWORK_NAME}/config:/chainconfig
       - ./scripts/:/scripts
       - shared:/shared
     ports:
@@ -125,7 +102,7 @@ services:
     image: grafana/grafana:${IMAGE_TAG__GRAFANA:-9.3.0}
     restart: unless-stopped
     env_file:
-      -  ./envs/${NETWORK_NAME}/grafana.env
+      -  ./envs/common/grafana.env
     volumes:
       - ./docker/grafana/provisioning/:/etc/grafana/provisioning/:ro
       - ./docker/grafana/dashboards/simple_node_dashboard.json:/var/lib/grafana/dashboards/simple_node_dashboard.json
@@ -140,7 +117,7 @@ services:
     image: influxdb:${IMAGE_TAG__INFLUXDB:-1.8}
     restart: unless-stopped
     env_file:
-      - ./envs/${NETWORK_NAME}/influxdb.env
+      - ./envs/common/influxdb.env
     volumes:
       - ./docker/influxdb/influx_init.iql:/docker-entrypoint-initdb.d/influx_init.iql
       - influxdb_data:/var/lib/influxdb
