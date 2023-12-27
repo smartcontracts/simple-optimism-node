@@ -7,7 +7,7 @@ while [ ! -f /shared/initialized.txt ]; do
   sleep 60
 done
 
-if [ -n "$IS_CUSTOM_CHAIN" ]; then
+if [ -n "${IS_CUSTOM_CHAIN+x}" ]; then
   EXTENDED_ARG="$EXTENDED_ARG --rollup.config=/chainconfig/rollup.json"
 else
   EXTENDED_ARG="$EXTENDED_ARG --network=$NETWORK_NAME --rollup.load-protocol-versions=true"

@@ -7,7 +7,7 @@ while [ ! -f /shared/initialized.txt ]; do
   sleep 60
 done
 
-if [ -z "$IS_CUSTOM_CHAIN" ]; then
+if [ -z "${IS_CUSTOM_CHAIN+x}" ]; then
   if [ "$NETWORK_NAME" == "op-mainnet" ] || [ "$NETWORK_NAME" == "op-goerli" ]; then
     EXTENDED_ARG="$EXTENDED_ARG --rollup.historicalrpc=${OP_GETH__HISTORICAL_RPC:-http://l2geth:8545} --op-network=$NETWORK_NAME"
   else
@@ -16,7 +16,7 @@ if [ -z "$IS_CUSTOM_CHAIN" ]; then
 fi
 
 # Init genesis if custom chain
-if [ -n "$IS_CUSTOM_CHAIN" ]; then
+if [ -n "${IS_CUSTOM_CHAIN+x}" ]; then
   geth init --datadir="$BEDROCK_DATADIR" /chainconfig/genesis.json
 fi
 
