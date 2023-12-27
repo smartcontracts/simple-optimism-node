@@ -20,4 +20,5 @@ exec op-node \
   --metrics.enabled \
   --metrics.addr=0.0.0.0 \
   --metrics.port=7300 \
+  --rollup.load-protocol-versions=true \
   $@
