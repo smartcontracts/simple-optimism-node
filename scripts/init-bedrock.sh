@@ -27,8 +27,6 @@ if [ "$NETWORK_NAME" = "op-mainnet" ]; then
   BEDROCK_TAR_DOWNLOAD="https://datadirs.optimism.io/mainnet-bedrock.tar.zst"
 elif [ "$NETWORK_NAME" = "op-goerli" ]; then
   BEDROCK_TAR_DOWNLOAD="https://datadirs.optimism.io/goerli-bedrock.tar.zst"
-else
-  BEDROCK_TAR_DOWNLOAD=$(config "bedrock/$NETWORK_NAME/bedrock-download")
 fi
 
 if [[ "$BEDROCK_TAR_DOWNLOAD" == *.zst ]]; then
