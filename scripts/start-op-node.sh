@@ -4,7 +4,7 @@ set -eou
 # Wait for the Bedrock flag for this network to be set.
 while [ ! -f /shared/initialized.txt ]; do
   echo "Waiting for Bedrock node to initialize..."
-  sleep 60
+  sleep 1
 done
 
 if [ -n "${IS_CUSTOM_CHAIN+x}" ]; then
