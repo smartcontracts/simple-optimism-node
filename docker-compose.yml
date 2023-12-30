@@ -32,7 +32,7 @@ services:
       - current
 
   op-geth:
-    image: us-docker.pkg.dev/oplabs-tools-artifacts/images/op-geth:v1.101304.0
+    image: us-docker.pkg.dev/oplabs-tools-artifacts/images/op-geth:v1.101304.2
     restart: unless-stopped
     stop_grace_period: 5m
     entrypoint: /scripts/start-op-geth.sh
@@ -51,7 +51,7 @@ services:
       - current
 
   op-node:
-    image: us-docker.pkg.dev/oplabs-tools-artifacts/images/op-node:v1.3.0
+    image: us-docker.pkg.dev/oplabs-tools-artifacts/images/op-node:v1.4.1
     restart: unless-stopped
     stop_grace_period: 5m
     entrypoint: /scripts/start-op-node.sh
