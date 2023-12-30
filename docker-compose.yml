@@ -74,6 +74,7 @@ services:
       dockerfile: Dockerfile.bedrock-init
     entrypoint: /scripts/init-bedrock.sh
     env_file:
+      - ./envs/${NETWORK_NAME}/op-geth.env
       - .env
     volumes:
       - ./scripts/:/scripts
