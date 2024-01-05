@@ -172,7 +172,7 @@ docker compose pull
 Will download the latest images for any services where you haven't hard-coded a service version.
 Updates are regularly pushed to improve the stability of Optimism nodes or to introduce new quality-of-life features like better logging and better metrics.
 I recommend that you run this command every once in a while (once a week should be more than enough).
-If you intend to maintain an Optimism node for a long time, it's also worth subscribing to the [Optimism Public Changelog](https://changelog.optimism.io/) via either [RSS](https://changelog.optimism.io/feed.xml) or the [optimism-announce@optimism.io mailing list](https://groups.google.com/a/optimism.io/g/optimism-announce).
+If you intend to maintain an Optimism node for a long time, it's also worth tracking the [Monorepo's releases](https://github.com/ethereum-optimism/optimism/releases) to keep an eye on important changes.
 
 ## What's Included
 
