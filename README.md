@@ -167,7 +167,7 @@ The available services are:
 
 ```sh
 docker compose pull
-docker compose up -d --build
+docker compose up --profile current -d --build
 ```
 
 Will download the latest images for any services where you haven't hard-coded a service version.
