@@ -7,9 +7,8 @@ Let's do it!
 
 ## Bedrock Support
 
-`simple-optimism-node` now supports the Bedrock versions of both OP Mainnet and OP Goerli.
+`simple-optimism-node` now supports the Bedrock versions of both OP Mainnet, OP Goerli, and OP Sepolia.
 Please note that, for the moment, this repository *only* supports running a Bedrock node from the pre-migrated data directory supplied by OP Labs.
-I am working on including the functionality for self-migration but I wanted to get something functional out there as quickly as possible.
 
 Previous versions of this repository used a torrenting system for downloading configuration files and data directories.
 I've decided to move to Cloudflare R2 temporarily since it provides better download speeds and is relatively inexpensive.
