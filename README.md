@@ -108,27 +108,21 @@ Open `.env` with your editor of choice
 ### Start
 
 ```sh
-docker compose --profile current up -d
+docker compose up -d
 ```
 
 Will start the node in a detatched shell (`-d`), meaning the node will continue to run in the background.
 
-If you want to self-host historical l2geth node, append `--profile legacy` to `--profile current` on every command.
-
-```sh
-docker compose --profile current --profile legacy up -d
-```
-
 ### View logs
 
 ```sh
-docker compose --profile current logs -f --tail 10
+docker compose logs -f --tail 10
 ```
 
 To view logs of all containers.
 
 ```sh
-docker compose --profile current logs <CONTAINER_NAME> -f --tail 10
+docker compose logs <CONTAINER_NAME> -f --tail 10
 ```
 
 To view logs for a specific container. Most commonly used `<CONTAINER_NAME>` are:
@@ -140,7 +134,7 @@ To view logs for a specific container. Most commonly used `<CONTAINER_NAME>` are
 ### Stop
 
 ```sh
-docker compose --profile current down
+docker compose down
 ```
 
 Will shut down the node without wiping any volumes.
@@ -149,7 +143,7 @@ You can safely run this command and then restart the node again.
 ### Restart
 
 ```sh
-docker compose --profile current restart
+docker compose restart
 ```
 
 Will restart the node safely with minimal downtime but without upgrading the node.
@@ -157,8 +151,8 @@ Will restart the node safely with minimal downtime but without upgrading the nod
 ### Upgrade
 
 ```sh
-docker compose --profile current pull
-docker compose --profile current up --build --force-recreate -d
+docker compose pull
+docker compose up --build --force-recreate -d
 ```
 
 Will upgrade your node with minimal downtime.
@@ -166,7 +160,7 @@ Will upgrade your node with minimal downtime.
 ### Wipe [DANGER]
 
 ```sh
-docker compose --profile current down -v
+docker compose down -v
 ```
 
 Will shut down the node and WIPE ALL DATA. Proceed with caution!
