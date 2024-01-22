@@ -18,6 +18,15 @@ function extractzst() {
   tar --use-compress-program=unzstd -xf $1 -C $2
 }
 
+# extract: Extracts a lz4 archive into an output location.
+# Arguments:
+#   arc: lz4 archive to to extract.
+#   loc: Location to extract to.
+function extractlz4() {
+  mkdir -p $2
+  tar --use-compress-program=lz4 -xf $1 -C $2
+}
+
 # download: Downloads a file and provides basic progress percentages.
 # Arguments:
 #   url: URL of the file to download.

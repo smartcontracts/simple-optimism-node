@@ -32,6 +32,8 @@ fi
 if [ -n "${BEDROCK_TAR_DOWNLOAD+x}" ]; then
   if [[ "$BEDROCK_TAR_DOWNLOAD" == *.zst ]]; then
     BEDROCK_TAR_PATH+=".zst"
+  elif [[ "$BEDROCK_TAR_DOWNLOAD" == *.lz4 ]]; then
+    BEDROCK_TAR_PATH+=".lz4"
   fi
 
   echo "Downloading bedrock.tar..."
@@ -40,6 +42,8 @@ if [ -n "${BEDROCK_TAR_DOWNLOAD+x}" ]; then
   echo "Extracting bedrock.tar..."
   if [[ "$BEDROCK_TAR_DOWNLOAD" == *.zst ]]; then
     extractzst $BEDROCK_TAR_PATH $GETH_DATA_DIR
+  elif [[ "$BEDROCK_TAR_DOWNLOAD" == *.lz4 ]]; then
+    extractlz4 $BEDROCK_TAR_PATH $GETH_DATA_DIR
   else
     extract $BEDROCK_TAR_PATH $GETH_DATA_DIR
   fi
