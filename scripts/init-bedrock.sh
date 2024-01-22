@@ -24,7 +24,7 @@ echo "Initializing via download..."
 # Fix OP link with hardcoded official OP snapshot
 echo "Fetching download link..."
 if [ "$NETWORK_NAME" = "op-mainnet" ]; then
-  BEDROCK_TAR_DOWNLOAD="https://datadirs.optimism.io/mainnet-bedrock.tar.zst"
+  BEDROCK_TAR_DOWNLOAD="https://r2-snapshots.fastnode.io/op/$(curl -s https://r2-snapshots.fastnode.io/op/latest-mainnet).tar.lz4"
 elif [ "$NETWORK_NAME" = "op-goerli" ]; then
   BEDROCK_TAR_DOWNLOAD="https://datadirs.optimism.io/goerli-bedrock.tar.zst"
 fi

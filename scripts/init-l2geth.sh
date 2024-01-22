@@ -1,6 +1,14 @@
 #!/bin/sh
 set -eou
 
+if [ "$NETWORK_NAME" != "op-mainnet" ]; then
+  exit
+fi
+
+if [ -n "${OP_GETH__HISTORICAL_RPC+x}" ]; then
+  exit
+fi
+
 GETH_DATA_DIR=/geth
 GETH_CHAINDATA_DIR=$GETH_DATA_DIR/geth/chaindata
 GETH_KEYSTORE_DIR=$GETH_DATA_DIR/keystore
