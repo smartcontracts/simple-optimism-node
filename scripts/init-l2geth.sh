@@ -1,6 +1,16 @@
 #!/bin/sh
 set -eou
 
+if [ "$NETWORK_NAME" != "op-mainnet" ]; then
+  echo "Stopping l2geth for a non op-mainnet chain"
+  exit
+fi
+
+if [ -n "${OP_GETH__HISTORICAL_RPC+x}" ]; then
+  echo "Stopping l2geth for using an external historical RPC"
+  exit
+fi
+
 GETH_DATA_DIR=/geth
 GETH_CHAINDATA_DIR=$GETH_DATA_DIR/geth/chaindata
 GETH_KEYSTORE_DIR=$GETH_DATA_DIR/keystore

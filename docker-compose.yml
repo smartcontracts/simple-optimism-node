@@ -2,7 +2,7 @@ version: "3.4"
 services:
   l2geth:
     image: ethereumoptimism/l2geth:${IMAGE_TAG__L2GETH:-latest}
-    restart: unless-stopped
+    restart: on-failure
     stop_grace_period: 5m
     entrypoint: 
       - /bin/sh
@@ -17,8 +17,6 @@ services:
     ports:
       - ${PORT__L2GETH_HTTP:-9991}:8545
       - ${PORT__L2GETH_WS:-9992}:8546
-    profiles:
-      - legacy
 
   healthcheck:
     image: ethereumoptimism/replica-healthcheck:${IMAGE_TAG__HEALTHCHECK:-latest}
@@ -28,8 +26,6 @@ services:
       - .env
     ports:
       - ${PORT__HEALTHCHECK_METRICS:-7300}:7300
-    profiles:
-      - current
 
   op-geth:
     image: us-docker.pkg.dev/oplabs-tools-artifacts/images/op-geth:v1.101304.2
@@ -47,8 +43,6 @@ services:
     ports:
       - ${PORT__OP_GETH_HTTP:-9993}:8545
       - ${PORT__OP_GETH_WS:-9994}:8546
-    profiles:
-      - current
 
   op-node:
     image: us-docker.pkg.dev/oplabs-tools-artifacts/images/op-node:v1.4.1
@@ -65,8 +59,6 @@ services:
     ports:
       - ${PORT__OP_NODE_P2P:-9003}:9003/udp
       - ${PORT__OP_NODE_P2P:-9003}:9003/tcp
-    profiles:
-      - current
 
   bedrock-init:
     build:
@@ -82,8 +74,6 @@ services:
       - op_geth:/geth
       - geth:/legacy-geth
       - torrent_downloads:/downloads
-    profiles:
-      - current
 
   prometheus:
     image: prom/prometheus:${IMAGE_TAG__PROMETHEUS:-latest}
@@ -95,9 +85,6 @@ services:
       - prometheus_data:/prometheus
     ports:
       - ${PORT__PROMETHEUS:-9090}:9090
-    profiles:
-      - legacy
-      - current
 
   grafana:
     image: grafana/grafana:${IMAGE_TAG__GRAFANA:-9.3.0}
@@ -110,9 +97,6 @@ services:
       - grafana_data:/var/lib/grafana
     ports:
       - ${PORT__GRAFANA:-3000}:3000
-    profiles:
-      - legacy
-      - current
 
   influxdb:
     image: influxdb:${IMAGE_TAG__INFLUXDB:-1.8}
@@ -124,9 +108,6 @@ services:
       - influxdb_data:/var/lib/influxdb
     ports:
       - ${PORT__INFLUXDB:-8086}:8086
-    profiles:
-      - legacy
-      - current
 
 volumes:
   dtl:

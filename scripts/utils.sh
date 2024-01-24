@@ -18,16 +18,21 @@ function extractzst() {
   tar --use-compress-program=unzstd -xf $1 -C $2
 }
 
+# extract: Extracts a lz4 archive into an output location.
+# Arguments:
+#   arc: lz4 archive to to extract.
+#   loc: Location to extract to.
+function extractlz4() {
+  mkdir -p $2
+  tar --use-compress-program=lz4 -xf $1 -C $2
+}
+
 # download: Downloads a file and provides basic progress percentages.
 # Arguments:
 #   url: URL of the file to download.
 #   out: Location to download the file to.
 function download() {
-  SIZE=$(curl -sI $1 | grep -i Content-Length | awk '{print $2}')
-  (while true ; do sleep 60; echo "$(ls -l $2 | awk -v size=$SIZE '{printf "Download Progress: %.2f%%\n", $5/size*100}')"; done) &
-  monitor_pid=$!
-  aria2c --max-tries=0 -o $2 $1
-  kill $monitor_pid
+  aria2c --max-tries=0 -x 16 -s 16 -k100M -o $2 $1
 }
 
 # chainwait: Waits for a chain to be running.
