@@ -16,6 +16,8 @@ A simple docker compose script for launching full / archive node for OP Stack ch
 
 ### Install docker and docker compose
 
+> Note: If you're not logged in as root, you'll need to log out and log in again after installation to complete the docker installation.
+
 Note: This command install docker and docker compose for Ubuntu. For windows and mac desktop or laptop, please use Docker Desktop. For other OS, please find instruction in Google.
 
 ```sh
@@ -47,9 +49,7 @@ sudo usermod -aG docker $(whoami)
 sudo docker run hello-world
 ```
 
-> Note: If you're not logged in as root, you'll need to log out and log in again to complete the docker installation.
-
-After logged back in, test if docker is working by running.
+(For non-root user) After logged out and logged back in, test if docker is working by running.
 
 ```sh
 docker ps
@@ -108,10 +108,10 @@ Open `.env` with your editor of choice
 ### Start
 
 ```sh
-docker compose up -d
+docker compose up -d --build
 ```
 
-Will start the node in a detatched shell (`-d`), meaning the node will continue to run in the background.
+Will start the node in a detatched shell (`-d`), meaning the node will continue to run in the background. We recommended to add `--build` to make sure that latest changes are being applied.
 
 ### View logs
 
@@ -152,7 +152,7 @@ Will restart the node safely with minimal downtime but without upgrading the nod
 
 ```sh
 docker compose pull
-docker compose up --build --force-recreate -d
+docker compose up -d --build --force-recreate
 ```
 
 Will upgrade your node with minimal downtime.
