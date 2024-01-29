@@ -14,6 +14,3 @@ RUN cp /usr/local/go/bin/go /usr/bin/go
 RUN curl -L https://foundry.paradigm.xyz | bash
 RUN /root/.foundry/bin/foundryup
 RUN rsync -a /root/.foundry/bin/ /usr/bin/
-
-# Install Python packages.
-RUN pip3 install qbittorrent-api
