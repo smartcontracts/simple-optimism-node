@@ -24,7 +24,7 @@ function extractzst() {
 #   loc: Location to extract to.
 function extractlz4() {
   mkdir -p $2
-  tar --use-compress-program=lz4 -xf $1 -C $2
+  tar --use-compress-program="lz4 --no-crc" -xf $1 -C $2
 }
 
 # download: Downloads a file and provides basic progress percentages.
