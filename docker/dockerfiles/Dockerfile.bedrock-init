@@ -1,4 +1,4 @@
-FROM ubuntu:22.04
+FROM ubuntu:23.10
 
 # Disable prompts during package installation.
 ARG DEBIAN_FRONTEND=noninteractive
@@ -7,13 +7,10 @@ ARG DEBIAN_FRONTEND=noninteractive
 RUN apt-get update && apt install -y curl wget git rsync build-essential openssl python3 python3-pip aria2 zstd lz4
 
 # Install Go.
-RUN curl -sSL https://golang.org/dl/go1.19.5.linux-amd64.tar.gz | tar -v -C /usr/local -xz
+RUN curl -sSL https://golang.org/dl/go1.21.6.linux-amd64.tar.gz | tar -v -C /usr/local -xz
 RUN cp /usr/local/go/bin/go /usr/bin/go
 
 # Install Foundry.
 RUN curl -L https://foundry.paradigm.xyz | bash
 RUN /root/.foundry/bin/foundryup
 RUN rsync -a /root/.foundry/bin/ /usr/bin/
-
-# Install Python packages.
-RUN pip3 install qbittorrent-api
