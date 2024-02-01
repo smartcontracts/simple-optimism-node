@@ -174,6 +174,15 @@ Run progress.sh to estimate remaining sync time and speed.
 ./progress.sh
 ```
 
+This will show the sync speed in blocks per minute and the time until sync is completed.
+
+```
+Chain ID: 10
+Please wait
+Blocks per minute: ...
+Hours until sync completed: ...
+```
+
 ### Grafana dashboard
 
 Grafana is exposed at [http://localhost:3000](http://localhost:3000) and comes with one pre-loaded dashboard ("Simple Node Dashboard").
