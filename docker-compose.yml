@@ -45,7 +45,7 @@ services:
       - ${PORT__OP_GETH_WS:-9994}:8546
 
   op-node:
-    image: us-docker.pkg.dev/oplabs-tools-artifacts/images/op-node:v1.4.1
+    image: us-docker.pkg.dev/oplabs-tools-artifacts/images/op-node:v1.4.3
     restart: unless-stopped
     stop_grace_period: 5m
     entrypoint: /scripts/start-op-node.sh
