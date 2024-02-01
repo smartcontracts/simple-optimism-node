@@ -1,6 +1,11 @@
 #!/usr/bin/bash
 
-export ETH_RPC_URL=http://localhost:8545
+# Load Environment Variables
+if [ -f .env ]; then
+  export $(cat .env | grep -v '#' | sed 's/\r$//' | awk '/=/ {print $1}' )
+fi
+
+export ETH_RPC_URL=http://localhost:${PORT__OP_GETH_HTTP:-9993}
 CHAIN_ID=`cast chain-id`
 echo Chain ID: $CHAIN_ID
 echo Please wait
