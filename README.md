@@ -149,7 +149,10 @@ Will restart the node safely with minimal downtime but without upgrading the nod
 
 ### Upgrade
 
+Pull the latest updates from GitHub, and Docker Hub and rebuild the container.
+
 ```sh
+git pull
 docker compose pull
 docker compose up -d --build --force-recreate
 ```
