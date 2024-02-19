@@ -31,6 +31,8 @@ if [ "$NODE_TYPE" = "full" ]; then
     BEDROCK_TAR_DOWNLOAD="https://datadirs.optimism.io/goerli-bedrock.tar.zst"
   elif [ "$NETWORK_NAME" = "base-mainnet" ]; then
     BEDROCK_TAR_DOWNLOAD="https://base-snapshots-mainnet-archive.s3.amazonaws.com/$(curl -s https://base-snapshots-mainnet-archive.s3.amazonaws.com/latest)"
+  elif [ "$NETWORK_NAME" = "base-goerli" ]; then
+    BEDROCK_TAR_DOWNLOAD="https://base-snapshots-goerli-archive.s3.amazonaws.com/$(curl -s https://base-snapshots-goerli-archive.s3.amazonaws.com/latest)"
   elif [ "$NETWORK_NAME" = "base-sepolia" ]; then
     BEDROCK_TAR_DOWNLOAD="https://base-snapshots-sepolia-archive.s3.amazonaws.com/$(curl -s https://base-snapshots-sepolia-archive.s3.amazonaws.com/latest)"
   fi
