@@ -38,7 +38,7 @@ if [ "$NODE_TYPE" = "full" ]; then
   fi
 elif [ "$NODE_TYPE" = "archive" ]; then
   if [ "$NETWORK_NAME" = "op-mainnet" ]; then
-    BEDROCK_TAR_DOWNLOAD="https://datadirs.optimism.io/latest"
+    BEDROCK_TAR_DOWNLOAD="$(curl -s https://datadirs.optimism.io/latest/ | grep -oE 'https://[^\"]+')"
   fi
 fi
 
