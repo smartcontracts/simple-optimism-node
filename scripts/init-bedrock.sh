@@ -38,7 +38,7 @@ if [ "$NODE_TYPE" = "full" ]; then
   fi
 elif [ "$NODE_TYPE" = "archive" ]; then
   if [ "$NETWORK_NAME" = "op-mainnet" ]; then
-    BEDROCK_TAR_DOWNLOAD="https://datadirs.optimism.io/mainnet-2024-01-26.tar.zst"
+    BEDROCK_TAR_DOWNLOAD="https://datadirs.optimism.io/latest"
   fi
 fi
 
