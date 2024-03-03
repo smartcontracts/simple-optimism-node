@@ -45,7 +45,7 @@ exec geth \
   --metrics.influxdb \
   --metrics.influxdb.endpoint=http://influxdb:8086 \
   --metrics.influxdb.database=opgeth \
-  --syncmode=full \
+  --syncmode="$SYNCMODE" \
   --gcmode="$NODE_TYPE" \
   --nodiscover \
   --maxpeers=0 \
@@ -56,6 +56,5 @@ exec geth \
   --authrpc.jwtsecret=/shared/jwt.txt \
   --rollup.sequencerhttp="$BEDROCK_SEQUENCER_HTTP" \
   --rollup.disabletxpoolgossip=true \
-  --syncmode="$SYNCMODE" \
   $EXTENDED_ARG $@
 
