@@ -47,9 +47,6 @@ exec geth \
   --metrics.influxdb.database=opgeth \
   --syncmode="$SYNCMODE" \
   --gcmode="$NODE_TYPE" \
-  --nodiscover \
-  --maxpeers=0 \
-  --networkid=420 \
   --authrpc.vhosts="*" \
   --authrpc.addr=0.0.0.0 \
   --authrpc.port=8551 \
