@@ -2,9 +2,9 @@
 set -eou
 
 # Wait for the Bedrock flag for this network to be set.
+echo "Waiting for Bedrock node to initialize..."
 while [ ! -f /shared/initialized.txt ]; do
-  echo "Waiting for Bedrock node to initialize..."
-  sleep 5
+  sleep 1
 done
 
 if [ -z "${IS_CUSTOM_CHAIN+x}" ]; then
@@ -18,6 +18,13 @@ fi
 # Init genesis if custom chain
 if [ -n "${IS_CUSTOM_CHAIN+x}" ]; then
   geth init --datadir="$BEDROCK_DATADIR" /chainconfig/genesis.json
+fi
+
+# Determine syncmode based on NODE_TYPE
+if [ "$NODE_TYPE" = "full" ]; then
+  export SYNCMODE="snap"
+else
+  export SYNCMODE="full"
 fi
 
 # Start op-geth.
@@ -49,5 +56,6 @@ exec geth \
   --authrpc.jwtsecret=/shared/jwt.txt \
   --rollup.sequencerhttp="$BEDROCK_SEQUENCER_HTTP" \
   --rollup.disabletxpoolgossip=true \
+  --syncmode="$SYNCMODE" \
   $EXTENDED_ARG $@
 

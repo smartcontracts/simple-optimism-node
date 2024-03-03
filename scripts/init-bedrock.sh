@@ -24,19 +24,7 @@ echo "Initializing via download..."
 # Fix OP link with hardcoded official OP snapshot
 echo "Fetching download link..."
 
-if [ "$NODE_TYPE" = "full" ]; then
-  if [ "$NETWORK_NAME" = "op-mainnet" ]; then
-    BEDROCK_TAR_DOWNLOAD="https://r2-snapshots.fastnode.io/op/$(curl -s https://r2-snapshots.fastnode.io/op/latest-mainnet)"
-  elif [ "$NETWORK_NAME" = "op-goerli" ]; then
-    BEDROCK_TAR_DOWNLOAD="https://datadirs.optimism.io/goerli-bedrock.tar.zst"
-  elif [ "$NETWORK_NAME" = "base-mainnet" ]; then
-    BEDROCK_TAR_DOWNLOAD="https://base-snapshots-mainnet-archive.s3.amazonaws.com/$(curl -s https://base-snapshots-mainnet-archive.s3.amazonaws.com/latest)"
-  elif [ "$NETWORK_NAME" = "base-goerli" ]; then
-    BEDROCK_TAR_DOWNLOAD="https://base-snapshots-goerli-archive.s3.amazonaws.com/$(curl -s https://base-snapshots-goerli-archive.s3.amazonaws.com/latest)"
-  elif [ "$NETWORK_NAME" = "base-sepolia" ]; then
-    BEDROCK_TAR_DOWNLOAD="https://base-snapshots-sepolia-archive.s3.amazonaws.com/$(curl -s https://base-snapshots-sepolia-archive.s3.amazonaws.com/latest)"
-  fi
-elif [ "$NODE_TYPE" = "archive" ]; then
+if [ "$NODE_TYPE" = "archive" ]; then
   if [ "$NETWORK_NAME" = "op-mainnet" ]; then
     BEDROCK_TAR_DOWNLOAD="$(curl -s https://datadirs.optimism.io/latest/ | grep -oE 'https://[^\"]+')"
   fi

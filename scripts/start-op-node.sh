@@ -2,9 +2,9 @@
 set -eou
 
 # Wait for the Bedrock flag for this network to be set.
+echo "Waiting for Bedrock node to initialize..."
 while [ ! -f /shared/initialized.txt ]; do
-  echo "Waiting for Bedrock node to initialize..."
-  sleep 5
+  sleep 1
 done
 
 if [ -n "${IS_CUSTOM_CHAIN+x}" ]; then
@@ -26,4 +26,5 @@ exec op-node \
   --metrics.enabled \
   --metrics.addr=0.0.0.0 \
   --metrics.port=7300 \
+  --syncmode=execution-layer \
   $EXTENDED_ARG $@
