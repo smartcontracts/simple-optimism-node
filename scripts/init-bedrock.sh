@@ -26,7 +26,7 @@ echo "Fetching download link..."
 
 if [ "$NODE_TYPE" = "full" ]; then
   # Warning: syncmode=full for syncing full node is deprecated and not recommended to use
-  if [ "$OP_GETH__SYNCMODE" = "full" ]; then
+  if [ "${OP_GETH__SYNCMODE+x}" = "full" ]; then
     if [ "$NETWORK_NAME" = "op-mainnet" ]; then
       BEDROCK_TAR_DOWNLOAD="https://r2-snapshots.fastnode.io/op/$(curl -s https://r2-snapshots.fastnode.io/op/latest-mainnet)"
     elif [ "$NETWORK_NAME" = "op-goerli" ]; then
