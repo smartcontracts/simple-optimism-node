@@ -21,10 +21,12 @@ if [ -n "${IS_CUSTOM_CHAIN+x}" ]; then
 fi
 
 # Determine syncmode based on NODE_TYPE
-if [ "$NODE_TYPE" = "full" ]; then
-  export SYNCMODE="snap"
-else
-  export SYNCMODE="full"
+if [ -z "${OP_GETH__SYNCMODE+x}" ]; then
+  if [ "$NODE_TYPE" = "full" ]; then
+    export OP_GETH__SYNCMODE="snap"
+  else
+    export OP_GETH__SYNCMODE="full"
+  fi
 fi
 
 # Start op-geth.
@@ -45,7 +47,7 @@ exec geth \
   --metrics.influxdb \
   --metrics.influxdb.endpoint=http://influxdb:8086 \
   --metrics.influxdb.database=opgeth \
-  --syncmode="$SYNCMODE" \
+  --syncmode="$OP_GETH__SYNCMODE" \
   --gcmode="$NODE_TYPE" \
   --authrpc.vhosts="*" \
   --authrpc.addr=0.0.0.0 \
