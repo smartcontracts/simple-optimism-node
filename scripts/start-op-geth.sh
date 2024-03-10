@@ -2,9 +2,9 @@
 set -eou
 
 # Wait for the Bedrock flag for this network to be set.
+echo "Waiting for Bedrock node to initialize..."
 while [ ! -f /shared/initialized.txt ]; do
-  echo "Waiting for Bedrock node to initialize..."
-  sleep 5
+  sleep 1
 done
 
 if [ -z "${IS_CUSTOM_CHAIN+x}" ]; then
@@ -18,6 +18,15 @@ fi
 # Init genesis if custom chain
 if [ -n "${IS_CUSTOM_CHAIN+x}" ]; then
   geth init --datadir="$BEDROCK_DATADIR" /chainconfig/genesis.json
+fi
+
+# Determine syncmode based on NODE_TYPE
+if [ -z "${OP_GETH__SYNCMODE+x}" ]; then
+  if [ "$NODE_TYPE" = "full" ]; then
+    export OP_GETH__SYNCMODE="snap"
+  else
+    export OP_GETH__SYNCMODE="full"
+  fi
 fi
 
 # Start op-geth.
@@ -38,16 +47,15 @@ exec geth \
   --metrics.influxdb \
   --metrics.influxdb.endpoint=http://influxdb:8086 \
   --metrics.influxdb.database=opgeth \
-  --syncmode=full \
+  --syncmode="$OP_GETH__SYNCMODE" \
   --gcmode="$NODE_TYPE" \
-  --nodiscover \
-  --maxpeers=0 \
-  --networkid=420 \
   --authrpc.vhosts="*" \
   --authrpc.addr=0.0.0.0 \
   --authrpc.port=8551 \
   --authrpc.jwtsecret=/shared/jwt.txt \
   --rollup.sequencerhttp="$BEDROCK_SEQUENCER_HTTP" \
   --rollup.disabletxpoolgossip=true \
+  --port="${PORT__OP_GETH_P2P:-39393}" \
+  --discovery.port="${PORT__OP_GETH_P2P:-39393}" \
   $EXTENDED_ARG $@
 
