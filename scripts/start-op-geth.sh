@@ -57,5 +57,7 @@ exec geth \
   --rollup.disabletxpoolgossip=true \
   --port="${PORT__OP_GETH_P2P:-39393}" \
   --discovery.port="${PORT__OP_GETH_P2P:-39393}" \
+  --db.engine=pebble \
+  --state.scheme=hash \
   $EXTENDED_ARG $@
 
