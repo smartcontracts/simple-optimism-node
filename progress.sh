@@ -1,4 +1,4 @@
-#!/usr/bin/bash
+#!/bin/bash
 
 # Load Environment Variables
 if [ -f .env ]; then
