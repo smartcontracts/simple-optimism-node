@@ -63,6 +63,7 @@ services:
     ports:
       - ${PORT__OP_NODE_P2P:-9003}:9003/udp
       - ${PORT__OP_NODE_P2P:-9003}:9003/tcp
+      - ${PORT__OP_NODE_HTTP:-9545}:9545
     extra_hosts:
       - "host.docker.internal:host-gateway"
 

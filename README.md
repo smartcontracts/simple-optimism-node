@@ -7,8 +7,16 @@ A simple docker compose script for launching full / archive node for OP Stack ch
 
 ## Recommended Hardware
 
+### OP and Base Mainnet
+
 - 16GB+ RAM
-- 2TB SSD (NVME Recommended)
+- 2 TB SSD (NVME Recommended)
+- 100mb/s+ Download
+
+### Testnets
+
+- 16GB+ RAM
+- 500 GB SSD (NVME Recommended)
 - 100mb/s+ Download
 
 ## Installation and Configuration
