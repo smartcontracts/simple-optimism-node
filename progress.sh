@@ -1,14 +1,18 @@
 #!/bin/bash
 
+set -eu
+
 # Load Environment Variables
 if [ -f .env ]; then
   export $(cat .env | grep -v '#' | sed 's/\r$//' | awk '/=/ {print $1}' )
 fi
 
 export ETH_RPC_URL=http://localhost:${PORT__OP_GETH_HTTP:-9993}
+# Cast is provided by Foundry: https://getfoundry.sh/.
+# Run `pnpm install:foundry` in the optimism repo root.
 CHAIN_ID=`cast chain-id`
 echo Chain ID: $CHAIN_ID
-echo Please wait
+echo Sampling, please wait
 
 if [ $CHAIN_ID -eq 10 ]; then
   L2_URL=https://mainnet.optimism.io
@@ -31,7 +35,7 @@ echo Blocks per minute: $PER_MIN
 
 
 if [ $PER_MIN -eq 0 ]; then
-    echo Not synching
+    echo Not syncing
     exit;
 fi
 
