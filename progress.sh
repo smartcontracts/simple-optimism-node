@@ -29,8 +29,8 @@ if [ $CHAIN_ID -eq 11155420 ]; then
 fi
 
 T0=`cast block-number --rpc-url $ETH_RPC_URL` ; sleep 10 ; T1=`cast block-number --rpc-url $ETH_RPC_URL`
-PER_MIN=`expr $T1 - $T0`
-PER_MIN=`expr $PER_MIN \* 6`
+PER_MIN=$(($T1 - $T0))
+PER_MIN=$(($PER_MIN * 6))
 echo Blocks per minute: $PER_MIN
 
 
