@@ -18,12 +18,6 @@ if [ $CHAIN_ID -eq 10 ]; then
   L2_URL=https://mainnet.optimism.io
 fi
 
-
-if [ $CHAIN_ID -eq 420 ]; then
-  L2_URL=https://goerli.optimism.io
-fi
-
-
 if [ $CHAIN_ID -eq 11155420 ]; then
   L2_URL=https://sepolia.optimism.io
 fi
