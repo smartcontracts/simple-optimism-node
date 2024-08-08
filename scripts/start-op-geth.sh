@@ -21,7 +21,7 @@ if [ -n "${IS_CUSTOM_CHAIN+x}" ]; then
 fi
 
 # Determine syncmode based on NODE_TYPE
-if [ -z "${OP_GETH__SYNCMODE+x}" ]; then
+if [ -z "$OP_GETH__SYNCMODE" ]; then
   if [ "$NODE_TYPE" = "full" ]; then
     export OP_GETH__SYNCMODE="snap"
   else
