@@ -1,5 +1,5 @@
 #!/bin/bash
-set -eou
+set -e
 
 # Import utilities.
 source ./scripts/utils.sh

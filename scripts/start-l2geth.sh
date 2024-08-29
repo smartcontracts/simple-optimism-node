@@ -1,5 +1,5 @@
 #!/bin/sh
-set -eou
+set -e
 
 if [ "$NETWORK_NAME" != "op-mainnet" ]; then
   echo "Stopping l2geth for a non op-mainnet chain"

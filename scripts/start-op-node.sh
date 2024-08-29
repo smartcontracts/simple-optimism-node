@@ -1,5 +1,5 @@
 #!/bin/sh
-set -eou
+set -e
 
 # Wait for the Bedrock flag for this network to be set.
 echo "Waiting for Bedrock node to initialize..."
