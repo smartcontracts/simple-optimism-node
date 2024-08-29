@@ -6,7 +6,7 @@ if [ "$NETWORK_NAME" != "op-mainnet" ]; then
   exit
 fi
 
-if [ -n "${OP_GETH__HISTORICAL_RPC+x}" ]; then
+if [ -n "${OP_GETH__HISTORICAL_RPC}" ]; then
   echo "Stopping l2geth for using an external historical RPC"
   exit
 fi
