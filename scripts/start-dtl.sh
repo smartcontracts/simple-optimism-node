@@ -1,5 +1,5 @@
 #!/bin/sh
-set -eou
+set -e
 
 # Setting both endpoints doesn't hurt.
 export DATA_TRANSPORT_LAYER__L1_RPC_ENDPOINT=$DATA_TRANSPORT_LAYER__RPC_ENDPOINT
