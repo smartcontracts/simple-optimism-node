@@ -171,7 +171,7 @@ Pull the latest updates from GitHub, and Docker Hub and rebuild the container.
 ```sh
 git pull
 docker compose pull
-docker compose up -d --build --force-recreate
+docker compose up -d --build
 ```
 
 Will upgrade your node with minimal downtime.
