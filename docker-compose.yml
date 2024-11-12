@@ -1,24 +1,25 @@
 version: "3.4"
 services:
-  l2geth:
-    image: ethereumoptimism/l2geth:${IMAGE_TAG__L2GETH:-latest}
-    restart: on-failure
-    stop_grace_period: 5m
-    entrypoint: 
-      - /bin/sh
-      - -c
-      - "/scripts/init-l2geth.sh && /scripts/start-l2geth.sh"
-    env_file:
-      - ./envs/common/l2geth.env
-      - .env
-    volumes:
-      - geth:/geth
-      - ./scripts/:/scripts/
-    ports:
-      - ${PORT__L2GETH_HTTP:-9991}:8545
-      - ${PORT__L2GETH_WS:-9992}:8546
+  # l2geth:
+  #   image: ethereumoptimism/l2geth:${IMAGE_TAG__L2GETH:-latest}
+  #   restart: on-failure
+  #   stop_grace_period: 5m
+  #   entrypoint: 
+  #     - /bin/sh
+  #     - -c
+  #     - "/scripts/init-l2geth.sh && /scripts/start-l2geth.sh"
+  #   env_file:
+  #     - ./envs/common/l2geth.env
+  #     - .env
+  #   volumes:
+  #     - geth:/geth
+  #     - ./scripts/:/scripts/
+  #   ports:
+  #     - ${PORT__L2GETH_HTTP:-9991}:8545
+  #     - ${PORT__L2GETH_WS:-9992}:8546
 
   healthcheck:
+    platform: linux/amd64
     image: ethereumoptimism/replica-healthcheck:${IMAGE_TAG__HEALTHCHECK:-latest}
     restart: unless-stopped
     env_file:
@@ -28,7 +29,8 @@ services:
       - ${PORT__HEALTHCHECK_METRICS:-7300}:7300
 
   op-geth:
-    image: us-docker.pkg.dev/oplabs-tools-artifacts/images/op-geth:v1.101411.0
+    platform: linux/amd64
+    image: us-west1-docker.pkg.dev/devopsre/celo-blockchain-public/op-geth:celo8
     restart: unless-stopped
     stop_grace_period: 5m
     entrypoint: /scripts/start-op-geth.sh
@@ -49,7 +51,8 @@ services:
       - "host.docker.internal:host-gateway"
 
   op-node:
-    image: us-docker.pkg.dev/oplabs-tools-artifacts/images/op-node:v1.9.4
+    platform: linux/amd64
+    image: us-west1-docker.pkg.dev/devopsre/celo-blockchain-public/op-node:celo9
     restart: unless-stopped
     stop_grace_period: 5m
     entrypoint: /scripts/start-op-node.sh
@@ -83,6 +86,7 @@ services:
       - torrent_downloads:/downloads
 
   prometheus:
+    platform: linux/amd64
     image: prom/prometheus:${IMAGE_TAG__PROMETHEUS:-latest}
     restart: unless-stopped
     env_file:
@@ -94,6 +98,7 @@ services:
       - ${PORT__PROMETHEUS:-9090}:9090
 
   grafana:
+    platform: linux/amd64
     image: grafana/grafana:${IMAGE_TAG__GRAFANA:-9.3.0}
     restart: unless-stopped
     env_file:
@@ -106,6 +111,7 @@ services:
       - ${PORT__GRAFANA:-3000}:3000
 
   influxdb:
+    platform: linux/amd64
     image: influxdb:${IMAGE_TAG__INFLUXDB:-1.8}
     restart: unless-stopped
     env_file:
