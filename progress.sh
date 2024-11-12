@@ -36,9 +36,9 @@ fi
 
 # How many more blocks do we need?
 HEAD=`cast block-number --rpc-url $L2_URL`
-BEHIND=`expr $HEAD - $T1`
-MINUTES=`expr $BEHIND / $PER_MIN`
-HOURS=`expr $MINUTES / 60`
+BEHIND=$((HEAD - T1))
+MINUTES=$((BEHIND / PER_MIN))
+HOURS=$((MINUTES / 60))
 
 if [ $MINUTES -le 60 ] ; then
    echo Minutes until sync completed: $MINUTES
