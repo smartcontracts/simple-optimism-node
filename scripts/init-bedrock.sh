@@ -24,7 +24,6 @@ echo "Initializing via download..."
 # Fix OP link with hardcoded official OP snapshot
 echo "Fetching download link..."
 
-echo $NODE_TYPE, $NETWORK_NAME, $OP_GETH__SYNCMODE
 if [ "$NODE_TYPE" = "full" ]; then
   # Warning: syncmode=full for syncing full node is deprecated and not recommended to use
   if [ "$OP_GETH__SYNCMODE" = "full" ]; then
@@ -32,8 +31,6 @@ if [ "$NODE_TYPE" = "full" ]; then
       BEDROCK_TAR_DOWNLOAD="https://r2-snapshots.fastnode.io/op/$(curl -s https://r2-snapshots.fastnode.io/op/latest-mainnet)"
     elif [ "$NETWORK_NAME" = "op-goerli" ]; then
       BEDROCK_TAR_DOWNLOAD="https://datadirs.optimism.io/goerli-bedrock.tar.zst"
-    elif [ "$NETWORK_NAME" = "alfajores" ]; then
-      BEDROCK_TAR_DOWNLOAD="https://storage.googleapis.com/cel2-rollup-files/alfajores/alfajores-migrated-datadir.tar.zst"
     fi
   fi
 elif [ "$NODE_TYPE" = "archive" ]; then
