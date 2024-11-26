@@ -67,7 +67,7 @@ It should returns an empty container list without having any error. Otherwise, r
 ### Clone the Repository
 
 ```sh
-git clone https://github.com/karlb/simple-optimism-node.git
+git clone https://github.com/simple-celo-node/simple-optimism-node.git
 cd simple-optimism-node
 ```
 
