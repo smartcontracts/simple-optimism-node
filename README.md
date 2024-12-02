@@ -64,6 +64,14 @@ docker ps
 
 It should returns an empty container list without having any error. Otherwise, restart your machine if there are errors.
 
+### MacOS configure virtual disk limit
+
+If using Docker Desktop on MacOS you may need to increase the virtual disk
+limit since the default size will likely not be enough to hold the chaindata
+for any chains that have been operating for a while. This can be done by
+opening Docker Desktop, going to Settings -> Resources -> Advanced and
+increasing the disk image size.
+
 ### Clone the Repository
 
 ```sh
