@@ -1,6 +1,6 @@
-# Simple Celo Node
+# Simple Celo L2 Node
 
-A simple docker compose script for launching Celo nodes.
+A simple docker compose script for launching Celo L2 full nodes.
 
 Supported networks:
 - Alfajores (Testnet)
