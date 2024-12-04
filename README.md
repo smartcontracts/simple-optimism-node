@@ -75,8 +75,8 @@ increasing the disk image size.
 ### Clone the Repository
 
 ```sh
-git clone https://github.com/simple-celo-node/simple-optimism-node.git
-cd simple-optimism-node
+git clone https://github.com/celo-org/simple-celo-node.git
+cd simple-celo-node
 ```
 
 ### Copy .env.example to .env
