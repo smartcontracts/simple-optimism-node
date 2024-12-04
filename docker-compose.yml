@@ -30,7 +30,7 @@ services:
 
   op-geth:
     platform: linux/amd64
-    image: us-west1-docker.pkg.dev/devopsre/celo-blockchain-public/op-geth:celo8
+    image: us-west1-docker.pkg.dev/blockchaintestsglobaltestnet/dev-images/op-geth:70a7e9baa9b6fc4ef47365a5186ebd7aac53dbf5
     restart: unless-stopped
     stop_grace_period: 5m
     entrypoint: /scripts/start-op-geth.sh
@@ -52,7 +52,7 @@ services:
 
   op-node:
     platform: linux/amd64
-    image: us-west1-docker.pkg.dev/devopsre/celo-blockchain-public/op-node:celo9
+    image: us-west1-docker.pkg.dev/blockchaintestsglobaltestnet/dev-images/op-node:b41faa95a0eaa0550ddcf4742ca8abf7b940b901
     restart: unless-stopped
     stop_grace_period: 5m
     entrypoint: /scripts/start-op-node.sh

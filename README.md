@@ -4,6 +4,7 @@ A simple docker compose script for launching Celo L2 full nodes.
 
 Supported networks:
 - Alfajores (Testnet)
+- Baklava (Testnet)
 
 Supported sync modes:
 - Snap sync
@@ -91,7 +92,18 @@ Open `.env` with your editor of choice
 
 ### Mandatory configurations
 
-None, the default configuration can be used as is for running an Alfajores snap sync node.
+The default configuration can be used as is for running an Alfajores snap sync node.
+
+If you want to run a Baklava node instead, set
+```
+NETWORK_NAME=baklava
+# Don't use these while baklava L1 is still running
+# HEALTHCHECK__REFERENCE_RPC_PROVIDER=https://baklava-forno.celo-testnet.org
+# OP_GETH__HISTORICAL_RPC=https://baklava-forno.celo-testnet.org
+# Use these instead:
+HEALTHCHECK__REFERENCE_RPC_PROVIDER=https://baklava-forno.baklava.celo-testnet.org
+OP_GETH__HISTORICAL_RPC=https://baklava-forno.baklava.celo-testnet.org
+```
 
 ### Optional configurations
 
