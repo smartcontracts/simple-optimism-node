@@ -2,10 +2,6 @@
 
 A simple docker compose script for launching Celo L2 full nodes.
 
-Supported networks:
-- Alfajores (Testnet)
-- Baklava (Testnet)
-
 Supported sync modes:
 - Snap sync
 
@@ -80,33 +76,23 @@ git clone https://github.com/celo-org/simple-celo-node.git
 cd simple-celo-node
 ```
 
-### Copy .env.example to .env
+### Copy network env to .env
 
-Make a copy of `.env.example` named `.env`.
+Copy the desired network environment file to `.env`.
+
+E.G. to run a node on Alfajores:
 
 ```sh
-cp .env.example .env
+cp alfajores.env .env
 ```
-
-Open `.env` with your editor of choice
-
-### Mandatory configurations
-
-The default configuration can be used as is for running an Alfajores snap sync node.
-
-If you want to run a Baklava node instead, set
-```
-NETWORK_NAME=baklava
-# Don't use these while baklava L1 is still running
-# HEALTHCHECK__REFERENCE_RPC_PROVIDER=https://baklava-forno.celo-testnet.org
-# OP_GETH__HISTORICAL_RPC=https://baklava-forno.celo-testnet.org
-# Use these instead:
-HEALTHCHECK__REFERENCE_RPC_PROVIDER=https://baklava-forno.baklava.celo-testnet.org
-OP_GETH__HISTORICAL_RPC=https://baklava-forno.baklava.celo-testnet.org
-```
+The `.env` file is ready to use and is configured for snap sync and non-archive mode. If you would like to customise
+your node further see [Optional configurations](#optional-configurations).
 
 ### Optional configurations
 
+* **NODE_TYPE** - Choose the type of node you want to run:
+    * `full` (Full node) - A Full node contains a few recent blocks without historical states.
+    * `archive` (Archive node) - An Archive node stores the complete history of the blockchain, including historical states.
 * **OP_NODE__RPC_ENDPOINT** - Specify the endpoint for the RPC of Layer 1 (e.g., Ethereum mainnet). For instance, you can use the free plan of Alchemy for the Ethereum mainnet.
 * **OP_NODE__L1_BEACON** - Specify the beacon endpoint of Layer 1. You can use [QuickNode for the beacon endpoint](https://www.quicknode.com). For example: https://xxx-xxx-xxx.quiknode.pro/db55a3908ba7e4e5756319ffd71ec270b09a7dce
 * **OP_NODE__RPC_TYPE** - Specify the service provider for the RPC endpoint you've chosen in the previous step. The available options are:
