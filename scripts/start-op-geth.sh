@@ -15,8 +15,9 @@ if [ -z "${IS_CUSTOM_CHAIN}" ]; then
   fi
 fi
 
-# Init genesis if custom chain
-if [ -n "${IS_CUSTOM_CHAIN}" ]; then
+# Init genesis if it's a custom chain and the datadir is empty
+if [ -n "${IS_CUSTOM_CHAIN}" ] && [ -z "$(ls -A "$BEDROCK_DATADIR")" ]; then
+  echo "Initializing custom chain genesis..."
   geth init --datadir="$BEDROCK_DATADIR" /chainconfig/genesis.json
 fi
 

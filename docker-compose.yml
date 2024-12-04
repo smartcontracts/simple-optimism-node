@@ -41,7 +41,7 @@ services:
       - ./envs/${NETWORK_NAME}/config:/chainconfig
       - ./scripts/:/scripts
       - shared:/shared
-      - op_geth:/geth
+      - ${DATADIR_PATH}:/geth
     ports:
       - ${PORT__OP_GETH_HTTP:-9993}:8545
       - ${PORT__OP_GETH_WS:-9994}:8546
@@ -81,7 +81,7 @@ services:
     volumes:
       - ./scripts/:/scripts
       - shared:/shared
-      - op_geth:/geth
+      - ${DATADIR_PATH}:/geth
       - geth:/legacy-geth
       - torrent_downloads:/downloads
 
@@ -129,5 +129,4 @@ volumes:
   grafana_data:
   influxdb_data:
   shared:
-  op_geth:
   torrent_downloads:
