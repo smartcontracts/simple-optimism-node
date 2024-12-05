@@ -50,7 +50,7 @@ services:
 
   op-geth:
     platform: linux/amd64
-    image: us-west1-docker.pkg.dev/blockchaintestsglobaltestnet/dev-images/op-geth:70a7e9baa9b6fc4ef47365a5186ebd7aac53dbf5
+    image: us-west1-docker.pkg.dev/blockchaintestsglobaltestnet/dev-images/op-geth:f1023154e81d1b2dbc627c6ff859c59d959beffa
     restart: unless-stopped
     stop_grace_period: 5m
     entrypoint: /scripts/start-op-geth.sh
