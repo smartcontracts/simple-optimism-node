@@ -76,6 +76,39 @@ git clone https://github.com/celo-org/simple-celo-node.git
 cd simple-celo-node
 ```
 
+## L1 Data Migration
+
+If you have been running an existing L1 node and wish to continue using the same datadir,
+you can migrate the data in order to use it with the L2 node.
+
+Also note that a migrated datadir is a pre-requisite for:
+* Full syncing (as opposed to snap syncing).
+* Having an archive node with all the states.
+
+If you do not have an existing L1 datadir but wish to full sync and/or run an archive node with all
+the states you will be able to download a migrated datadir hosted by cLabs.
+
+### Running migration
+
+A pre migration option is provided to allow the bulk of the migration to occur
+before the network migration point, thus allowing for minimal downtime at the
+migration point.
+
+Once the L1 network has reached the final block a full migration should be performed. It is envisaged that
+pre migrations will be run in the days leading up to the migration point, there is no limit to the number
+of times pre migration can be run.
+
+Use the following commands to pre migrate and full migrate the data:
+
+```sh
+./migrate.sh pre <network> <source_L1_chaindata_dir> [dest_L2_chaindata_dir2]
+./migrate.sh full <network> <source_L1_chaindata_dir> [dest_L2_chaindata_dir2]
+```
+
+If the destination dir is omitted `./envs/<network>/datadir` will be used.
+
+## Starting the node
+
 ### Copy network env to .env
 
 Copy the desired network environment file to `.env`.
