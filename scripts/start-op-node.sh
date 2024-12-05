@@ -13,6 +13,12 @@ else
   export EXTENDED_ARG="${EXTENDED_ARG:-} --network=$NETWORK_NAME --rollup.load-protocol-versions=true --rollup.halt=major"
 fi
 
+# OP_NODE_ALTDA_DA_SERVER is picked up by the op-node binary.
+export OP_NODE_ALTDA_DA_SERVER=$EIGENDA_PROXY_ENDPOINT
+if [ -n $USE_LOCAL_EIGENDA_PROXY_IF_UNSET ]; then
+  OP_NODE_ALTDA_DA_SERVER="http://egenda-proxy:4242"
+fi
+
 # Start op-node.
 exec op-node \
   --l1=$OP_NODE__RPC_ENDPOINT \
