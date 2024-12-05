@@ -41,8 +41,6 @@ services:
       - ${PORT_EIGENDA_PROXY:-4242}:4242
     extra_hosts:
       - "host.docker.internal:host-gateway"
-    environment:
-      - USE_LOCAL_EIGENDA_PROXY_IF_UNSET=${EIGENDA_PROXY_ENDPOINT:+0}
     deploy:
       # If USE_LOCAL_EIGENDA_PROXY_IF_UNSET is unset or empty, then we set replicas to 1,
       # otherwise use the value of USE_LOCAL_EIGENDA_PROXY_IF_UNSET which should be 0.
