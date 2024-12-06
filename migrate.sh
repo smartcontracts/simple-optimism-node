@@ -52,7 +52,7 @@ if [ "${operation}" = "pre" ]; then
   docker run --platform=linux/amd64 -it --rm \
     -v "${source_dir}/celo/chaindata:/old-db" \
     -v "${destination_dir}/geth/chaindata:/new-db" \
-    us-west1-docker.pkg.dev/devopsre/dev-images/cel2-migration-tool:5682b80ec60c47f582c6af8aa085ae6f9048d801 \
+    us-west1-docker.pkg.dev/devopsre/celo-blockchain-public/cel2-migration-tool:5682b80ec60c47f582c6af8aa085ae6f9048d801 \
     "${operation}" \
       --old-db /old-db \
       --new-db /new-db
@@ -80,7 +80,7 @@ docker run --platform=linux/amd64 -it --rm \
   -v "${destination_dir}/geth/chaindata:/new-db" \
   -v "${migration_config_dir}:/migration-config" \
   -v "./envs/${network}/config:/out-config" \
-  us-west1-docker.pkg.dev/devopsre/dev-images/cel2-migration-tool:5682b80ec60c47f582c6af8aa085ae6f9048d801 \
+  us-west1-docker.pkg.dev/devopsre/celo-blockchain-public/cel2-migration-tool:5682b80ec60c47f582c6af8aa085ae6f9048d801 \
   "${operation}" \
     --old-db /old-db \
     --new-db /new-db \
