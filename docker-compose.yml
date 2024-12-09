@@ -117,7 +117,6 @@ services:
       - ${PORT__INFLUXDB:-8086}:8086
 
 volumes:
-  dtl:
   geth:
   prometheus_data:
   grafana_data:
