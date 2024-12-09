@@ -1,9 +1,6 @@
-# Simple Celo L2 Node
+[#](#) Docker Compose Setup for Running a Celo L2 Node
 
 A simple docker compose script for launching Celo L2 full nodes.
-
-Supported sync modes:
-- Snap sync
 
 <!-- ## Use cases
 * Docker compose to launch Optimism mainnet full / archive node -->
@@ -72,8 +69,8 @@ increasing the disk image size.
 ### Clone the Repository
 
 ```sh
-git clone https://github.com/celo-org/simple-celo-node.git
-cd simple-celo-node
+git clone https://github.com/celo-org/celo-l2-node-docker-compose.git
+cd celo-l2-node-docker-compose
 ```
 
 ## L1 Data Migration
@@ -90,13 +87,13 @@ the states you will be able to download a migrated datadir hosted by cLabs.
 
 ### Running migration
 
-A pre migration option is provided to allow the bulk of the migration to occur
+A pre-migration option is provided to allow the bulk of the migration to occur
 before the network migration point, thus allowing for minimal downtime at the
 migration point.
 
 Once the L1 network has reached the final block a full migration should be performed. It is envisaged that
-pre migrations will be run in the days leading up to the migration point, there is no limit to the number
-of times pre migration can be run.
+pre-migrations will be run in the days leading up to the migration point, there is no limit to the number
+of times pre-migration can be run.
 
 Use the following commands to pre migrate and full migrate the data:
 
@@ -113,7 +110,7 @@ If the destination dir is omitted `./envs/<network>/datadir` will be used.
 
 Copy the desired network environment file to `.env`.
 
-E.G. to run a node on Alfajores:
+E.g. to run a node on Alfajores:
 
 ```sh
 cp alfajores.env .env
