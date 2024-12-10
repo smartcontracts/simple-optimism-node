@@ -1,2 +1,2 @@
-CREATE DATABASE "l2geth"
+CREATE DATABASE "historical-rpc-node"
 CREATE DATABASE "opgeth"

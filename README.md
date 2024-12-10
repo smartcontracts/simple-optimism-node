@@ -131,7 +131,8 @@ your node further see [Optional configurations](#optional-configurations).
     * `erigon` - Erigon
     * `basic` - Other providers
 * **HEALTHCHECK__REFERENCE_RPC_PROVIDER** - Specify the public RPC endpoint for Layer 2 network you want to operate on for healthchecking.
-* **OP_GETH__HISTORICAL_RPC** - RPC Endpoint for fetching pre-L2 historical data
+* **HISTORICAL_RPC_DATADIR_PATH** - Datadir path to use for historical RPC node to serve pre-L2 historical state.
+* **OP_GETH__HISTORICAL_RPC** - RPC Endpoint for fetching pre-L2 historical state, if set overrides the **HISTORICAL_RPC_DATADIR_PATH** setting.
     * Leave blank if you want to self-host pre-bedrock historical node for high-throughput use cases such as subgraph indexing.
 * **IMAGE_TAG__[...]** - Use custom docker image for specified components.
 * **PORT__[...]** - Use custom port for specified components.

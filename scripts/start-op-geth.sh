@@ -7,13 +7,12 @@ while [ ! -f /shared/initialized.txt ]; do
   sleep 1
 done
 
-if [ -z "${IS_CUSTOM_CHAIN}" ]; then
-  if [ "$NETWORK_NAME" == "op-mainnet" ] || [ "$NETWORK_NAME" == "op-goerli" ]; then
-    export EXTENDED_ARG="${EXTENDED_ARG:-} --rollup.historicalrpc=${OP_GETH__HISTORICAL_RPC:-http://l2geth:8545} --op-network=$NETWORK_NAME"
-  else
-    export EXTENDED_ARG="${EXTENDED_ARG:-} --op-network=$NETWORK_NAME"
-  fi
+# Check if either OP_GETH__HISTORICAL_RPC or HISTORICAL_RPC_DATADIR_PATH is set and if so set the historical rpc option.
+if [ -n "$OP_GETH__HISTORICAL_RPC" ] || [ -n "$HISTORICAL_RPC_DATADIR_PATH" ] ; then
+    export EXTENDED_ARG="${EXTENDED_ARG:-} --rollup.historicalrpc=${OP_GETH__HISTORICAL_RPC:-http://historical-rpc-node:8545}"
 fi
+
+
 
 # Init genesis if it's a custom chain and the datadir is empty
 if [ -n "${IS_CUSTOM_CHAIN}" ] && [ -z "$(ls -A "$BEDROCK_DATADIR")" ]; then
