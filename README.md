@@ -1,4 +1,4 @@
-[#](#) Docker Compose Setup for Running a Celo L2 Node
+# Docker Compose Setup for Running a Celo L2 Node
 
 A simple docker compose script for launching Celo L2 full nodes.
 
