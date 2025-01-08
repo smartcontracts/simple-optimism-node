@@ -73,42 +73,13 @@ git clone https://github.com/celo-org/celo-l2-node-docker-compose.git
 cd celo-l2-node-docker-compose
 ```
 
-## L1 Data Migration
+## Configuring a node
 
-If you have been running an existing L1 node and wish to continue using the same datadir,
-you can migrate the data in order to use it with the L2 node.
+Example config is provided for Alfajores, Baklava and Mainnet (or will be
+provided once the L2 versions of those networks are launched).
 
-Also note that a migrated datadir is a pre-requisite for:
-* Full syncing (as opposed to snap syncing).
-* Having an archive node with all the states.
-
-If you do not have an existing L1 datadir but wish to full sync and/or run an archive node with all
-the states you will be able to download a migrated datadir hosted by cLabs.
-
-### Running migration
-
-A pre-migration option is provided to allow the bulk of the migration to occur
-before the network migration point, thus allowing for minimal downtime at the
-migration point.
-
-Once the L1 network has reached the final block a full migration should be performed. It is envisaged that
-pre-migrations will be run in the days leading up to the migration point, there is no limit to the number
-of times pre-migration can be run.
-
-Use the following commands to pre migrate and full migrate the data:
-
-```sh
-./migrate.sh pre <network> <source_L1_chaindata_dir> [dest_L2_chaindata_dir2]
-./migrate.sh full <network> <source_L1_chaindata_dir> [dest_L2_chaindata_dir2]
-```
-
-If the destination dir is omitted `./envs/<network>/datadir` will be used.
-
-## Starting the node
-
-### Copy network env to .env
-
-Copy the desired network environment file to `.env`.
+Copy the desired network environment file to `.env` (`.env` is used by
+docker-compose to load environment variables).
 
 E.g. to run a node on Alfajores:
 
@@ -116,7 +87,45 @@ E.g. to run a node on Alfajores:
 cp alfajores.env .env
 ```
 The `.env` file is ready to use and is configured for snap sync and non-archive mode. If you would like to customise
-your node further see [Optional configurations](#optional-configurations).
+your node further see below.
+
+### Type of node to run
+
+There are some choices that significantly affect how nodes need to be run. The
+requirements for each are given below.
+
+* Snap sync node:
+  * No extra requirements, simply use the provided config.
+* Full sync node:
+   * A datadir migrated from an L1 node (this does not need to be an archive datadir)
+   * Full sync configured
+   * Example config adjustments:
+     * ```
+       OP_GETH__SYNCMODE=full
+       DATADIR_PATH=<path to your migrated datadir>
+       ```
+* Full archive node (provides historical execution and
+  state access (e.g. `eth_call`, `eth_getBalance` ... etc for all blocks back
+  to genesis)
+   * A datadir migrated from an L1 node (this does not need to be an archive datadir)
+   * A historical RPC node configured
+   * Full sync configured
+   * Archive mode configured
+   * Example config adjustments:
+     * ```
+       NODE_TYPE=full
+       OP_GETH__SYNCMODE=full
+       DATADIR_PATH=<path to your migrated datadir>
+       HISTORICAL_RPC_DATADIR_PATH=<path to your L1 archive datadir> or OP_GETH__HISTORICAL_RPC=<historical rpc node endpoint>
+       ```
+
+Note that snap sync and full sync nodes (the first two options above) can be
+run with archive mode enabled but they will only store archive states from:
+* The point where snap syncing completes, for a snap sync node.
+* The point where a full sync starts, for a full sync node.
+
+See [Obtaining a migrated L1 datadir](#obtaining-a-migrated-l1-datadir) for
+instructions on obtaining a migrated L1 datadir.
 
 ### Optional configurations
 
@@ -136,6 +145,62 @@ your node further see [Optional configurations](#optional-configurations).
     * Leave blank if you want to self-host pre-bedrock historical node for high-throughput use cases such as subgraph indexing.
 * **IMAGE_TAG__[...]** - Use custom docker image for specified components.
 * **PORT__[...]** - Use custom port for specified components.
+
+## Obtaining a migrated L1 datadir
+
+For some node configurations a migrated L1 datadir is required, you can obtain
+one by following one of the options outlined below.
+
+### 1. Download a pre-migrated datadir
+
+If you do not have an existing L1 datadir but wish to full sync and/or run an
+archive node you can download a migrated datadir hosted by cLabs from one of the links below.
+
+* [Alfajores migrated datadir](https://storage.googleapis.com/cel2-rollup-files/alfajores/alfajores-migrated-datadir.tar.zst)
+* Baklava migrated datadir - pending network launch
+* Mainnet migrated datadir - pending network launch
+
+### 2. Migrate your own datadir
+
+If you have been running an existing L1 node and wish to continue using the same datadir,
+you can migrate the data in order to use it with the L2 node.
+
+Once an L2 hardfork date has been decided for a specific network the L1
+[blockchain client](https://github.com/celo-org/celo-blockchain) will be
+released with a hardcoded stop block. Nodes running this version will stop
+producing blocks at the stop block, at which point the node can be shut down
+and the datadir can be migrated.
+
+Note that the migration does not modify the source datadir.
+
+Run the migration with the following command, where network is one of(mainnet, alfajores or baklava):
+
+```sh
+./migrate.sh full <network> <source_L1_chaindata_dir> [dest_L2_chaindata_dir2]
+```
+
+If the destination dir is omitted `./envs/<network>/datadir` will be used.
+
+#### Pre-migrations
+
+In the case that you wish to suffer minimal downtime at the L2 hardfork point
+you can run a pre-migration which will allow the bulk of a migration to occur
+before the hardfork point, thus speeding up the final full migration.
+
+Note your node needs to be stopped in order for the pre-migration to be run.
+
+To run a pre-migration use the following command:
+
+```sh
+./migrate.sh pre <network> <source_L1_chaindata_dir> [dest_L2_chaindata_dir2]
+```
+
+Also note that the full migration needs to be run with the same destination dir
+as the pre-migration in order to benefit from the pre-migration.
+
+There is no limit to the number of times a pre-migration can be run, each
+subsequent run of a pre-migration will migrate the blocks added since the
+previous pre-migration.
 
 ## Operating the Node
 
@@ -233,3 +298,23 @@ Use the following login details to access the dashboard:
 Navigate over to `Dashboards > Manage > Simple Node Dashboard` to see the dashboard, see the following gif if you need help:
 
 ![metrics dashboard gif](https://user-images.githubusercontent.com/14298799/171476634-0cb84efd-adbf-4732-9c1d-d737915e1fa7.gif)
+
+# Appendix
+
+## L2 network assets
+
+These assets are fetched when required by the scripts in this repo and so
+should not need to be manually retrieved, however for completeness they are
+provided here.
+
+* Mainnet
+ * Pending launch
+* Alfajores - L2 fork block 26384000
+  * [Full migrated chaindata](https://storage.googleapis.com/cel2-rollup-files/alfajores/alfajores-migrated-datadir.tar.zst)
+  * [Rollup deploy config](https://storage.googleapis.com/cel2-rollup-files/alfajores/config.json)
+  * [L1 contract addresses](https://storage.googleapis.com/cel2-rollup-files/alfajores/deployment-l1.json)
+  * [L2 allocs](https://storage.googleapis.com/cel2-rollup-files/alfajores/l2-allocs.json)
+  * [rollup.json](https://storage.googleapis.com/cel2-rollup-files/alfajores/rollup.json)
+  * [Genesis](https://storage.googleapis.com/cel2-rollup-files/alfajores/genesis.json) used for snap syncing
+* Baklava
+ * Pending launch

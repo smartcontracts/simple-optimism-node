@@ -6,7 +6,7 @@ set -e
 usage() {
     echo "Usage: $0 <operation> <network> <source_dir> [destination_dir]"
     echo "  <operation>       Either pre or full"
-    echo "  <network>         Network name (celo-mainnet, alfajores, or baklava)"
+    echo "  <network>         Network name (mainnet, alfajores, or baklava)"
     echo "  <source_dir>      Source datadir directory (the value of the '--datadir' flag for the celo L1 client)"
     echo "  [destination_dir] Optional destination datadir directory (should be used as the value for the '--datadir'"
     echo "                    flag for the celo L2 client), if omitted './envs/<network>/datadir' will be used"
@@ -31,7 +31,7 @@ if [ "$operation" != "pre" ] && [ "$operation" != "full" ]; then
 fi
 
 # Validate network name
-if [ "$network" != "celo-mainnet" ] && [ "$network" != "alfajores" ] && [ "$network" != "baklava" ]; then
+if [ "$network" != "mainnet" ] && [ "$network" != "alfajores" ] && [ "$network" != "baklava" ]; then
     echo "Invalid network name: $network"
     usage
 fi
