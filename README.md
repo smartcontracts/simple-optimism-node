@@ -127,7 +127,7 @@ Open `.env` with your editor of choice
 docker compose up -d --build
 ```
 
-Will start the node in a detatched shell (`-d`), meaning the node will continue to run in the background. We recommended to add `--build` to make sure that latest changes are being applied.
+Will start the node in a detached shell (`-d`), meaning the node will continue to run in the background. We recommended to add `--build` to make sure that latest changes are being applied.
 
 ### View logs
 
