@@ -14,12 +14,10 @@ CHAIN_ID=`cast chain-id`
 echo Chain ID: $CHAIN_ID
 echo Sampling, please wait
 
-if [ $CHAIN_ID -eq 10 ]; then
-  L2_URL=https://mainnet.optimism.io
-fi
-
-if [ $CHAIN_ID -eq 11155420 ]; then
-  L2_URL=https://sepolia.optimism.io
+if [ $CHAIN_ID -eq 480 ]; then
+  L2_URL=https://worldchain-mainnet.g.alchemy.com/public
+elif [ $CHAIN_ID -eq 4801 ]; then
+  L2_URL=https://worldchain-sepolia.g.alchemy.com/public
 fi
 
 T0=`cast block-number --rpc-url $ETH_RPC_URL` ; sleep 10 ; T1=`cast block-number --rpc-url $ETH_RPC_URL`
@@ -36,9 +34,9 @@ fi
 
 # How many more blocks do we need?
 HEAD=`cast block-number --rpc-url $L2_URL`
-BEHIND=`expr $HEAD - $T1`
-MINUTES=`expr $BEHIND / $PER_MIN`
-HOURS=`expr $MINUTES / 60`
+BEHIND=$((HEAD - T1))
+MINUTES=$((BEHIND / PER_MIN))
+HOURS=$((MINUTES / 60))
 
 if [ $MINUTES -le 60 ] ; then
    echo Minutes until sync completed: $MINUTES

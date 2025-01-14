@@ -17,16 +17,6 @@ datasources:
 - access: 'proxy'
   editable: true
   is_default: false
-  name: 'InfluxDB (l2geth)'
-  uid: '4knV40nVz'
-  org_id: 1
-  type: 'influxdb'
-  database: 'l2geth'
-  url: 'http://influxdb:8086'
-  version: 1
-- access: 'proxy'
-  editable: true
-  is_default: false
   name: 'InfluxDB (op-geth)'
   uid: '4knV40nVb'
   org_id: 1

@@ -7,10 +7,6 @@ scrape_configs:
     static_configs:
     - targets: ['healthcheck:7300']
 
-  - job_name: 'fault-detector'
-    static_configs:
-    - targets: ['fault-detector:7300']
-
   - job_name: 'op-node'
     static_configs:
     - targets: ['op-node:7300']

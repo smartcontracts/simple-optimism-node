@@ -1,31 +1,4 @@
-version: "3.4"
 services:
-  l2geth:
-    image: ethereumoptimism/l2geth:${IMAGE_TAG__L2GETH:-latest}
-    restart: on-failure
-    stop_grace_period: 5m
-    entrypoint: 
-      - /bin/sh
-      - -c
-      - "/scripts/init-l2geth.sh && /scripts/start-l2geth.sh"
-    env_file:
-      - ./envs/common/l2geth.env
-      - .env
-    volumes:
-      - geth:/geth
-      - ./scripts/:/scripts/
-    ports:
-      - ${PORT__L2GETH_HTTP:-9991}:8545
-      - ${PORT__L2GETH_WS:-9992}:8546
-
-  healthcheck:
-    image: ethereumoptimism/replica-healthcheck:${IMAGE_TAG__HEALTHCHECK:-latest}
-    restart: unless-stopped
-    env_file:
-      - ./envs/common/healthcheck.env
-      - .env
-    ports:
-      - ${PORT__HEALTHCHECK_METRICS:-7300}:7300
 
   op-geth:
     image: us-docker.pkg.dev/oplabs-tools-artifacts/images/op-geth:v1.101411.4
@@ -47,6 +20,29 @@ services:
       - ${PORT__OP_GETH_P2P:-39393}:${PORT__OP_GETH_P2P:-39393}/tcp
     extra_hosts:
       - "host.docker.internal:host-gateway"
+    profiles: ["geth"]
+
+  op-reth:
+    image: ghcr.io/paradigmxyz/op-reth:v1.1.4
+    restart: unless-stopped
+    stop_grace_period: 5m
+    entrypoint: /scripts/start-op-reth.sh
+    ports:
+      - ${PORT__OP_GETH_HTTP:-9993}:8545
+      - ${PORT__OP_GETH_WS:-9994}:8546
+      - ${PORT__OP_GETH_P2P:-39393}:${PORT__OP_GETH_P2P:-39393}/udp
+      - ${PORT__OP_GETH_P2P:-39393}:${PORT__OP_GETH_P2P:-39393}/tcp
+    volumes:
+        - ./envs/${NETWORK_NAME}/config:/chainconfig
+        - op_reth:/data
+        - ./scripts/:/scripts
+        - shared:/shared
+    env_file:
+      - ./envs/${NETWORK_NAME}/op-geth.env
+      - .env
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    profiles: ["reth"]
 
   op-node:
     image: us-docker.pkg.dev/oplabs-tools-artifacts/images/op-node:v1.10.2
@@ -66,21 +62,6 @@ services:
       - ${PORT__OP_NODE_HTTP:-9545}:9545
     extra_hosts:
       - "host.docker.internal:host-gateway"
-
-  bedrock-init:
-    build:
-      context: ./docker/dockerfiles
-      dockerfile: Dockerfile.bedrock-init
-    entrypoint: /scripts/init-bedrock.sh
-    env_file:
-      - ./envs/${NETWORK_NAME}/op-geth.env
-      - .env
-    volumes:
-      - ./scripts/:/scripts
-      - shared:/shared
-      - op_geth:/geth
-      - geth:/legacy-geth
-      - torrent_downloads:/downloads
 
   prometheus:
     image: prom/prometheus:${IMAGE_TAG__PROMETHEUS:-latest}
@@ -117,10 +98,10 @@ services:
       - ${PORT__INFLUXDB:-8086}:8086
 
 volumes:
-  geth:
   prometheus_data:
   grafana_data:
   influxdb_data:
   shared:
   op_geth:
+  op_reth:
   torrent_downloads:

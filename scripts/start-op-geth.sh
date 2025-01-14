@@ -1,20 +1,6 @@
 #!/bin/sh
 set -e
 
-# Wait for the Bedrock flag for this network to be set.
-echo "Waiting for Bedrock node to initialize..."
-while [ ! -f /shared/initialized.txt ]; do
-  sleep 1
-done
-
-if [ -z "${IS_CUSTOM_CHAIN}" ]; then
-  if [ "$NETWORK_NAME" == "op-mainnet" ] || [ "$NETWORK_NAME" == "op-goerli" ]; then
-    export EXTENDED_ARG="${EXTENDED_ARG:-} --rollup.historicalrpc=${OP_GETH__HISTORICAL_RPC:-http://l2geth:8545} --op-network=$NETWORK_NAME"
-  else
-    export EXTENDED_ARG="${EXTENDED_ARG:-} --op-network=$NETWORK_NAME"
-  fi
-fi
-
 # Init genesis if custom chain
 if [ -n "${IS_CUSTOM_CHAIN}" ]; then
   geth init --datadir="$BEDROCK_DATADIR" /chainconfig/genesis.json
@@ -59,5 +45,5 @@ exec geth \
   --discovery.port="${PORT__OP_GETH_P2P:-39393}" \
   --db.engine=pebble \
   --state.scheme=hash \
+  --op-network="$NETWORK_NAME" \
   $EXTENDED_ARG $@
-
