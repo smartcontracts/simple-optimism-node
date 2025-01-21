@@ -270,7 +270,10 @@ Will shut down the node and WIPE ALL DATA. Proceed with caution!
 
 ### Estimate remaining sync time
 
-Run progress.sh to estimate remaining sync time and speed.
+Install foundry following the instructions of
+<https://book.getfoundry.sh/getting-started/installation>
+
+And then run progress.sh to estimate remaining sync time and speed.
 
 ```sh
 ./progress.sh
