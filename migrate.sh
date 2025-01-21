@@ -40,6 +40,7 @@ fi
 echo "Network: $network"
 echo "Source Directory: $source_dir"
 echo "Destination Directory: $destination_dir"
+echo "" # Blank line to separate from any failure output
 
 # Convert source and destination directories to absolute paths
 source_dir=$(readlink -f "$source_dir")
@@ -60,6 +61,10 @@ if [ "${operation}" = "pre" ]; then
 fi
 
 # We need the OP_NODE__RPC_ENDPOINT to know where to connect to the L1 node.
+if ! test -e "${network}.env"; then
+	echo "Network environment file not found: ${network}.env"
+	echo "If this repo is up to date with the remote main branch, then the ${network} config has not yet been published."
+fi
 . "${network}.env"
 
 # Get MIGRATION_BLOCK_NUMBER and MIGRATION_BLOCK_TIME.
@@ -71,7 +76,7 @@ mkdir -p "$migration_config_dir"
 (
   cd "$migration_config_dir"
   wget -N "https://storage.googleapis.com/cel2-rollup-files/${network}/config.json"
-  wget -N "https://storage.googleapis.com/cel2-rollup-files/${network}/deployment-l1.json"                                                                              
+  wget -N "https://storage.googleapis.com/cel2-rollup-files/${network}/deployment-l1.json"
   wget -N "https://storage.googleapis.com/cel2-rollup-files/${network}/l2-allocs.json"
 )
 
