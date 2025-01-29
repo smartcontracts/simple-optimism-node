@@ -11,18 +11,15 @@ if [ -n "${OP_GETH__HISTORICAL_RPC}" ]; then
   exit
 fi
 
+# l2geth new standard env variables
+export USING_OVM=true
+export ETH1_SYNC_SERVICE_ENABLE=false
+export RPC_API=eth,rollup,net,web3,debug
+export RPC_ADDR=0.0.0.0
+export RPC_CORS_DOMAIN=*
+export RPC_ENABLE=true
+export RPC_PORT=8545
+export RPC_VHOSTS=*
+
 # Start l2geth.
-exec geth \
-  --vmodule=eth/*=5,miner=4,rpc=5,rollup=4,consensus/clique=1 \
-  --datadir=$DATADIR \
-  --password=$DATADIR/password \
-  --allow-insecure-unlock \
-  --unlock=$BLOCK_SIGNER_ADDRESS \
-  --mine \
-  --miner.etherbase=$BLOCK_SIGNER_ADDRESS \
-  --gcmode=$NODE_TYPE \
-  --metrics \
-  --metrics.influxdb \
-  --metrics.influxdb.endpoint=http://influxdb:8086 \
-  --metrics.influxdb.database=l2geth \
-  $@
+exec geth --datadir=$DATADIR $@
