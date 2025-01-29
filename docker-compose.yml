@@ -83,21 +83,9 @@ services:
       - ${PORT__OP_NODE_HTTP:-9545}:9545
     extra_hosts:
       - "host.docker.internal:host-gateway"
-
-  bedrock-init:
-    build:
-      context: ./docker/dockerfiles
-      dockerfile: Dockerfile.bedrock-init
-    entrypoint: /scripts/init-bedrock.sh
-    env_file:
-      - ./envs/${NETWORK_NAME}/op-geth.env
-      - .env
-    volumes:
-      - ./scripts/:/scripts
-      - shared:/shared
-      - ${DATADIR_PATH}:/geth
-      - geth:/legacy-geth
-      - torrent_downloads:/downloads
+    depends_on:
+      op-geth:
+        condition: service_started
 
   prometheus:
     platform: linux/amd64

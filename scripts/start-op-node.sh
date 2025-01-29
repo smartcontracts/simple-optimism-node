@@ -1,12 +1,6 @@
 #!/bin/sh
 set -e
 
-# Wait for the Bedrock flag for this network to be set.
-echo "Waiting for Bedrock node to initialize..."
-while [ ! -f /shared/initialized.txt ]; do
-  sleep 1
-done
-
 if [ -n "${IS_CUSTOM_CHAIN}" ]; then
   export EXTENDED_ARG="${EXTENDED_ARG:-} --rollup.config=/chainconfig/rollup.json"
 else
