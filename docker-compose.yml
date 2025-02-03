@@ -44,7 +44,7 @@ services:
 
   op-geth:
     platform: linux/amd64
-    image: us-west1-docker.pkg.dev/devopsre/celo-blockchain-public/op-geth:celo-v2.0.0-rc1
+    image: us-west1-docker.pkg.dev/devopsre/celo-blockchain-public/op-geth:celo-v2.0.0-rc3
     restart: unless-stopped
     stop_grace_period: 5m
     entrypoint: /scripts/start-op-geth.sh
