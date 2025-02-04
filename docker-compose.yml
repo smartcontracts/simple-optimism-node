@@ -104,7 +104,7 @@ services:
     image: grafana/grafana:${IMAGE_TAG__GRAFANA:-9.3.0}
     restart: unless-stopped
     env_file:
-      -  ./envs/common/grafana.env
+      - ./envs/common/grafana.env
     volumes:
       - ./docker/grafana/provisioning/:/etc/grafana/provisioning/:ro
       - ./docker/grafana/dashboards/simple_node_dashboard.json:/var/lib/grafana/dashboards/simple_node_dashboard.json
@@ -131,4 +131,3 @@ volumes:
   grafana_data:
   influxdb_data:
   shared:
-  torrent_downloads:
