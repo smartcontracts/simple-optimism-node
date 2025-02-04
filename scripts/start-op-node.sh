@@ -10,7 +10,7 @@ fi
 # OP_NODE_ALTDA_DA_SERVER is picked up by the op-node binary.
 export OP_NODE_ALTDA_DA_SERVER=$EIGENDA_PROXY_ENDPOINT
 if [ -n $USE_LOCAL_EIGENDA_PROXY_IF_UNSET ]; then
-  OP_NODE_ALTDA_DA_SERVER="http://egenda-proxy:4242"
+  OP_NODE_ALTDA_DA_SERVER="http://eigenda-proxy:4242"
 fi
 
 # Start op-node.

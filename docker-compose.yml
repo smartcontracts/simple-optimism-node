@@ -26,10 +26,13 @@ services:
 
   eigenda-proxy:
     platform: linux/amd64
-    image: us-west1-docker.pkg.dev/devopsre/celo-blockchain-public/eigenda-proxy:v1.4.1
+    # Image: ghcr.io/layr-labs/eigenda-proxy:v1.6.3 + fix for public s3 buckets
+    image: us-west1-docker.pkg.dev/devopsre/eigenda-proxy/eigenda-proxy:efe8c51033a4dc0d494ccfdb9f5ffabee7ad0ac9
     restart: unless-stopped
     stop_grace_period: 5m
     entrypoint: /scripts/start-eigenda-proxy.sh
+    env_file:
+      - .env
     volumes:
       - eigenda-data:/data
       - ./scripts/:/scripts
