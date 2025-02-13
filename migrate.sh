@@ -42,18 +42,42 @@ echo "Source Directory: $source_dir"
 echo "Destination Directory: $destination_dir"
 echo "" # Blank line to separate from any failure output
 
-# Convert source and destination directories to absolute paths
+# Check if source directory exists
+if [ ! -d "${source_dir}" ]; then
+    printf "\033[0;31mError: Source directory does not exist\033[0m\n"
+    exit 1
+fi
+
+# Convert source directory to absolute path
 source_dir=$(readlink -f "$source_dir")
-destination_dir=$(readlink -f "$destination_dir")
+
+cel2_migration_tool_image="us-west1-docker.pkg.dev/devopsre/celo-blockchain-public/cel2-migration-tool"
+cel2_migration_tool_tag="5682b80ec60c47f582c6af8aa085ae6f9048d801"
+
+# Run check-db continuity script to ensure source db has no data gaps
+if docker run --platform=linux/amd64 -it --rm \
+    -v "${source_dir}/celo/chaindata:/old-db" \
+    "${cel2_migration_tool_image}:${cel2_migration_tool_tag}" \
+    check-db \
+      --db-path /old-db \
+      --fail-fast; then
+    printf "\033[0;32mDB check completed successfully. No gaps or missing data detected.\033[0m\n"
+else
+    printf "\033[0;31mDB check failed with exit code $?. If the logs indicate that the db is missing data, please retry with another source db. You can visit https://docs.celo.org/cel2/operators/migrate-node for instructions on how to check whether a db has missing data.\033[0m\n"
+    exit $?
+fi
 
 # Ensure destination directory exists for chaindata
-mkdir -p  "${destination_dir}/geth"
+mkdir -p  "${destination_dir}/geth/chaindata"
+
+# Convert destination directory to absolute path
+destination_dir=$(readlink -f "$destination_dir")
 
 if [ "${operation}" = "pre" ]; then
   docker run --platform=linux/amd64 -it --rm \
     -v "${source_dir}/celo/chaindata:/old-db" \
     -v "${destination_dir}/geth/chaindata:/new-db" \
-    us-west1-docker.pkg.dev/devopsre/celo-blockchain-public/cel2-migration-tool:5682b80ec60c47f582c6af8aa085ae6f9048d801 \
+    "${cel2_migration_tool_image}:${cel2_migration_tool_tag}" \
     "${operation}" \
       --old-db /old-db \
       --new-db /new-db
@@ -85,7 +109,7 @@ docker run --platform=linux/amd64 -it --rm \
   -v "${destination_dir}/geth/chaindata:/new-db" \
   -v "${migration_config_dir}:/migration-config" \
   -v "./envs/${network}/config:/out-config" \
-  us-west1-docker.pkg.dev/devopsre/celo-blockchain-public/cel2-migration-tool:5682b80ec60c47f582c6af8aa085ae6f9048d801 \
+  "${cel2_migration_tool_image}:${cel2_migration_tool_tag}" \
   "${operation}" \
     --old-db /old-db \
     --new-db /new-db \
