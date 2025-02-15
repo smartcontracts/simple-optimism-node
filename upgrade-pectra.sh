@@ -11,6 +11,7 @@ echo "Starting Docker Compose services with rebuild..."
 docker compose up -d --build
 
 echo "Creating upgrade flag file..."
+mkdir -p .upgrade-pectra
 touch ./.upgrade-pectra/upgraded
 
 # Start the background pectra upgrade process
