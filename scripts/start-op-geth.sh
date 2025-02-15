@@ -7,6 +7,11 @@ while [ ! -f /shared/initialized.txt ]; do
   sleep 1
 done
 
+if [ ! -f /upgrade-pectra/upgraded ]; then
+  echo "Please upgrade to Pectra with upgrade-pectra.sh"
+  exit 1
+fi
+
 if [ -z "${IS_CUSTOM_CHAIN}" ]; then
   if [ "$NETWORK_NAME" == "op-mainnet" ] || [ "$NETWORK_NAME" == "op-goerli" ]; then
     export EXTENDED_ARG="${EXTENDED_ARG:-} --rollup.historicalrpc=${OP_GETH__HISTORICAL_RPC:-http://l2geth:8545} --op-network=$NETWORK_NAME"
