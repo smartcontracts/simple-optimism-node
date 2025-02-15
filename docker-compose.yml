@@ -61,6 +61,7 @@ services:
       - ./envs/${NETWORK_NAME}/config:/chainconfig
       - ./scripts/:/scripts
       - shared:/shared
+      - ./.upgrade-pectra:/upgrade-pectra
     ports:
       - ${PORT__OP_NODE_P2P:-9003}:9003/udp
       - ${PORT__OP_NODE_P2P:-9003}:9003/tcp

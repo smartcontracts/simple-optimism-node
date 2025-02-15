@@ -7,6 +7,11 @@ while [ ! -f /shared/initialized.txt ]; do
   sleep 1
 done
 
+if [ ! -f /upgrade-pectra/upgraded ]; then
+  echo "Please upgrade to Pectra with upgrade-pectra.sh"
+  exit 1
+fi
+
 if [ -n "${IS_CUSTOM_CHAIN}" ]; then
   export EXTENDED_ARG="${EXTENDED_ARG:-} --rollup.config=/chainconfig/rollup.json"
 else
