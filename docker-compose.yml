@@ -1,6 +1,6 @@
 services:
   historical-rpc-node:
-    image: us-docker.pkg.dev/celo-org/us.gcr.io/geth-all:1.8.7
+    image: us-docker.pkg.dev/celo-org/us.gcr.io/geth-all:1.8.8
     restart: on-failure
     stop_grace_period: 5m
     entrypoint: /scripts/start-historical-rpc-node.sh
@@ -46,7 +46,7 @@ services:
 
   op-geth:
     platform: linux/amd64
-    image: us-west1-docker.pkg.dev/devopsre/celo-blockchain-public/op-geth:celo-v2.0.0-rc3
+    image: us-west1-docker.pkg.dev/devopsre/celo-blockchain-public/op-geth:celo-v2.0.0-rc4
     restart: unless-stopped
     stop_grace_period: 5m
     entrypoint: /scripts/start-op-geth.sh
@@ -68,7 +68,7 @@ services:
 
   op-node:
     platform: linux/amd64
-    image: us-west1-docker.pkg.dev/devopsre/celo-blockchain-public/op-node:celo-v2.0.0-rc3
+    image: us-west1-docker.pkg.dev/devopsre/celo-blockchain-public/op-node:celo-v2.0.0-rc4
     restart: unless-stopped
     stop_grace_period: 5m
     entrypoint: /scripts/start-op-node.sh
