@@ -50,14 +50,12 @@ fi
 
 # Convert source directory to absolute path
 source_dir=$(readlink -f "$source_dir")
-
-cel2_migration_tool_image="us-west1-docker.pkg.dev/devopsre/celo-blockchain-public/cel2-migration-tool"
-cel2_migration_tool_tag="celo-v2.0.0-rc4"
+cel2_migration_tool_image="us-west1-docker.pkg.dev/devopsre/celo-blockchain-public/cel2-migration-tool:celo-migrate-v2.0.0-rc5"
 
 # Run check-db continuity script to ensure source db has no data gaps
 if docker run --platform=linux/amd64 -it --rm \
     -v "${source_dir}/celo/chaindata:/old-db" \
-    "${cel2_migration_tool_image}:${cel2_migration_tool_tag}" \
+    "${cel2_migration_tool_image}" \
     check-db \
       --db-path /old-db \
       --fail-fast; then
@@ -77,7 +75,7 @@ if [ "${operation}" = "pre" ]; then
   docker run --platform=linux/amd64 -it --rm \
     -v "${source_dir}/celo/chaindata:/old-db" \
     -v "${destination_dir}/geth/chaindata:/new-db" \
-    "${cel2_migration_tool_image}:${cel2_migration_tool_tag}" \
+    "${cel2_migration_tool_image}" \
     "${operation}" \
       --old-db /old-db \
       --new-db /new-db
@@ -109,7 +107,7 @@ docker run --platform=linux/amd64 -it --rm \
   -v "${destination_dir}/geth/chaindata:/new-db" \
   -v "${migration_config_dir}:/migration-config" \
   -v "./envs/${network}/config:/out-config" \
-  "${cel2_migration_tool_image}:${cel2_migration_tool_tag}" \
+  "${cel2_migration_tool_image}" \
   "${operation}" \
     --old-db /old-db \
     --new-db /new-db \
