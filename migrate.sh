@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 
 set -e
 
@@ -87,7 +87,7 @@ if ! test -e "${network}.env"; then
 	echo "Network environment file not found: ${network}.env"
 	echo "If this repo is up to date with the remote main branch, then the ${network} config has not yet been published."
 fi
-. "${network}.env"
+. "./${network}.env"
 
 # Get MIGRATION_BLOCK_NUMBER and MIGRATION_BLOCK_TIME.
 . "./envs/${network}/migration-config/migration.env"
