@@ -89,7 +89,7 @@ cp alfajores.env .env
 The `.env` file is ready to use and is configured for snap sync and non-archive mode. If you would like to customise
 your node further see below.
 
-### Type of node to run
+### Node configurations
 
 There are some choices that significantly affect how nodes need to be run. The
 requirements for each are given below.
@@ -104,25 +104,29 @@ requirements for each are given below.
        OP_GETH__SYNCMODE=full
        DATADIR_PATH=<path to your migrated datadir>
        ```
-* Full archive node (provides historical execution and
-  state access (e.g. `eth_call`, `eth_getBalance` ... etc for all blocks back
-  to genesis)
-   * A datadir migrated from an L1 node (this does not need to be an archive datadir)
-   * A historical RPC node configured
-   * Full sync configured
-   * Archive mode configured
+* Historical archive access (historical execution and state access, e.g.
+  `eth_call`, `eth_getBalance` ... etc for pre-L2 blocks)
+   * Requires access to an L1 archive node, this can be achieved in one of 3 ways:
+     * An existing L1 archive node datadir can be configured and an L1 node
+       will be launched using that datadir
+     * An empty datadir can be configured and an L1 archive node will be launched
+       and sync using that datadir. Note that it will be some time till the L1
+       node will be able to serve state queries
+     * An L1 archive node URL can be configured
    * Example config adjustments:
      * ```
-       NODE_TYPE=full
+       HISTORICAL_RPC_DATADIR_PATH=<path to datadir> or OP_GETH__HISTORICAL_RPC=<historical rpc node endpoint>
+       ```
+* Full archive node with all states from genesis stored:
+   * A datadir migrated from an L1 node (this does not need to be an archive datadir)
+   * Full sync configured
+   * Historical archive access configured (see above)
+   * Example config adjustments:
+     * ```
        OP_GETH__SYNCMODE=full
        DATADIR_PATH=<path to your migrated datadir>
-       HISTORICAL_RPC_DATADIR_PATH=<path to your L1 archive datadir> or OP_GETH__HISTORICAL_RPC=<historical rpc node endpoint>
+       HISTORICAL_RPC_DATADIR_PATH=<path to datadir> or OP_GETH__HISTORICAL_RPC=<historical rpc node endpoint>
        ```
-
-Note that snap sync and full sync nodes (the first two options above) can be
-run with archive mode enabled but they will only store archive states from:
-* The point where snap syncing completes, for a snap sync node.
-* The point where a full sync starts, for a full sync node.
 
 See [Obtaining a migrated L1 datadir](#obtaining-a-migrated-l1-datadir) for
 instructions on obtaining a migrated L1 datadir.
