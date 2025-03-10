@@ -32,6 +32,14 @@ if [ -z "$OP_GETH__SYNCMODE" ]; then
   fi
 fi
 
+METRICS_ARGS="--metrics"
+if [ "$MONITORING_ENABLED" = "true" ]; then
+  METRICS_ARGS="$METRICS_ARGS \
+    --metrics.influxdb \
+    --metrics.influxdb.endpoint=http://influxdb:8086 \
+    --metrics.influxdb.database=opgeth"
+fi
+
 # Start op-geth.
 exec geth \
   --datadir="$BEDROCK_DATADIR" \
@@ -46,10 +54,7 @@ exec geth \
   --ws.port=8546 \
   --ws.origins="*" \
   --ws.api=debug,eth,txpool,net,engine,web3 \
-  --metrics \
-  --metrics.influxdb \
-  --metrics.influxdb.endpoint=http://influxdb:8086 \
-  --metrics.influxdb.database=opgeth \
+  $METRICS_ARGS \
   --syncmode="$OP_GETH__SYNCMODE" \
   --gcmode="$NODE_TYPE" \
   --authrpc.vhosts="*" \

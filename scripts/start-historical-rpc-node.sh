@@ -16,14 +16,19 @@ if [ -z "${HISTORICAL_RPC_DATADIR_PATH}" ]; then
   exit
 fi
 
+METRICS_ARGS="--metrics"
+if [ "$MONITORING_ENABLED" = "true" ]; then
+  METRICS_ARGS="$METRICS_ARGS \
+    --metrics.influxdb \
+    --metrics.influxdb.endpoint=http://influxdb:8086 \
+    --metrics.influxdb.database=historical-rpc-node"
+fi
+
 # Start historical-rpc-node.
 exec geth \
   --$NETWORK_NAME \
   --datadir=$DATADIR \
   --gcmode=archive \
   --syncmode=full \
-  --metrics \
-  --metrics.influxdb \
-  --metrics.influxdb.endpoint=http://influxdb:8086 \
-  --metrics.influxdb.database=historical-rpc-node \
+  $METRICS_ARGS \
   $@

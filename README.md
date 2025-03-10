@@ -272,6 +272,17 @@ Will shut down the node and WIPE ALL DATA. Proceed with caution!
 
 ## Monitoring
 
+### Conditional Start of Monitoring Services
+
+The following monitoring-related services:
+
+- `healthcheck`
+- `prometheus`
+- `grafana`
+- `influxdb`
+
+will only start if the environment variable `MONITORING_ENABLED` is set to `true`
+
 ### Estimate remaining sync time
 
 Install foundry following the instructions of

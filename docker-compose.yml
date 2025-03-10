@@ -17,10 +17,13 @@ services:
   healthcheck:
     platform: linux/amd64
     image: ethereumoptimism/replica-healthcheck:${IMAGE_TAG__HEALTHCHECK:-latest}
-    restart: unless-stopped
+    restart: on-failure
+    entrypoint: /opt/optimism/packages/replica-healthcheck/start-healthcheck.sh
     env_file:
       - ./envs/common/healthcheck.env
       - .env
+    volumes:
+      - ./scripts/start-healthcheck.sh:/opt/optimism/packages/replica-healthcheck/start-healthcheck.sh
     ports:
       - ${PORT__HEALTHCHECK_METRICS:-7300}:7300
 
@@ -92,37 +95,45 @@ services:
   prometheus:
     platform: linux/amd64
     image: prom/prometheus:${IMAGE_TAG__PROMETHEUS:-latest}
-    restart: unless-stopped
+    restart: on-failure
+    entrypoint: /scripts/start-prometheus.sh
     env_file:
       - .env
     volumes:
       - ./docker/prometheus:/etc/prometheus
       - prometheus_data:/prometheus
+      - ./scripts/start-prometheus.sh:/scripts/start-prometheus.sh
     ports:
       - ${PORT__PROMETHEUS:-9090}:9090
 
   grafana:
     platform: linux/amd64
     image: grafana/grafana:${IMAGE_TAG__GRAFANA:-9.3.0}
-    restart: unless-stopped
+    restart: on-failure
+    entrypoint: /scripts/start-grafana.sh
     env_file:
       - ./envs/common/grafana.env
+      - .env
     volumes:
       - ./docker/grafana/provisioning/:/etc/grafana/provisioning/:ro
       - ./docker/grafana/dashboards/simple_node_dashboard.json:/var/lib/grafana/dashboards/simple_node_dashboard.json
       - grafana_data:/var/lib/grafana
+      - ./scripts/start-grafana.sh:/scripts/start-grafana.sh
     ports:
       - ${PORT__GRAFANA:-3000}:3000
 
   influxdb:
     platform: linux/amd64
     image: influxdb:${IMAGE_TAG__INFLUXDB:-1.8}
-    restart: unless-stopped
+    restart: on-failure
+    entrypoint: /scripts/start-influxdb.sh
     env_file:
       - ./envs/common/influxdb.env
+      - .env
     volumes:
       - ./docker/influxdb/influx_init.iql:/docker-entrypoint-initdb.d/influx_init.iql
       - influxdb_data:/var/lib/influxdb
+      - ./scripts/start-influxdb.sh:/scripts/start-influxdb.sh
     ports:
       - ${PORT__INFLUXDB:-8086}:8086
 
