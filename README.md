@@ -1,17 +1,8 @@
 # Docker Compose Setup for Running a Celo L2 Node
 
-A simple docker compose script for launching Celo L2 full nodes.
+A simple docker compose script for migrating Celo L1 data and launching Celo L2 nodes.
 
-<!-- ## Use cases
-* Docker compose to launch Optimism mainnet full / archive node -->
-
-## Recommended Hardware
-
-### Testnets
-
-- 16GB+ RAM
-- 500 GB SSD (NVME Recommended)
-- 100mb/s+ Download
+> ⚠️ The instructions in this README are are for illustrative purposes only. Please refer to the [Celo Docs](https://docs.celo.org/cel2/notices/l2-migration) for the most up to date information on participating in the L2 hardfork.
 
 ## Installation and Configuration
 
@@ -19,7 +10,7 @@ A simple docker compose script for launching Celo L2 full nodes.
 
 > Note: If you're not logged in as root, you'll need to log out and log in again after installation to complete the docker installation.
 
-Note: This command install docker and docker compose for Ubuntu. For windows and mac desktop or laptop, please use Docker Desktop. For other OS, please find instruction in Google.
+This command installs docker and docker compose for Ubuntu. For windows and mac, please use Docker Desktop. For all other OS, please find instructions online.
 
 ```sh
 # Update and upgrade packages
@@ -50,21 +41,17 @@ sudo usermod -aG docker $(whoami)
 sudo docker run hello-world
 ```
 
-(For non-root user) After logged out and logged back in, test if docker is working by running.
+(For non-root user) After logging out and in, test if docker is working by running.
 
 ```sh
 docker ps
 ```
 
-It should returns an empty container list without having any error. Otherwise, restart your machine if there are errors.
+This should return an empty container list. If an error is returned, restart your machine.
 
 ### MacOS configure virtual disk limit
 
-If using Docker Desktop on MacOS you may need to increase the virtual disk
-limit since the default size will likely not be enough to hold the chaindata
-for any chains that have been operating for a while. This can be done by
-opening Docker Desktop, going to Settings -> Resources -> Advanced and
-increasing the disk image size.
+If using Docker Desktop on MacOS you will most likely need to increase the virtual disk limit in order to accomodate the chaindata directory. This can be done by opening Docker Desktop, going to Settings -> Resources -> Advanced and increasing the disk image size.
 
 ### Clone the Repository
 
@@ -75,121 +62,127 @@ cd celo-l2-node-docker-compose
 
 ## Configuring a node
 
-Example config is provided for Alfajores, Baklava and Mainnet (or will be
-provided once the L2 versions of those networks are launched).
-
-Copy the desired network environment file to `.env` (`.env` is used by
-docker-compose to load environment variables).
+Example configs are provided for Alfajores, Baklava and Mainnet. Start by copying the desired network environment file to `.env`, which is what docker-compose will use to load environment variables.
 
 E.g. to run a node on Alfajores:
 
 ```sh
 cp alfajores.env .env
 ```
-The `.env` file is ready to use and is configured for snap sync and non-archive mode. If you would like to customise
-your node further see below.
+
+The `.env` file is now ready to use and configured for snap sync and full (non-archive) mode. If you would like to customise your node further see below.
 
 ### Node configurations
 
-There are some choices that significantly affect how nodes need to be run. The
-requirements for each are given below.
+We recommend one of the 3 following configurations for your L2 node. For more detailed instructions on running Celo nodes, see the [Running a Celo Node](https://docs.celo.org/cel2/operators/run-node) docs page.
 
-* Snap sync node:
-  * No extra requirements, simply use the provided config.
-* Full sync node:
-   * A datadir migrated from an L1 node (this does not need to be an archive datadir)
-   * Full sync configured
-   * Example config adjustments:
-     * ```
-       OP_GETH__SYNCMODE=full
-       DATADIR_PATH=<path to your migrated datadir>
-       ```
-* Historical archive access (historical execution and state access, e.g.
-  `eth_call`, `eth_getBalance` ... etc for pre-L2 blocks)
-   * Requires access to an L1 archive node, this can be achieved in one of 3 ways:
-     * An existing L1 archive node datadir can be configured and an L1 node
-       will be launched using that datadir
-     * An empty datadir can be configured and an L1 archive node will be launched
-       and sync using that datadir. Note that it will be some time till the L1
-       node will be able to serve state queries
-     * An L1 archive node URL can be configured
-   * Example config adjustments:
-     * ```
-       HISTORICAL_RPC_DATADIR_PATH=<path to datadir> or OP_GETH__HISTORICAL_RPC=<historical rpc node endpoint>
-       ```
-* Full archive node with all states from genesis stored:
-   * A datadir migrated from an L1 node (this does not need to be an archive datadir)
-   * Full sync configured
-   * Historical archive access configured (see above)
-   * Example config adjustments:
-     * ```
-       OP_GETH__SYNCMODE=full
-       DATADIR_PATH=<path to your migrated datadir>
-       HISTORICAL_RPC_DATADIR_PATH=<path to datadir> or OP_GETH__HISTORICAL_RPC=<historical rpc node endpoint>
-       ```
+1. Snap sync node:
 
-See [Obtaining a migrated L1 datadir](#obtaining-a-migrated-l1-datadir) for
-instructions on obtaining a migrated L1 datadir.
+    No extra requirements, simply use the provided default config for the appropriate network. Your node will use snap sync to download chaindata from the p2p network and will run as a full node, meaning that it will not store archive state. This is the easiest way to start your node as you do not need a migrated pre-hardfork datadir.
+  
+2. Full sync node:
 
-### Optional configurations
+    Requires a migrated pre-hardfork full node datadir (you should not run the migration on an archive datadir).
 
-* **NODE_TYPE** - Choose the type of node you want to run:
-    * `full` (Full node) - A Full node contains a few recent blocks without historical states.
-    * `archive` (Archive node) - An Archive node stores the complete history of the blockchain, including historical states.
-* **OP_NODE__RPC_ENDPOINT** - Specify the endpoint for the RPC of Layer 1 (e.g., Ethereum mainnet). For instance, you can use the free plan of Alchemy for the Ethereum mainnet.
-* **OP_NODE__L1_BEACON** - Specify the beacon endpoint of Layer 1. You can use [QuickNode for the beacon endpoint](https://www.quicknode.com). For example: https://xxx-xxx-xxx.quiknode.pro/db55a3908ba7e4e5756319ffd71ec270b09a7dce
-* **OP_NODE__RPC_TYPE** - Specify the service provider for the RPC endpoint you've chosen in the previous step. The available options are:
-    * `alchemy` - Alchemy
-    * `quicknode` - Quicknode (ETH only)
-    * `erigon` - Erigon
-    * `basic` - Other providers
-* **HEALTHCHECK__REFERENCE_RPC_PROVIDER** - Specify the public RPC endpoint for Layer 2 network you want to operate on for healthchecking.
-* **HISTORICAL_RPC_DATADIR_PATH** - Datadir path to use for historical RPC node to serve pre-L2 historical state.
-* **OP_GETH__HISTORICAL_RPC** - RPC Endpoint for fetching pre-L2 historical state, if set overrides the **HISTORICAL_RPC_DATADIR_PATH** setting.
-    * Leave blank if you want to self-host pre-bedrock historical node for high-throughput use cases such as subgraph indexing.
-* **IMAGE_TAG__[...]** - Use custom docker image for specified components.
-* **PORT__[...]** - Use custom port for specified components.
+      ```text
+      OP_GETH__SYNCMODE=full
+      DATADIR_PATH=<path to your migrated pre-hardfork full node datadir>
+      ```
 
-## Obtaining a migrated L1 datadir
+3. Archive node:
 
-For some node configurations a migrated L1 datadir is required, you can obtain
-one by following one of the options outlined below.
+    > ⚠️ We do not recommend migrating archive data. Please only migrate full node data, even if you plan to run an archive node. See the [migration docs](https://docs.celo.org/cel2/operators/migrate-node) for more information.
 
-### 1. Download a pre-migrated datadir
+    Celo L2 nodes cannot use pre-hardfork state. Therefore, RPC requests requiring state (e.g. `eth_call`, `eth_getBalance`) from before the L2 hardfork require access to a running legacy archive node. Your Celo L2 node can be easily configured to forward requests requiring pre-hardfork state to a legacy archive node.
 
-If you do not have an existing L1 datadir but wish to full sync and/or run an
-archive node you can download a migrated datadir hosted by cLabs from one of the links below.
+    The tooling in this repo makes running a Celo L2 archive node setup straightforward. You have 3 options:
 
-* [Alfajores migrated datadir](https://storage.googleapis.com/cel2-rollup-files/alfajores/alfajores-migrated-datadir.tar.zst)
-* Baklava migrated datadir - pending network launch
-* Mainnet migrated datadir - pending network launch
+      1. Run your L2 node in archive mode with full sync, and provide the path to an existing pre-hardfork archive datadir. The docker-compose script will then automatically start a legacy archive node with that datadir and connect it to your L2 node.
+
+          ```text
+          NODE_TYPE=archive
+          OP_GETH__SYNCMODE=full
+          DATADIR_PATH=<path to a migrated L1 full node datadir>
+          HISTORICAL_RPC_DATADIR_PATH=<path to your pre-hardfork archive datadir>
+          ```
+
+      2. Run your L2 node in archive mode with full sync, and do not provide a path to an existing pre-hardfork archive datadir. The docker-compose script will automatically start a legacy archive node which will begin syncing from the Celo genesis block. Note that syncing the legacy archive node will take some time, during which pre-hardfork archive access will not be available.
+
+          ```text
+          NODE_TYPE=archive
+          OP_GETH__SYNCMODE=full
+          DATADIR_PATH=<path to a migrated L1 full node datadir>
+          HISTORICAL_RPC_DATADIR_PATH=
+          ```
+
+      3. Run your L2 node in archive mode with full sync, and provide the RPC url of a running legacy archive node. This will override any value set for `HISTORICAL_RPC_DATADIR_PATH` and a legacy archive node will not be launched when you start your L2 node.
+
+          ```text
+          NODE_TYPE=archive
+          OP_GETH__SYNCMODE=full
+          DATADIR_PATH=<path to a migrated L1 full node datadir>
+          OP_GETH__HISTORICAL_RPC=<historical rpc node endpoint>
+          ```
+
+    Note that in all of these configurations we set
+
+      ```text
+      NODE_TYPE=archive
+      OP_GETH__SYNCMODE=full
+      ```
+
+    This is because nodes will not accept requests for RPC methods that require archive state data unless we set `NODE_TYPE=archive`, and because archive nodes that use snap sync do not store state until the block at which they finish syncing. For these reasons, we recommend using the configurations above. See below for more information.
+
+### Environment Variables
+
+- **NODE_TYPE**
+  - `full` - A full node stores historical state only for recent blocks.
+  - `archive` - An archive node stores historical state for the entire history of the blockchain.
+- **OP_GETH__SYNCMODE** - Sync mode to use for L2 node
+  - `snap` - If left empty, `snap` sync will be used. `snap` sync downloads chaindata from peers until it receives an unbroken chain of headers up through the most recent block, and only begins executing transactions from that point on. Archive nodes that run with `snap` sync will only store state from the point at which the node begins executing transactions.
+  - `full` - `full` sync executes all transactions from genesis (or the last block in the datadir) to verify every header. Archive nodes that run with `full` sync will store state for every block synced, as `full` sync must calculate the state at every block in order to verify every header.
+- **OP_NODE__RPC_ENDPOINT** - Specify the Layer 1 RPC endpoint (e.g., Ethereum mainnet). For instance, you can use the Alchemy free plan for Ethereum mainnet.
+- **OP_NODE__L1_BEACON** - Specify the Layer 1 beacon endpoint. For instance, you can use [QuickNode](https://www.quicknode.com). E.g `https://xxx-xxx-xxx.quiknode.pro/db55a3908ba7e4e5756319ffd71ec270b09a7dce`.
+- **OP_NODE__RPC_TYPE** - Specify the service provider for the RPC endpoint you've chosen in the previous step. The available options are:
+  - `alchemy` - Alchemy
+  - `quicknode` - Quicknode (ETH only)
+  - `erigon` - Erigon
+  - `basic` - Other providers
+- **HEALTHCHECK__REFERENCE_RPC_PROVIDER** - Specify the public healthcheck RPC endpoint for the Layer 2 network.
+- **HISTORICAL_RPC_DATADIR_PATH** - Datadir path to use for legacy archive node to serve pre-L2 historical state.
+- **OP_GETH__HISTORICAL_RPC** - RPC Endpoint for fetching pre-L2 historical state. If set, this overrides the **HISTORICAL_RPC_DATADIR_PATH** setting.
+- **IMAGE_TAG**[...]__ - Use custom docker image for specified components.
+- **PORT**[...]__ - Use custom port for specified components.
+
+## Obtaining a migrated datadir
+
+If you are not using `snap` sync, then a migrated pre-hardfork full node datadir is required. Your options for obtaining one are as follows.
+
+> ⚠️ The instructions in this README are are for illustrative purposes only. Please refer to [Migrating a Celo L1 node](https://docs.celo.org/cel2/operators/migrate-node) for the most up to date information.
+
+### 1. Download a migrated datadir
+
+If you do not have an existing pre-hardfork full node datadir but wish to full sync or run an archive node you can download a migrated datadir hosted by cLabs from one of the links provided in [Migrating a Celo L1 node](https://docs.celo.org/cel2/operators/migrate-node).
 
 ### 2. Migrate your own datadir
 
-If you have been running an existing L1 node and wish to continue using the same datadir,
-you can migrate the data in order to use it with the L2 node.
+> ⚠️ We do not recommend migrating archive data. Please only migrate full node data, even if you plan to run an archive node. See [Migrating a Celo L1 node](https://docs.celo.org/cel2/operators/migrate-node) for more information.
 
-Once an L2 hardfork date has been decided for a specific network the L1
-[blockchain client](https://github.com/celo-org/celo-blockchain) will be
-released with a hardcoded stop block. Nodes running this version will stop
-producing blocks at the stop block, at which point the node can be shut down
-and the datadir can be migrated.
-
-Note that the migration does not modify the source datadir.
-
-Run the migration with the following command, where network is one of(mainnet, alfajores or baklava):
+If you've been running a full node and wish to continue using the same datadir, you can migrate the data as follows:
 
 ```sh
 ./migrate.sh full <network> <source_L1_chaindata_dir> [dest_L2_chaindata_dir2]
 ```
 
+Where `<network>` is one of `mainnet`, `alfajores` or `baklava`.
+
+Please make sure your node is stopped before running the migration.
+
 If the destination dir is omitted `./envs/<network>/datadir` will be used.
 
 #### Pre-migrations
 
-In the case that you wish to suffer minimal downtime at the L2 hardfork point
-you can run a pre-migration which will allow the bulk of a migration to occur
-before the hardfork point, thus speeding up the final full migration.
+In the case that you wish to suffer minimal downtime at the L2 hardfork point you can run a pre-migration which will allow the bulk of a migration to occur in advance, thus speeding up the final full migration.
 
 Note your node needs to be stopped in order for the pre-migration to be run.
 
@@ -218,20 +211,26 @@ Will start the node in a detatched shell (`-d`), meaning the node will continue 
 
 ### View logs
 
+To view logs of all containers, run
+
 ```sh
 docker compose logs -f --tail 10
 ```
 
-To view logs of all containers.
+To view logs for a specific container, run
 
 ```sh
-docker compose logs <CONTAINER_NAME> -f --tail 10
+docker compose logs [CONTAINER_NAME] -f --tail 10
 ```
 
-To view logs for a specific container. Most commonly used `<CONTAINER_NAME>` are:
-* op-geth
-* op-node
-* bedrock-init
+Where `CONTAINER_NAME` will most likely be one of:
+
+- op-geth
+- op-node
+- historical-rpc-node
+- eigenda-proxy
+
+Refer to the docker-compose file for the full list of containers.
 
 ### Stop
 
@@ -285,18 +284,15 @@ will only start if the environment variable `MONITORING_ENABLED` is set to `true
 
 ### Estimate remaining sync time
 
-Install foundry following the instructions of
-<https://book.getfoundry.sh/getting-started/installation>
-
-And then run progress.sh to estimate remaining sync time and speed.
+To estimate remaining sync time, first [install foundry](https://book.getfoundry.sh/getting-started/installation) and then run
 
 ```sh
 ./progress.sh
 ```
 
-This will show the sync speed in blocks per minute and the time until sync is completed.
+This will display remaining sync time and sync speed in blocks per minute.
 
-```
+```text
 Chain ID: 10
 Please wait
 Blocks per minute: ...
@@ -316,23 +312,3 @@ Use the following login details to access the dashboard:
 Navigate over to `Dashboards > Manage > Simple Node Dashboard` to see the dashboard, see the following gif if you need help:
 
 ![metrics dashboard gif](https://user-images.githubusercontent.com/14298799/171476634-0cb84efd-adbf-4732-9c1d-d737915e1fa7.gif)
-
-# Appendix
-
-## L2 network assets
-
-These assets are fetched when required by the scripts in this repo and so
-should not need to be manually retrieved, however for completeness they are
-provided here.
-
-* Mainnet
- * Pending launch
-* Alfajores - L2 fork block 26384000
-  * [Full migrated chaindata](https://storage.googleapis.com/cel2-rollup-files/alfajores/alfajores-migrated-datadir.tar.zst)
-  * [Rollup deploy config](https://storage.googleapis.com/cel2-rollup-files/alfajores/config.json)
-  * [L1 contract addresses](https://storage.googleapis.com/cel2-rollup-files/alfajores/deployment-l1.json)
-  * [L2 allocs](https://storage.googleapis.com/cel2-rollup-files/alfajores/l2-allocs.json)
-  * [rollup.json](https://storage.googleapis.com/cel2-rollup-files/alfajores/rollup.json)
-  * [Genesis](https://storage.googleapis.com/cel2-rollup-files/alfajores/genesis.json) used for snap syncing
-* Baklava
- * Pending launch
