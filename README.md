@@ -149,8 +149,8 @@ We recommend one of the 3 following configurations for your L2 node. For more de
   - `erigon` - Erigon
   - `basic` - Other providers
 - **HEALTHCHECK__REFERENCE_RPC_PROVIDER** - Specify the public healthcheck RPC endpoint for the Layer 2 network.
-- **HISTORICAL_RPC_DATADIR_PATH** - Datadir path to use for legacy archive node to serve pre-L2 historical state.
-- **OP_GETH__HISTORICAL_RPC** - RPC Endpoint for fetching pre-L2 historical state. If set, this overrides the **HISTORICAL_RPC_DATADIR_PATH** setting.
+- **HISTORICAL_RPC_DATADIR_PATH** - Datadir path to use for legacy archive node to serve pre-L2 historical state. If set a Celo L1 node will be run in archive mode to serve requests requiring state for blocks prior to the L2 hardfork and op-geth will be configured to proxy those requests to the Celo L1 node.
+- **OP_GETH__HISTORICAL_RPC** - RPC Endpoint for fetching pre-L2 historical state, if set op-geth will proxy requests requiring state prior to the L2 hardfork to here. If set this overrides the use of a local Celo L1 node via **HISTORICAL_RPC_DATADIR_PATH** so no local Celo L1 node will be run.
 - **IMAGE_TAG**[...]__ - Use custom docker image for specified components.
 - **PORT**[...]__ - Use custom port for specified components.
 
