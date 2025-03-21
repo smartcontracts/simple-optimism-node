@@ -141,8 +141,8 @@ We recommend one of the 3 following configurations for your L2 node. For more de
 - **OP_GETH__SYNCMODE** - Sync mode to use for L2 node
   - `snap` - If left empty, `snap` sync will be used. `snap` sync downloads chaindata from peers until it receives an unbroken chain of headers up through the most recent block, and only begins executing transactions from that point on. Archive nodes that run with `snap` sync will only store state from the point at which the node begins executing transactions.
   - `full` - `full` sync executes all transactions from genesis (or the last block in the datadir) to verify every header. Archive nodes that run with `full` sync will store state for every block synced, as `full` sync must calculate the state at every block in order to verify every header.
-- **OP_NODE__RPC_ENDPOINT** - Specify the Layer 1 RPC endpoint (e.g., Ethereum mainnet). For instance, you can use the Alchemy free plan for Ethereum mainnet.
-- **OP_NODE__L1_BEACON** - Specify the Layer 1 beacon endpoint. For instance, you can use [QuickNode](https://www.quicknode.com). E.g `https://xxx-xxx-xxx.quiknode.pro/db55a3908ba7e4e5756319ffd71ec270b09a7dce`.
+- **OP_NODE__RPC_ENDPOINT** - Specify the Layer 1 RPC endpoint (e.g., Ethereum mainnet). For instance, you can use the Alchemy free plan for Ethereum mainnet, although for reliablity a paid plan or hosting your own node would be a beteer choice.
+- **OP_NODE__L1_BEACON** - Specify the Layer 1 beacon endpoint. For instance, you can use [QuickNode](https://www.quicknode.com). E.g `https://xxx-xxx-xxx.quiknode.pro/db55a3908ba7e4e5756319ffd71ec270b09a7dce`. To ensure reliability a paid plan or self hosted node should be used.
 - **OP_NODE__RPC_TYPE** - Specify the service provider for the RPC endpoint you've chosen in the previous step. The available options are:
   - `alchemy` - Alchemy
   - `quicknode` - Quicknode (ETH only)

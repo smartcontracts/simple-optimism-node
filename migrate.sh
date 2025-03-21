@@ -50,20 +50,7 @@ fi
 
 # Convert source directory to absolute path
 source_dir=$(readlink -f "$source_dir")
-cel2_migration_tool_image="us-west1-docker.pkg.dev/devopsre/celo-blockchain-public/cel2-migration-tool:celo-migrate-v2.0.0-rc5"
-
-# Run check-db continuity script to ensure source db has no data gaps
-if docker run --platform=linux/amd64 -it --rm \
-    -v "${source_dir}/celo/chaindata:/old-db" \
-    "${cel2_migration_tool_image}" \
-    check-db \
-      --db-path /old-db \
-      --fail-fast; then
-    printf "\033[0;32mDB check completed successfully. No gaps or missing data detected.\033[0m\n"
-else
-    printf "\033[0;31mDB check failed with exit code $?. If the logs indicate that the db is missing data, please retry with another source db. You can visit https://docs.celo.org/cel2/operators/migrate-node for instructions on how to check whether a db has missing data.\033[0m\n"
-    exit $?
-fi
+cel2_migration_tool_image="us-west1-docker.pkg.dev/devopsre/celo-blockchain-public/cel2-migration-tool:celo-migrate-v2.0.1"
 
 # Ensure destination directory exists for chaindata
 mkdir -p  "${destination_dir}/geth/chaindata"
@@ -72,7 +59,7 @@ mkdir -p  "${destination_dir}/geth/chaindata"
 destination_dir=$(readlink -f "$destination_dir")
 
 if [ "${operation}" = "pre" ]; then
-  docker run --platform=linux/amd64 -it --rm \
+  docker run -it --rm \
     -v "${source_dir}/celo/chaindata:/old-db" \
     -v "${destination_dir}/geth/chaindata:/new-db" \
     "${cel2_migration_tool_image}" \
@@ -89,20 +76,33 @@ if ! test -e "${network}.env"; then
 fi
 . "./${network}.env"
 
-# Get MIGRATION_BLOCK_NUMBER and MIGRATION_BLOCK_TIME.
+# For mainnet we set the L1_BEACON_RPC_FLAG to be able to dynamically find the l1 starting block tag
+if [ "$network" = "mainnet" ]; then
+	L1_BEACON_RPC_FLAG="--l1-beacon-rpc=$OP_NODE__L1_BEACON"
+fi
+
+# Get MIGRATION_BLOCK_NUMBER.
 . "./envs/${network}/migration-config/migration.env"
 
 # Gather required migration files
 migration_config_dir="./envs/${network}/migration-config"
 mkdir -p "$migration_config_dir"
-(
+if ! (
+  networkid=${network}
+  if [ ${network} = "mainnet" ]; then
+	  networkid="celo"
+  fi
   cd "$migration_config_dir"
-  wget -N "https://storage.googleapis.com/cel2-rollup-files/${network}/config.json"
-  wget -N "https://storage.googleapis.com/cel2-rollup-files/${network}/deployment-l1.json"
-  wget -N "https://storage.googleapis.com/cel2-rollup-files/${network}/l2-allocs.json"
-)
+  wget -O config.json "https://storage.googleapis.com/cel2-rollup-files/${networkid}/config.json"
+  wget -O deployment-l1.json "https://storage.googleapis.com/cel2-rollup-files/${networkid}/deployment-l1.json"
+  wget -O l2-allocs.json "http://storage.googleapis.com/cel2-rollup-files/${networkid}/l2-allocs.json"
+); then
+  printf "\033[0;31mFailed to download migration config: one or more downloads failed. You may need to wait until the migration config has been published.\033[0m\n"
+  exit 1
+fi
 
-docker run --platform=linux/amd64 -it --rm \
+
+docker run -it --rm \
   -v "${source_dir}/celo/chaindata:/old-db" \
   -v "${destination_dir}/geth/chaindata:/new-db" \
   -v "${migration_config_dir}:/migration-config" \
@@ -117,8 +117,7 @@ docker run --platform=linux/amd64 -it --rm \
     --l1-rpc "${OP_NODE__RPC_ENDPOINT}" \
     --outfile.rollup-config /out-config/rollup.json \
     --outfile.genesis /out-config/genesis.json \
-    --migration-block-time="$MIGRATION_BLOCK_TIME" \
-    --migration-block-number="$MIGRATION_BLOCK_NUMBER"
+    --migration-block-number="$MIGRATION_BLOCK_NUMBER" "$L1_BEACON_RPC_FLAG"
 
 # Put a blank line before the summary
 echo ""
