@@ -171,14 +171,16 @@ If you do not have an existing pre-hardfork full node datadir but wish to full s
 If you've been running a full node and wish to continue using the same datadir, you can migrate the data as follows:
 
 ```sh
-./migrate.sh full <network> <source_L1_chaindata_dir> [dest_L2_chaindata_dir2]
+./migrate.sh full <network> <source_L1_datadir> [dest_L2_datadir2]
 ```
 
-Where `<network>` is one of `mainnet`, `alfajores` or `baklava`.
+Where `<network>` is one of `mainnet`, `alfajores` or `baklava` and the
+datadirs are the values that would be set with the `--datadir` flag in the
+celo-blockchain and the op-geth nodes.
 
 Please make sure your node is stopped before running the migration.
 
-If the destination dir is omitted `./envs/<network>/datadir` will be used.
+If the destination datadir is omitted `./envs/<network>/datadir` will be used.
 
 #### Pre-migrations
 
@@ -189,7 +191,7 @@ Note your node needs to be stopped in order for the pre-migration to be run.
 To run a pre-migration use the following command:
 
 ```sh
-./migrate.sh pre <network> <source_L1_chaindata_dir> [dest_L2_chaindata_dir2]
+./migrate.sh pre <network> <source_L1_datadir> [dest_L2_datadir2]
 ```
 
 Also note that the full migration needs to be run with the same destination dir
