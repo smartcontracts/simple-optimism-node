@@ -182,6 +182,24 @@ Please make sure your node is stopped before running the migration.
 
 If the destination datadir is omitted `./envs/<network>/datadir` will be used.
 
+> ⚠️  We have experienced the below problem when migrating datadirs and were
+> able to resolve it by starting up the celo-blockchain client with the same
+> datadir, waiting for the node to fully start, and then shutting it down
+> again.
+>
+> Alternatively you can open a local console with the celo-blockchain client
+> (`geth console --datadir <datadir>`), wait for the console to load, and then
+> exit the console. This ensures that all components have loaded before
+> shutdown is attempted.
+>
+> It seems that this issue is caused by the celo-blockchain client sometimes
+> shutting down in an inconsistent state, which is repaired upon the next
+> startup.
+
+```
+CRIT [03-19|10:38:17.229] error in celo-migrate err="failed to run full migration: failed to get head header: failed to open database at \"/datadir/celo/chaindata\" err: failed to open leveldb: EOF"
+```
+
 #### Pre-migrations
 
 In the case that you wish to suffer minimal downtime at the L2 hardfork point you can run a pre-migration which will allow the bulk of a migration to occur in advance, thus speeding up the final full migration.
