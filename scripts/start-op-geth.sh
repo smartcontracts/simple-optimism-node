@@ -20,6 +20,10 @@ fi
 # Init genesis if it's a custom chain and the datadir is empty
 if [ -n "${IS_CUSTOM_CHAIN}" ] && [ -z "$(ls -A "$BEDROCK_DATADIR")" ]; then
   echo "Initializing custom chain genesis..."
+  if [ ! -f /chainconfig/genesis.json ]; then
+    echo "Missing genesis.json file: Either update the repo to pull the published genesis.json or migrate your Celo L1 datadir to generate genesis.json."
+    exit
+  fi
   geth init --datadir="$BEDROCK_DATADIR" /chainconfig/genesis.json
 fi
 
