@@ -182,6 +182,9 @@ Please make sure your node is stopped before running the migration.
 
 If the destination datadir is omitted `./envs/<network>/datadir` will be used.
 
+> ⚠️
+> When migrating a datadir, make sure to set `OP_GETH__SYNCMODE=full`, otherwise the node will use snap-sync.
+
 > ⚠️  We have experienced the below problem when migrating datadirs and were
 > able to resolve it by starting up the celo-blockchain client with the same
 > datadir, waiting for the node to fully start, and then shutting it down
