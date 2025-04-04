@@ -11,6 +11,10 @@ else
   export EXTENDED_ARG="${EXTENDED_ARG:-} --network=$NETWORK_NAME --rollup.load-protocol-versions=true --rollup.halt=major"
 fi
 
+if [ -n $OP_NODE__P2P_ADVERTISE_IP ]; then
+  export EXTENDED_ARG="${EXTENDED_ARG:-} --p2p.advertise.ip=$OP_NODE__P2P_ADVERTISE_IP"
+fi
+
 # OP_NODE_ALTDA_DA_SERVER is picked up by the op-node binary.
 export OP_NODE_ALTDA_DA_SERVER=$EIGENDA_PROXY_ENDPOINT
 if [ -n $USE_LOCAL_EIGENDA_PROXY_IF_UNSET ]; then

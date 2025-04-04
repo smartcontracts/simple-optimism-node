@@ -151,8 +151,35 @@ We recommend one of the 3 following configurations for your L2 node. For more de
 - **HEALTHCHECK__REFERENCE_RPC_PROVIDER** - Specify the public healthcheck RPC endpoint for the Layer 2 network.
 - **HISTORICAL_RPC_DATADIR_PATH** - Datadir path to use for legacy archive node to serve pre-L2 historical state. If set a Celo L1 node will be run in archive mode to serve requests requiring state for blocks prior to the L2 hardfork and op-geth will be configured to proxy those requests to the Celo L1 node.
 - **OP_GETH__HISTORICAL_RPC** - RPC Endpoint for fetching pre-L2 historical state, if set op-geth will proxy requests requiring state prior to the L2 hardfork to here. If set this overrides the use of a local Celo L1 node via **HISTORICAL_RPC_DATADIR_PATH** so no local Celo L1 node will be run.
+- **DATADIR_PATH** - Use a custom datadir instead of the default at ./envs/<network>/datadir.
+- **IPC_PATH** - The IPC file used by geth to facilitate local console connections only works with certain filesystems, if the filesystem hosting the datadir is not compatible use this option to specify an alternative location for the geth IPC file. 
 - **IMAGE_TAG**[...]__ - Use custom docker image for specified components.
-- **PORT**[...]__ - Use custom port for specified components.
+
+### P2P networking environment variables
+
+> ⚠️ If the following options are not configured correctly, your node will not
+> be discoverable or reachable to other nodes on the network. This is likely
+> to impair your node's ability to stay reliably connected to and synced with
+> the network.
+
+- **OP_NODE__P2P_ADVERTISE_IP** - Specifies the public IP to be shared via
+  discovery so that other nodes can connect to your node. If unset op-node
+  other nodes on the network will not be able to discover and connect to your
+  node.
+- **PORT__OP_NODE_P2P** - Specifies the port to be shared via discovery so that
+  other nodes can connect to your node. Defaults to 9222.
+
+- **OP_GETH__NAT** - Controls how op-geth determines its public IP that is
+  shared via the discovery mechanism. If the public IP is not correctly
+  configured then other nodes on the network will not be able to discover and
+  connect to your node. The default value of `any` will try to automatically
+  determine the public IP, but the most reliable approach is to explicitly set
+  the public IP using `extip:<your-public-ip>`. Other acceptable values are
+  `(any|none|upnp|pmp|pmp:<IP>|extip:<IP>|stun:<IP:PORT>)`.
+- **PORT__OP_GETH_P2P** - Specifies the port to be shared via discovery so that
+  other nodes can connect to your node. Defaults to 30303.
+
+- **PORT**[...]__ - Other custom ports that may be specified.
 
 ## Obtaining a migrated datadir
 

@@ -69,6 +69,7 @@ exec geth \
   --rollup.disabletxpoolgossip=true \
   --port="${PORT__OP_GETH_P2P:-39393}" \
   --discovery.port="${PORT__OP_GETH_P2P:-39393}" \
+  --nat=$OP_GETH__NAT \
   --snapshot=true \
   --verbosity=3 \
   --history.transactions=0 \
