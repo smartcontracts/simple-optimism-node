@@ -32,6 +32,9 @@ services:
     restart: unless-stopped
     stop_grace_period: 5m
     entrypoint: /scripts/start-op-geth.sh
+    profiles: 
+      - op-geth
+      - !nethermind
     env_file:
       - ./envs/${NETWORK_NAME}/op-geth.env
       - .env
@@ -46,6 +49,34 @@ services:
       - ${PORT__OP_GETH_WS:-9994}:8546
       - ${PORT__OP_GETH_P2P:-39393}:${PORT__OP_GETH_P2P:-39393}/udp
       - ${PORT__OP_GETH_P2P:-39393}:${PORT__OP_GETH_P2P:-39393}/tcp
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+
+  op-nethermind:
+    build:
+      context: .
+      dockerfile: docker/dockerfiles/Dockerfile.nethermind
+    restart: unless-stopped
+    stop_grace_period: 5m
+    profiles:
+      - nethermind
+      - !op-geth
+    env_file:
+      - ./envs/${NETWORK_NAME}/nethermind.env
+      - .env
+    volumes:
+      - ./scripts:/scripts:ro
+      - op_nethermind:/nethermind
+      - shared:/shared
+      - torrent_downloads:/downloads
+      - ./.upgrade-pectra:/upgrade-pectra
+    ports:
+      - ${PORT__OP_NETHERMIND_HTTP:-9995}:9995
+      - ${PORT__OP_NETHERMIND_WS:-9996}:9996
+      - ${PORT__OP_NETHERMIND_AUTHRPC:-8551}:8551
+      - ${PORT__OP_NETHERMIND_METRICS:-6062}:6060
+      - ${PORT__OP_NETHERMIND_DISCOVERY:-30303}:30303/udp
+      - ${PORT__OP_NETHERMIND_DISCOVERY:-30303}:30303/tcp
     extra_hosts:
       - "host.docker.internal:host-gateway"
 
@@ -126,4 +157,5 @@ volumes:
   influxdb_data:
   shared:
   op_geth:
+  op_nethermind:
   torrent_downloads:
