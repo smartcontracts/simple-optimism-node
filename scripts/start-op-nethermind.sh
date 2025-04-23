@@ -55,7 +55,7 @@ else
 fi
 
 # Execute Nethermind with properly formatted arguments
-exec /nethermind/Nethermind.Runner \
+exec /nethermind/nethermind \
     --config "$NETWORK_NAME" \
     --datadir "$NETHERMIND_DATA_DIR" \
     --Optimism.SequencerUrl "$BEDROCK_SEQUENCER_HTTP" \
