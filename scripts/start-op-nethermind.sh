@@ -3,7 +3,7 @@ set -e
 
 # Add debug information
 echo "Debug: Checking Nethermind executable..."
-ls -l /nethermind/Nethermind.Runner || echo "Nethermind.Runner not found in /nethermind/"
+ls -l /nethermind/nethermind || echo "nethermind not found in /nethermind/"
 echo "Debug: Checking entire /nethermind directory..."
 ls -la /nethermind/ || echo "/nethermind directory not found or empty"
 
