@@ -139,27 +139,8 @@ When using Nethermind as the execution client, you can configure the following a
 
 ### Start
 
-You can start the node using the provided `start.sh` script:
-
 ```sh
-# Start with op-geth (default)
-./start.sh
-
-# Start with Nethermind
-EXECUTION_CLIENT=nethermind ./start.sh
-```
-
-Or using docker compose directly:
-
-```sh
-# For op-geth
-docker compose --profile op-geth up -d --build
-
-# For Nethermind
-docker compose --profile nethermind up -d --build
-```
-
-This will start the node in a detached shell (`-d`), meaning the node will continue to run in the background. We recommend adding `--build` to make sure that latest changes are being applied.
+docker compose up -d --build
 
 ### View logs
 
