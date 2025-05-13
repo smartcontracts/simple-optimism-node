@@ -1,6 +1,11 @@
 #!/bin/sh
 set -e
 
+if [ -n "$EIGENDA_PROXY_ENDPOINT" ]; then
+  echo "Not starting local EigenDA proxy since proxy endpoint ($EIGENDA_PROXY_ENDPOINT) is defined"
+  exit
+fi
+
 # Archive blobs configuration
 if [ -n "$EIGENDA_LOCAL_ARCHIVE_BLOBS" ]; then
   export EXTENDED_EIGENDA_PARAMETERS="${EXTENDED_EIGENDA_PARAMETERS:-} --s3.credential-type=$EIGENDA_LOCAL_S3_CREDENTIAL_TYPE \

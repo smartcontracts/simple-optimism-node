@@ -30,7 +30,7 @@ services:
   eigenda-proxy:
     platform: linux/amd64
     image: ghcr.io/layr-labs/eigenda-proxy:v1.6.4
-    restart: unless-stopped
+    restart: on-failure
     stop_grace_period: 5m
     entrypoint: /scripts/start-eigenda-proxy.sh
     env_file:
@@ -42,10 +42,6 @@ services:
       - ${PORT_EIGENDA_PROXY:-4242}:4242
     extra_hosts:
       - "host.docker.internal:host-gateway"
-    deploy:
-      # If USE_LOCAL_EIGENDA_PROXY_IF_UNSET is unset or empty, then we set replicas to 1,
-      # otherwise use the value of USE_LOCAL_EIGENDA_PROXY_IF_UNSET which should be 0.
-      replicas: ${USE_LOCAL_EIGENDA_PROXY_IF_UNSET:-1}
 
   op-geth:
     platform: linux/amd64
