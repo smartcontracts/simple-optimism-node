@@ -29,7 +29,7 @@ services:
 
   eigenda-proxy:
     platform: linux/amd64
-    image: ghcr.io/layr-labs/eigenda-proxy:v1.8.1
+    image: ghcr.io/layr-labs/eigenda-proxy:v1.8.2
     restart: on-failure
     stop_grace_period: 5m
     entrypoint: /scripts/start-eigenda-proxy.sh
