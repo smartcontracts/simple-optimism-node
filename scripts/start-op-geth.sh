@@ -73,5 +73,6 @@ exec geth \
   --snapshot=true \
   --verbosity=3 \
   --history.transactions=0 \
+  --txpool.nolocals \
   $EXTENDED_ARG $@
 
