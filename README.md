@@ -62,12 +62,12 @@ cd celo-l2-node-docker-compose
 
 ## Configuring a node
 
-Example configs are provided for Alfajores, Baklava and Mainnet. Start by copying the desired network environment file to `.env`, which is what docker-compose will use to load environment variables.
+Example configs are provided for Celo Sepolia, Alfajores, Baklava and Mainnet. Start by copying the desired network environment file to `.env`, which is what docker-compose will use to load environment variables.
 
-E.g. to run a node on Alfajores:
+E.g. to run a node on Celo Sepolia:
 
 ```sh
-cp alfajores.env .env
+cp celo-sepolia.env .env
 ```
 
 The `.env` file is now ready to use and configured for snap sync and full (non-archive) mode. If you would like to customise your node further see below.
@@ -201,7 +201,7 @@ If you've been running a full node and wish to continue using the same datadir, 
 ./migrate.sh full <network> <source_L1_datadir> [dest_L2_datadir2]
 ```
 
-Where `<network>` is one of `mainnet`, `alfajores` or `baklava` and the
+Where `<network>` is one of `mainnet`, `celo-sepolia`, `alfajores` or `baklava` and the
 datadirs are the values that would be set with the `--datadir` flag in the
 celo-blockchain and the op-geth nodes.
 
