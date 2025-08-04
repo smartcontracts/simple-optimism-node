@@ -1,0 +1,18 @@
+{
+  "ProxyAdminAddress": "0xf7d7a3d3bb8abb6829249b3d3ad3d525d052027e",
+  "AddressManagerAddress": "0x8f0c6fc85a53551d87899ac2a5af2b48c793eb63",
+  "L1ERC721BridgeProxyAddress": "0xb8c8dcbccd0f7c5e7a2184b13b85d461d8711e96",
+  "SystemConfigProxyAddress": "0x760a5f022c9940f4a074e0030be682f560d29818",
+  "OptimismMintableERC20FactoryProxyAddress": "0x261be2ed7241fed9c746e0b5dff3a4a335991377",
+  "L1StandardBridgeProxyAddress": "0xec18a3c30131a0db4246e785355fbc16e2eaf408",
+  "L1CrossDomainMessengerProxyAddress": "0x70b0e58e6039831954ede2ea1e9ef8a51680e4fd",
+  "OptimismPortalProxyAddress": "0x44ae3d41a335a7d05eb533029917aad35662dcc2",
+  "DisputeGameFactoryProxyAddress": "0x57c45d82d1a995f1e135b8d7edc0a6bb5211cfaa",
+  "AnchorStateRegistryProxyAddress": "0xd73ba8168a61f3e917f0930d5c0401aa47e269d6",
+  "FaultDisputeGameAddress": "0x0000000000000000000000000000000000000000",
+  "PermissionedDisputeGameAddress": "0x5a4feaeb665f8049ac1e0714f82a11532d47ae49",
+  "DelayedWETHPermissionedGameProxyAddress": "0x082f5f58b664cd1d51f9845fee322aba2ced9cba",
+  "DelayedWETHPermissionlessGameProxyAddress": "0x0000000000000000000000000000000000000000",
+  "CeloSuperchainConfigProxyAddress": "0x5c34140a1273372211bd75184ccc9e434b38d86b",
+  "CeloTokenProxyAddress": "0x3c7011fd5e6aed460caa4985cf8d8caba435b092"
+}

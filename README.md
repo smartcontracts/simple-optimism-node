@@ -152,7 +152,7 @@ We recommend one of the 3 following configurations for your L2 node. For more de
 - **HISTORICAL_RPC_DATADIR_PATH** - Datadir path to use for legacy archive node to serve pre-L2 historical state. If set a Celo L1 node will be run in archive mode to serve requests requiring state for blocks prior to the L2 hardfork and op-geth will be configured to proxy those requests to the Celo L1 node.
 - **OP_GETH__HISTORICAL_RPC** - RPC Endpoint for fetching pre-L2 historical state, if set op-geth will proxy requests requiring state prior to the L2 hardfork to here. If set this overrides the use of a local Celo L1 node via **HISTORICAL_RPC_DATADIR_PATH** so no local Celo L1 node will be run.
 - **DATADIR_PATH** - Use a custom datadir instead of the default at ./envs/<network>/datadir.
-- **IPC_PATH** - The IPC file used by geth to facilitate local console connections only works with certain filesystems, if the filesystem hosting the datadir is not compatible use this option to specify an alternative location for the geth IPC file. 
+- **IPC_PATH** - The IPC file used by geth to facilitate local console connections only works with certain filesystems, if the filesystem hosting the datadir is not compatible use this option to specify an alternative location for the geth IPC file.
 - **IMAGE_TAG**[...]__ - Use custom docker image for specified components.
 
 ### P2P networking environment variables
@@ -211,7 +211,7 @@ If the destination datadir is omitted `./envs/<network>/datadir` will be used.
 
 > ⚠️
 > When migrating a datadir, make sure to set `OP_GETH__SYNCMODE=full`, otherwise the node will use snap-sync.
-
+>
 > ⚠️  We have experienced the below problem when migrating datadirs and were
 > able to resolve it by starting up the celo-blockchain client with the same
 > datadir, waiting for the node to fully start, and then shutting it down
@@ -226,7 +226,7 @@ If the destination datadir is omitted `./envs/<network>/datadir` will be used.
 > shutting down in an inconsistent state, which is repaired upon the next
 > startup.
 
-```
+```log
 CRIT [03-19|10:38:17.229] error in celo-migrate err="failed to run full migration: failed to get head header: failed to open database at \"/datadir/celo/chaindata\" err: failed to open leveldb: EOF"
 ```
 
