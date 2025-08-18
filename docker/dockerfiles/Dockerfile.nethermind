@@ -1,0 +1,11 @@
+FROM nethermind/nethermind:1.31.6
+
+# Install bash
+RUN apt-get update && apt-get install -y bash
+
+# Copy and set up the startup script
+COPY scripts/start-op-nethermind.sh /scripts/
+RUN chmod +x /scripts/start-op-nethermind.sh
+
+# Set the entrypoint to use bash
+ENTRYPOINT ["/bin/bash", "/scripts/start-op-nethermind.sh"] 
