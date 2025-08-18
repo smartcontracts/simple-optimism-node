@@ -28,7 +28,7 @@ if [ "$NODE_TYPE" = "full" ]; then
   # Warning: syncmode=full for syncing full node is deprecated and not recommended to use
   if [ "$OP_GETH__SYNCMODE" = "full" ]; then
     if [ "$NETWORK_NAME" = "op-mainnet" ]; then
-      BEDROCK_TAR_DOWNLOAD="https://datadirs.optimism.io/op-mainnet-pre-bedrockstate.zst"
+      BEDROCK_TAR_DOWNLOAD="https://datadirs.optimism.io/latest"
     elif [ "$NETWORK_NAME" = "op-goerli" ]; then
       BEDROCK_TAR_DOWNLOAD="https://datadirs.optimism.io/goerli-bedrock.tar.zst"
     fi
