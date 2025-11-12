@@ -91,6 +91,11 @@ Open `.env` with your editor of choice
 * **NODE_TYPE** - Choose the type of node you want to run:
     * `full` (Full node) - A Full node contains a few recent blocks without historical states.
     * `archive` (Archive node) - An Archive node stores the complete history of the blockchain, including historical states.
+*  **EXECUTION_CLIENT** - Choose which execution client to use:
+    * `op-geth` - The original execution client for OP Stack (default)
+    * `nethermind` - Alternative high-performance execution client written in C#
+    
+    You can set this in your `.env` file or use it as an environment variable when running the `start.sh` script.
 * **OP_NODE__RPC_ENDPOINT** - Specify the endpoint for the RPC of Layer 1 (e.g., Ethereum mainnet). For instance, you can use the free plan of Alchemy for the Ethereum mainnet.
 * **OP_NODE__L1_BEACON** - Specify the beacon endpoint of Layer 1. You can use [QuickNode for the beacon endpoint](https://www.quicknode.com). For example: https://xxx-xxx-xxx.quiknode.pro/db55a3908ba7e4e5756319ffd71ec270b09a7dce
 * **OP_NODE__RPC_TYPE** - Specify the service provider for the RPC endpoint you've chosen in the previous step. The available options are:
@@ -119,15 +124,23 @@ Open `.env` with your editor of choice
 * **IMAGE_TAG__[...]** - Use custom docker image for specified components.
 * **PORT__[...]** - Use custom port for specified components.
 
+### Nethermind Configuration
+When using Nethermind as the execution client, you can configure the following additional settings:
+
+* **NETHERMIND_DATA_DIR** - Directory where Nethermind stores its data (default: /nethermind)
+* **NETHERMIND_LOG_LEVEL** - Logging level for Nethermind (default: Info)
+* **PORT__OP_NETHERMIND_HTTP** - HTTP RPC port (default: 9995)
+* **PORT__OP_NETHERMIND_WS** - WebSocket RPC port (default: 9996)
+* **PORT__OP_NETHERMIND_AUTHRPC** - Engine API port (default: 8551)
+* **PORT__OP_NETHERMIND_METRICS** - Metrics port (default: 6060)
+* **PORT__OP_NETHERMIND_DISCOVERY** - P2P discovery port (default: 30303)
+
 ## Operating the Node
 
 ### Start
 
 ```sh
 docker compose up -d --build
-```
-
-Will start the node in a detached shell (`-d`), meaning the node will continue to run in the background. We recommended to add `--build` to make sure that latest changes are being applied.
 
 ### View logs
 
