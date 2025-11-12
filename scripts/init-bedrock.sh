@@ -28,7 +28,7 @@ if [ "$NODE_TYPE" = "full" ]; then
   # Warning: syncmode=full for syncing full node is deprecated and not recommended to use
   if [ "$OP_GETH__SYNCMODE" = "full" ]; then
     if [ "$NETWORK_NAME" = "op-mainnet" ]; then
-      BEDROCK_TAR_DOWNLOAD="https://r2-snapshots.fastnode.io/op/$(curl -s https://r2-snapshots.fastnode.io/op/latest-mainnet)"
+      BEDROCK_TAR_DOWNLOAD="https://datadirs.optimism.io/latest"
     elif [ "$NETWORK_NAME" = "op-goerli" ]; then
       BEDROCK_TAR_DOWNLOAD="https://datadirs.optimism.io/goerli-bedrock.tar.zst"
     fi
@@ -46,26 +46,35 @@ elif [ "$NODE_TYPE" = "archive" ]; then
 fi
 
 if [ -n "$BEDROCK_TAR_DOWNLOAD" ]; then
-  if [[ "$BEDROCK_TAR_DOWNLOAD" == *.zst ]]; then
-    BEDROCK_TAR_PATH+=".zst"
-  elif [[ "$BEDROCK_TAR_DOWNLOAD" == *.lz4 ]]; then
-    BEDROCK_TAR_PATH+=".lz4"
+  DOWNLOAD_FILE_EXTENSION="${BEDROCK_TAR_DOWNLOAD##*.}"
+  if [[ "$DOWNLOAD_FILE_EXTENSION" == "zst" ]]; then
+    DOWNLOAD_FILE_PATH="/downloads/bedrock.tar.zst"
+  elif [[ "$DOWNLOAD_FILE_EXTENSION" == "lz4" ]]; then
+    DOWNLOAD_FILE_PATH="/downloads/bedrock.tar.lz4"
   fi
 
-  echo "Downloading bedrock.tar..."
-  download $BEDROCK_TAR_DOWNLOAD $BEDROCK_TAR_PATH
-
-  echo "Extracting bedrock.tar..."
-  if [[ "$BEDROCK_TAR_DOWNLOAD" == *.zst ]]; then
-    extractzst $BEDROCK_TAR_PATH $GETH_DATA_DIR
-  elif [[ "$BEDROCK_TAR_DOWNLOAD" == *.lz4 ]]; then
-    extractlz4 $BEDROCK_TAR_PATH $GETH_DATA_DIR
+  # Check if the file already exists and skip download if it does
+  if [ ! -f "$DOWNLOAD_FILE_PATH" ]; then
+    echo "Downloading snapshot..."
+    download "$BEDROCK_TAR_DOWNLOAD" "$DOWNLOAD_FILE_PATH"
   else
-    extract $BEDROCK_TAR_PATH $GETH_DATA_DIR
+    echo "Snapshot file already exists. Skipping download."
+  fi
+
+  echo "Extracting snapshot..."
+  if [[ "$DOWNLOAD_FILE_EXTENSION" == "zst" ]]; then
+    # Corrected logic for a raw .zst file
+    echo "Extracting with zstd..."
+    zstd -d "$DOWNLOAD_FILE_PATH" -o "$GETH_DATA_DIR/chaindata.raw"
+    mv "$GETH_DATA_DIR/chaindata.raw" "$GETH_DATA_DIR/chaindata"
+  elif [[ "$DOWNLOAD_FILE_EXTENSION" == "lz4" ]]; then
+    extractlz4 "$DOWNLOAD_FILE_PATH" "$GETH_DATA_DIR"
+  else
+    extract "$DOWNLOAD_FILE_PATH" "$GETH_DATA_DIR"
   fi
 
   # Remove tar file to save disk space
-  rm $BEDROCK_TAR_PATH
+  rm "$DOWNLOAD_FILE_PATH"
 fi
 
 echo "Creating JWT..."
